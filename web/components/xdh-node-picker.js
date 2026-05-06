@@ -428,20 +428,19 @@ export class XdhNodePicker extends BaseElement {
                 :host {
                     display: block;
                     position: relative;
-                    font-family: sans-serif;
+                    font-family: var(--font-family-base);
                     width: 100%;
-                    --picker-toggle-bg: var(--xdh-color-surface-1, #1e1e1e);
-                    --picker-panel-bg: var(--xdh-color-surface-2, #2a2a2a);
-                    --picker-input-bg: var(--xdh-color-surface-1, #111111);
-                    --picker-muted-bg: var(--xdh-color-surface-3, #3a3a3a);
-                    --picker-hover-bg: var(--xdh-color-surface-3, #3d3d3d);
-                    --picker-border: var(--xdh-color-border, #444444);
+                    --picker-toggle-bg: var(--xdh-color-surface-1);
+                    --picker-panel-bg: var(--xdh-color-surface-2);
+                    --picker-input-bg: var(--xdh-color-surface-1);
+                    --picker-muted-bg: var(--xdh-color-surface-3);
+                    --picker-hover-bg: var(--xdh-color-surface-3);
+                    --picker-border: var(--xdh-color-border);
                     --picker-shadow: 0 -6px 20px rgba(0, 0, 0, 0.5);
-                    --picker-active-bg: var(--xdh-color-primary-muted, #1a3050);
-                    --picker-active-color: var(--xdh-color-primary, #4499ff);
+                    --picker-active-bg: var(--xdh-color-primary-muted);
+                    --picker-active-color: var(--color-primary);
                     --picker-secondary-text: var(
-                        --xdh-color-text-secondary,
-                        #777777
+                        --xdh-color-text-secondary
                     );
                 }
 
@@ -476,10 +475,10 @@ export class XdhNodePicker extends BaseElement {
                         0 2px 6px rgba(0, 0, 0, 0.06);
                     --picker-active-bg: color-mix(
                         in oklch,
-                        var(--xdh-brand-pink) 10%,
+                        var(--color-primary) 10%,
                         var(--xdh-pure-white) 90%
                     );
-                    --picker-active-color: var(--xdh-brand-pink);
+                    --picker-active-color: var(--color-primary);
                     --picker-secondary-text: var(--xdh-color-text-secondary);
                 }
 
@@ -488,13 +487,13 @@ export class XdhNodePicker extends BaseElement {
                     border: 1px solid ${sn
                         ? 'var(--picker-active-color)'
                         : 'var(--picker-border)'};
-                    color: var(--xdh-color-text-primary, #eee);
-                    padding: 6px 10px;
-                    border-radius: 6px;
+                    color: var(--xdh-color-text-primary);
+                    padding: var(--space-xs) var(--space-md);
+                    border-radius: var(--radius-sm);
                     cursor: pointer;
                     display: flex;
                     align-items: center;
-                    gap: 7px;
+                    gap: var(--space-sm);
                     width: 100%;
                     box-sizing: border-box;
                     font-size: 13px;
@@ -521,11 +520,11 @@ export class XdhNodePicker extends BaseElement {
                     white-space: nowrap;
                 }
                 .toggle-id {
-                    font-size: 11px;
+                    font: var(--font-badge);
                     color: var(--picker-secondary-text);
                     background: var(--picker-muted-bg);
-                    padding: 1px 5px;
-                    border-radius: 4px;
+                    padding: var(--space-xxs) var(--space-xs);
+                    border-radius: var(--radius-xs);
                     flex-shrink: 0;
                 }
                 .toggle-chevron {
@@ -550,7 +549,7 @@ export class XdhNodePicker extends BaseElement {
                     right: 0;
                     background: var(--picker-panel-bg);
                     border: 1px solid var(--picker-border);
-                    border-radius: 8px;
+                    border-radius: var(--radius-sm);
                     box-shadow: var(--picker-shadow);
                     max-height: 240px;
                     overflow-y: auto;
@@ -558,7 +557,7 @@ export class XdhNodePicker extends BaseElement {
                 }
 
                 .picker-search {
-                    padding: 8px;
+                    padding: var(--space-sm);
                     position: sticky;
                     top: 0;
                     background: var(--picker-panel-bg);
@@ -571,30 +570,30 @@ export class XdhNodePicker extends BaseElement {
                     box-sizing: border-box;
                     background: var(--picker-input-bg);
                     border: 1px solid var(--picker-border);
-                    color: var(--xdh-color-text-primary, #fff);
-                    padding: 5px 8px;
-                    border-radius: 5px;
+                    color: var(--xdh-color-text-primary);
+                    padding: var(--space-xs) var(--space-sm);
+                    border-radius: var(--radius-xs);
                     outline: none;
-                    font-size: 12px;
+                    font: var(--font-micro-label);
                 }
                 .picker-search input:focus {
                     border-color: var(--picker-active-color);
                 }
 
                 .node-option {
-                    padding: 7px 12px;
+                    padding: var(--space-sm) var(--space-md);
                     font-size: 13px;
                     color: var(--picker-secondary-text);
                     cursor: pointer;
                     display: flex;
                     align-items: center;
-                    gap: 8px;
+                    gap: var(--space-sm);
                     transition: background-color 0.12s ease,
                         color 0.12s ease;
                 }
                 .node-option:hover {
                     background: var(--picker-hover-bg);
-                    color: var(--xdh-color-text-primary, #ffffff);
+                    color: var(--xdh-color-text-primary);
                 }
                 .node-option.selected {
                     background: var(--picker-active-bg);
@@ -613,16 +612,16 @@ export class XdhNodePicker extends BaseElement {
                 .node-id {
                     background: var(--picker-muted-bg);
                     font-size: 10px;
-                    padding: 2px 5px;
-                    border-radius: 4px;
+                    padding: var(--space-xxs) var(--space-xs);
+                    border-radius: var(--radius-xs);
                     color: var(--picker-secondary-text);
                     margin-left: auto;
                     flex-shrink: 0;
                 }
 
                 .picker-empty {
-                    padding: 16px 12px;
-                    font-size: 12px;
+                    padding: var(--space-base) var(--space-md);
+                    font: var(--font-micro-label);
                     color: var(--picker-secondary-text);
                     text-align: center;
                 }
@@ -639,7 +638,7 @@ export class XdhNodePicker extends BaseElement {
                         placeholder="${searchPlaceholder}"
                         value="${searchQueryValue}" />
                 </div>
-                <div style="padding: 4px 0;">
+                <div style="padding: var(--space-xs) 0;">
                     ${listContent}
                 </div>
             </div>

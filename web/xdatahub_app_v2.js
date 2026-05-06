@@ -75,6 +75,20 @@ const URL_CATEGORY_PARAM = "tab";
 const LOCK_FALLBACK_POLL_INTERVAL_MS = 10000;
 const LOCK_EVENT_REFRESH_DEBOUNCE_MS = 80;
 const THEME_MODE_VALUES = new Set(["dark", "light"]);
+const THEME_STORAGE_KEY = "XDataHub.V2.Theme";
+
+// ── 初始主题检测：基于 prefers-color-scheme 设置 data-theme ──────────────
+(function initTheme() {
+    try {
+        const saved = localStorage.getItem(THEME_STORAGE_KEY);
+        if (saved === "light" || saved === "dark") {
+            document.body.dataset.theme = saved;
+            return;
+        }
+    } catch { /* ignore */ }
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.body.dataset.theme = prefersDark ? "dark" : "light";
+})();
 
 let lockRefreshTimer = 0;
 let lockRefreshInFlight = null;
@@ -557,6 +571,9 @@ function applyThemeV2(mode, options = {}) {
         return;
     }
     document.body.dataset.theme = normalized;
+    try {
+        localStorage.setItem(THEME_STORAGE_KEY, normalized);
+    } catch { /* ignore localStorage write errors */ }
     if (options.notifyHost !== false) {
         postThemeModeToHost(normalized);
     }
@@ -1280,10 +1297,10 @@ const _execOverlay = (() => {
     Object.assign(label.style, {
         color: "var(--xdh-color-text-primary, #f0f0f0)",
         fontSize: "15px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
+        fontFamily: "var(--font-family-base, system-ui, sans-serif)",
         fontWeight: "500",
         letterSpacing: "0.03em",
-        textShadow: "0 1px 4px rgba(0,0,0,0.6)",
+        textShadow: "0 1px 4px color-mix(in srgb, var(--color-canvas, #000) 60%, transparent)",
         padding: "12px 24px",
         background: "color-mix(in srgb, var(--xdh-color-surface-2, #333) 95%, transparent)",
         border: "1px solid var(--xdh-color-border, #2e2e2e)",

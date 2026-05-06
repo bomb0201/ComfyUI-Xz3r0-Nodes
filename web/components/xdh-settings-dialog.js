@@ -530,17 +530,17 @@ export class XdhSettingsDialog extends BaseElement {
                     position: fixed;
                     inset: 0;
                     z-index: 5000;
-                    background: rgba(0,0,0,0.6);
+                    background: var(--color-scrim);
                     display: flex;
                     align-items: center;
                     justify-content: center;
                 }
 
                 .dialog {
-                    background: var(--xdh-color-surface-1, #1a1a1a);
-                    border: 1px solid var(--xdh-color-border, #2e2e2e);
-                    border-radius: 12px;
-                    box-shadow: 0 12px 48px rgba(0,0,0,0.65);
+                    background: var(--xdh-color-surface-1);
+                    border: 1px solid var(--xdh-color-border);
+                    border-radius: var(--radius-md);
+                    box-shadow: var(--shadow-dialog);
                     width: 460px;
                     max-width: calc(100vw - 32px);
                     /* 面板高度接近全屏，保留 16px 上下边缘 */
@@ -554,76 +554,74 @@ export class XdhSettingsDialog extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    padding: 14px 18px 12px;
-                    border-bottom: 1px solid var(--xdh-color-border, #2e2e2e);
+                    padding: var(--space-md) var(--space-base) var(--space-md);
+                    border-bottom: 1px solid var(--xdh-color-border);
                     flex-shrink: 0;
                 }
 
                 .dialog-title {
-                    font-size: 14px;
-                    font-weight: 600;
-                    color: var(--xdh-color-text-primary, #f0f0f0);
+                    font: var(--font-button-sm);
+                    color: var(--xdh-color-text-primary);
                     display: flex;
                     align-items: center;
-                    gap: 8px;
+                    gap: var(--space-sm);
                 }
 
                 .btn-close-head {
                     background: transparent;
                     border: none;
-                    color: var(--xdh-color-text-secondary, #888);
+                    color: var(--xdh-color-text-secondary);
                     cursor: pointer;
-                    padding: 4px;
-                    border-radius: 6px;
+                    padding: var(--space-xs);
+                    border-radius: var(--radius-sm);
                     display: flex;
                     align-items: center;
                     transition: color 0.13s, background 0.13s;
                 }
                 .btn-close-head:hover {
-                    color: var(--xdh-color-text-primary, #f0f0f0);
-                    background: var(--xdh-color-hover, #2a2a2a);
+                    color: var(--xdh-color-text-primary);
+                    background: var(--xdh-color-hover);
                 }
 
                 /* 内容区域：flex 撑满剩余空间，纵向滚动 */
                 .dialog-body {
                     overflow-y: auto;
                     flex: 1;
-                    padding: 6px 0 12px;
+                    padding: var(--space-xs) 0 var(--space-md);
                 }
 
                 .loading-msg {
-                    padding: 32px;
+                    padding: var(--space-xl);
                     text-align: center;
-                    color: var(--xdh-color-text-secondary, #888);
+                    color: var(--xdh-color-text-secondary);
                     font-size: 13px;
                 }
 
                 .section {
-                    padding: 10px 18px 4px;
+                    padding: var(--space-md) var(--space-base) var(--space-xs);
                 }
 
                 .sect-title {
-                    font-size: 11px;
-                    font-weight: 600;
+                    font: var(--font-badge);
                     letter-spacing: 0.07em;
                     text-transform: uppercase;
-                    color: var(--xdh-color-text-secondary, #888);
-                    margin-bottom: 8px;
-                    padding-bottom: 5px;
-                    border-bottom: 1px solid var(--xdh-color-border, #2e2e2e);
+                    color: var(--xdh-color-text-secondary);
+                    margin-bottom: var(--space-sm);
+                    padding-bottom: var(--space-xs);
+                    border-bottom: 1px solid var(--xdh-color-border);
                 }
 
                 .row {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    padding: 7px 0;
-                    gap: 12px;
+                    padding: var(--space-sm) 0;
+                    gap: var(--space-md);
                 }
 
                 .row-label {
-                    font-size: 13px;
-                    color: var(--xdh-color-text-primary, #e8e8e8);
+                    font: var(--font-body-sm);
+                    color: var(--xdh-color-text-primary);
                     flex: 1;
                     min-width: 0;
                 }
@@ -651,9 +649,9 @@ export class XdhSettingsDialog extends BaseElement {
                 .track {
                     width: 36px;
                     height: 20px;
-                    background: var(--xdh-color-surface-2, #333);
-                    border-radius: 999px;
-                    border: 1px solid var(--xdh-color-border, #3a3a3a);
+                    background: var(--xdh-color-surface-2);
+                    border-radius: var(--radius-full);
+                    border: 1px solid var(--xdh-color-border);
                     transition: background 0.15s, border-color 0.15s;
                     position: relative;
                 }
@@ -661,18 +659,18 @@ export class XdhSettingsDialog extends BaseElement {
                     content: "";
                     position: absolute;
                     width: 14px; height: 14px;
-                    background: var(--xdh-color-text-secondary, #888);
+                    background: var(--xdh-color-text-secondary);
                     border-radius: 50%;
                     top: 2px; left: 2px;
                     transition: transform 0.15s, background 0.15s;
                 }
                 .toggle input:checked + .track {
-                    background: var(--xdh-brand-pink, #EA005E);
-                    border-color: var(--xdh-brand-pink, #EA005E);
+                    background: var(--color-primary);
+                    border-color: var(--color-primary);
                 }
                 .toggle input:checked + .track::after {
                     transform: translateX(16px);
-                    background: #fff;
+                    background: var(--color-on-primary);
                 }
                 .toggle.disabled {
                     opacity: 0.45;
@@ -684,48 +682,48 @@ export class XdhSettingsDialog extends BaseElement {
                     margin-top: -4px;
                 }
                 .ffmpeg-status-text {
-                    font-size: 11px;
+                    font: var(--font-badge);
                     opacity: 0.75;
                 }
                 .ffmpeg-status.is-available .ffmpeg-status-text {
-                    color: var(--xdh-color-text-secondary, #aaa);
+                    color: var(--xdh-color-text-secondary);
                 }
                 .ffmpeg-status.is-missing .ffmpeg-status-text {
-                    color: var(--xdh-brand-pink, #EA005E);
+                    color: var(--color-primary);
                     opacity: 0.9;
                 }
 
                 /* ── Select ── */
                 .select-input {
-                    background: var(--xdh-color-surface-2, #252525);
-                    border: 1px solid var(--xdh-color-border, #3a3a3a);
-                    color: var(--xdh-color-text-primary, #eee);
-                    border-radius: 6px;
-                    padding: 5px 9px;
-                    font-size: 12px;
+                    background: var(--xdh-color-surface-2);
+                    border: 1px solid var(--xdh-color-border);
+                    color: var(--xdh-color-text-primary);
+                    border-radius: var(--radius-sm);
+                    padding: var(--space-xs) var(--space-sm);
+                    font: var(--font-micro-label);
                     outline: none;
                     cursor: pointer;
                     transition: border-color 0.13s;
                 }
                 .select-input:focus {
-                    border-color: var(--xdh-brand-pink, #EA005E);
+                    border-color: var(--color-primary);
                 }
 
                 .text-input {
                     width: 152px;
                     max-width: min(36vw, 240px);
-                    background: var(--xdh-color-surface-2, #252525);
-                    border: 1px solid var(--xdh-color-border, #3a3a3a);
-                    color: var(--xdh-color-text-primary, #eee);
-                    border-radius: 6px;
-                    padding: 5px 9px;
-                    font-size: 12px;
+                    background: var(--xdh-color-surface-2);
+                    border: 1px solid var(--xdh-color-border);
+                    color: var(--xdh-color-text-primary);
+                    border-radius: var(--radius-sm);
+                    padding: var(--space-xs) var(--space-sm);
+                    font: var(--font-micro-label);
                     outline: none;
                     transition: border-color 0.13s;
                 }
 
                 .text-input:focus {
-                    border-color: var(--xdh-brand-pink, #EA005E);
+                    border-color: var(--color-primary);
                 }
 
                 /* ── Custom folder list ── */
@@ -733,30 +731,30 @@ export class XdhSettingsDialog extends BaseElement {
                     /* 最多显示约 3 条，超出内部滚动 */
                     max-height: 96px;
                     overflow-y: auto;
-                    margin-bottom: 8px;
+                    margin-bottom: var(--space-sm);
                     display: flex;
                     flex-direction: column;
-                    gap: 4px;
+                    gap: var(--space-xs);
                 }
                 .folder-empty {
-                    font-size: 12px;
-                    color: var(--xdh-color-text-secondary, #888);
-                    padding: 6px 0;
+                    font: var(--font-micro-label);
+                    color: var(--xdh-color-text-secondary);
+                    padding: var(--space-xs) 0;
                 }
                 .folder-tag {
                     display: flex;
                     align-items: center;
-                    gap: 6px;
-                    background: var(--xdh-color-surface-2, #252525);
-                    border: 1px solid var(--xdh-color-border, #3a3a3a);
-                    border-radius: 6px;
-                    padding: 5px 8px;
+                    gap: var(--space-xs);
+                    background: var(--xdh-color-surface-2);
+                    border: 1px solid var(--xdh-color-border);
+                    border-radius: var(--radius-sm);
+                    padding: var(--space-xs) var(--space-sm);
                 }
                 .folder-tag-text {
                     flex: 1;
                     min-width: 0;
-                    font-size: 12px;
-                    color: var(--xdh-color-text-primary, #eee);
+                    font: var(--font-micro-label);
+                    color: var(--xdh-color-text-primary);
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
@@ -764,120 +762,119 @@ export class XdhSettingsDialog extends BaseElement {
                 .folder-del {
                     background: transparent;
                     border: none;
-                    padding: 2px;
-                    border-radius: 4px;
+                    padding: var(--space-xxs);
+                    border-radius: var(--radius-xs);
                     cursor: pointer;
-                    color: var(--xdh-color-text-secondary, #888);
+                    color: var(--xdh-color-text-secondary);
                     display: flex;
                     align-items: center;
                     flex-shrink: 0;
                     transition: color 0.12s, background 0.12s;
                 }
                 .folder-del:hover {
-                    color: #e06060;
-                    background: rgba(224, 96, 96, 0.15);
+                    color: var(--color-error);
+                    background: color-mix(in srgb, var(--color-error) 15%, transparent);
                 }
 
                 .folder-add-row {
                     display: flex;
-                    gap: 6px;
+                    gap: var(--space-xs);
                     align-items: center;
                 }
                 .folder-input {
                     flex: 1;
                     min-width: 0;
-                    background: var(--xdh-color-surface-2, #252525);
-                    border: 1px solid var(--xdh-color-border, #3a3a3a);
-                    color: var(--xdh-color-text-primary, #eee);
-                    border-radius: 6px;
-                    padding: 5px 9px;
-                    font-size: 12px;
+                    background: var(--xdh-color-surface-2);
+                    border: 1px solid var(--xdh-color-border);
+                    color: var(--xdh-color-text-primary);
+                    border-radius: var(--radius-sm);
+                    padding: var(--space-xs) var(--space-sm);
+                    font: var(--font-micro-label);
                     outline: none;
                     transition: border-color 0.13s;
                 }
                 .folder-input:focus {
-                    border-color: var(--xdh-brand-pink, #EA005E);
+                    border-color: var(--color-primary);
                 }
                 .folder-add-btn {
                     flex-shrink: 0;
-                    background: var(--xdh-color-surface-2, #2e2e2e);
-                    border: 1px solid var(--xdh-color-border, #3a3a3a);
-                    color: var(--xdh-color-text-primary, #eee);
-                    border-radius: 6px;
-                    padding: 5px 12px;
-                    font-size: 12px;
+                    background: var(--xdh-color-surface-2);
+                    border: 1px solid var(--xdh-color-border);
+                    color: var(--xdh-color-text-primary);
+                    border-radius: var(--radius-sm);
+                    padding: var(--space-xs) var(--space-md);
+                    font: var(--font-micro-label);
                     cursor: pointer;
                     transition: background 0.13s, border-color 0.13s;
                     white-space: nowrap;
                 }
                 .folder-add-btn:hover {
-                    background: var(--xdh-color-hover, #333);
-                    border-color: var(--xdh-brand-pink, #EA005E);
-                    color: var(--xdh-brand-pink, #EA005E);
+                    background: var(--xdh-color-hover);
+                    border-color: var(--color-primary);
+                    color: var(--color-primary);
                 }
 
                 .confirm-overlay {
                     position: fixed;
                     inset: 0;
                     z-index: 5001;
-                    background: rgba(0,0,0,0.72);
+                    background: var(--color-scrim);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    padding: 16px;
+                    padding: var(--space-base);
                 }
 
                 .confirm-dialog {
                     width: min(460px, calc(100vw - 32px));
-                    background: var(--xdh-color-surface-1, #1a1a1a);
-                    border: 1px solid var(--xdh-color-border, #2e2e2e);
-                    border-radius: 12px;
-                    box-shadow: 0 12px 48px rgba(0,0,0,0.65);
-                    padding: 18px;
+                    background: var(--xdh-color-surface-1);
+                    border: 1px solid var(--xdh-color-border);
+                    border-radius: var(--radius-md);
+                    box-shadow: var(--shadow-dialog);
+                    padding: var(--space-base);
                     display: flex;
                     flex-direction: column;
-                    gap: 12px;
+                    gap: var(--space-md);
                 }
 
                 .confirm-title {
-                    font-size: 15px;
-                    font-weight: 600;
-                    color: var(--xdh-color-text-primary, #f0f0f0);
+                    font: var(--font-title-sm);
+                    color: var(--xdh-color-text-primary);
                 }
 
                 .confirm-message {
-                    font-size: 13px;
+                    font: var(--font-body-sm);
                     line-height: 1.6;
-                    color: var(--xdh-color-text-secondary, #b8b8b8);
+                    color: var(--xdh-color-text-secondary);
                 }
 
                 .confirm-path-list {
                     display: flex;
                     flex-direction: column;
-                    gap: 8px;
+                    gap: var(--space-sm);
                 }
 
                 .confirm-path-card {
-                    background: var(--xdh-color-surface-2, #252525);
-                    border: 1px solid var(--xdh-color-border, #3a3a3a);
-                    border-radius: 6px;
-                    padding: 8px 10px;
+                    background: var(--xdh-color-surface-2);
+                    border: 1px solid var(--xdh-color-border);
+                    border-radius: var(--radius-sm);
+                    padding: var(--space-sm) var(--space-md);
                     display: flex;
                     flex-direction: column;
-                    gap: 4px;
+                    gap: var(--space-xs);
                 }
 
                 .confirm-path-label {
-                    font-size: 11px;
-                    color: var(--xdh-color-text-secondary, #888);
+                    font: var(--font-badge);
+                    color: var(--xdh-color-text-secondary);
                     text-transform: uppercase;
                     letter-spacing: 0.05em;
                 }
 
                 .confirm-path-value {
-                    font-size: 12px;
+                    font: var(--font-micro-label);
                     line-height: 1.5;
-                    color: var(--xdh-color-text-primary, #eee);
+                    color: var(--xdh-color-text-primary);
                     word-break: break-all;
                 }
 
@@ -885,25 +882,24 @@ export class XdhSettingsDialog extends BaseElement {
                     display: flex;
                     justify-content: flex-end;
                     flex-wrap: wrap;
-                    gap: 8px;
+                    gap: var(--space-sm);
                 }
 
                 .confirm-btn {
-                    background: var(--xdh-color-surface-4, #505050);
-                    border: 1px solid var(--xdh-color-surface-4, #505050);
-                    color: var(--xdh-color-text-primary, #f0f0f0);
-                    border-radius: 6px;
-                    padding: 8px 12px;
-                    font-size: 12px;
-                    font-weight: 600;
+                    background: var(--xdh-color-surface-4);
+                    border: 1px solid var(--xdh-color-surface-4);
+                    color: var(--xdh-color-text-primary);
+                    border-radius: var(--radius-sm);
+                    padding: var(--space-sm) var(--space-md);
+                    font: var(--font-button-sm);
                     cursor: pointer;
                     transition: background 0.13s, border-color 0.13s,
                         color 0.13s;
                 }
 
                 .confirm-btn:hover:not(:disabled) {
-                    background: var(--xdh-color-surface-hover, #444444);
-                    border-color: var(--xdh-color-surface-hover, #444444);
+                    background: var(--xdh-color-surface-hover);
+                    border-color: var(--xdh-color-surface-hover);
                 }
 
                 .confirm-btn:disabled {
@@ -912,39 +908,39 @@ export class XdhSettingsDialog extends BaseElement {
                 }
 
                 .confirm-btn-primary {
-                    background: var(--xdh-color-success, #4caf50);
-                    border-color: var(--xdh-color-success, #4caf50);
-                    color: var(--xdh-pure-white, #ffffff);
+                    background: var(--xdh-color-success);
+                    border-color: var(--xdh-color-success);
+                    color: var(--xdh-pure-white);
                 }
 
                 .confirm-btn-primary:hover:not(:disabled) {
                     background: color-mix(
                         in srgb,
-                        var(--xdh-color-success, #4caf50) 84%,
+                        var(--xdh-color-success) 84%,
                         black 16%
                     );
                     border-color: color-mix(
                         in srgb,
-                        var(--xdh-color-success, #4caf50) 84%,
+                        var(--xdh-color-success) 84%,
                         black 16%
                     );
                 }
 
                 .confirm-btn-danger {
-                    background: var(--state-danger-bg-standard, #EA005E);
-                    border-color: var(--state-danger-bg-standard, #EA005E);
-                    color: var(--xdh-pure-white, #ffffff);
+                    background: var(--state-danger-bg-standard);
+                    border-color: var(--state-danger-bg-standard);
+                    color: var(--xdh-pure-white);
                 }
 
                 .confirm-btn-danger:hover:not(:disabled) {
                     background: color-mix(
                         in srgb,
-                        var(--state-danger-bg-standard, #EA005E) 84%,
+                        var(--state-danger-bg-standard) 84%,
                         black 16%
                     );
                     border-color: color-mix(
                         in srgb,
-                        var(--state-danger-bg-standard, #EA005E) 84%,
+                        var(--state-danger-bg-standard) 84%,
                         black 16%
                     );
                 }

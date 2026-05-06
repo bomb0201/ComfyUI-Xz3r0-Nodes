@@ -338,8 +338,8 @@ export class XdhLoraDetail extends BaseElement {
                     max-width: 100vw;
                     display: flex;
                     flex-direction: column;
-                    background: var(--xdh-color-surface-1, #333);
-                    border-left: 1px solid var(--xdh-color-border, #2e2e2e);
+                    background: var(--xdh-color-surface-1);
+                    border-left: 1px solid var(--xdh-color-border);
                     box-shadow: none;
                     transform: translateX(100%);
                     transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
@@ -353,20 +353,19 @@ export class XdhLoraDetail extends BaseElement {
                 .header {
                     flex-shrink: 0;
                     height: 44px;
-                    padding: 0 8px 0 14px;
+                    padding: 0 var(--space-sm) 0 var(--space-md);
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    border-bottom: 1px solid var(--xdh-color-border, #2e2e2e);
-                    background: var(--xdh-window-header-bg, #171718);
+                    border-bottom: 1px solid var(--xdh-color-border);
+                    background: var(--xdh-window-header-bg);
                 }
                 .title-wrap {
                     display: flex;
                     align-items: center;
-                    gap: 8px;
-                    color: var(--xdh-color-text-primary, #ddd);
-                    font-size: 13px;
-                    font-weight: 600;
+                    gap: var(--space-sm);
+                    color: var(--xdh-color-text-primary);
+                    font: var(--font-title-sm);
                     min-width: 0;
                 }
                 .title-text {
@@ -383,21 +382,21 @@ export class XdhLoraDetail extends BaseElement {
                     justify-content: center;
                     background: transparent;
                     border: none;
-                    border-radius: 5px;
-                    color: var(--xdh-color-text-secondary, #aaa);
+                    border-radius: var(--radius-xs);
+                    color: var(--xdh-color-text-secondary);
                     cursor: pointer;
                 }
                 .lb-close:hover {
-                    background: rgba(255,255,255,0.08);
-                    color: var(--xdh-color-text-primary, #ddd);
+                    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+                    color: var(--xdh-color-text-primary);
                 }
 
                 /* ── Preview area ────────────────────── */
                 .preview-area {
                     flex-shrink: 0;
                     height: 200px;
-                    background: #0e0e0e;
-                    border-bottom: 1px solid var(--xdh-color-border, #2e2e2e);
+                    background: var(--color-canvas);
+                    border-bottom: 1px solid var(--xdh-color-border);
                     position: relative;
                     display: flex;
                     align-items: center;
@@ -405,7 +404,7 @@ export class XdhLoraDetail extends BaseElement {
                     overflow: hidden;
                 }
                 .preview-empty {
-                    color: var(--xdh-color-text-secondary, #aaa);
+                    color: var(--xdh-color-text-secondary);
                     opacity: 0.2;
                     position: relative;
                     z-index: 1;
@@ -434,17 +433,17 @@ export class XdhLoraDetail extends BaseElement {
                 .form-scroll {
                     flex: 1;
                     overflow-y: auto;
-                    padding: 14px 16px;
+                    padding: var(--space-md) var(--space-base);
                     display: flex;
                     flex-direction: column;
-                    gap: 14px;
+                    gap: var(--space-md);
                 }
 
                 /* ── Strength row ────────────────────── */
                 .strength-row {
                     display: flex;
                     align-items: flex-end;
-                    gap: 6px;
+                    gap: var(--space-xs);
                 }
                 .strength-row .field-group { flex: 1; min-width: 0; }
 
@@ -452,30 +451,29 @@ export class XdhLoraDetail extends BaseElement {
                 .field-group {
                     display: flex;
                     flex-direction: column;
-                    gap: 5px;
+                    gap: var(--space-xs);
                 }
                 label {
-                    font-size: 10px;
-                    font-weight: 600;
-                    color: var(--xdh-color-text-secondary, #666);
+                    font: var(--font-micro-label);
+                    color: var(--xdh-color-text-secondary);
                     text-transform: uppercase;
                     letter-spacing: 0.06em;
                 }
                 input[type="number"], textarea {
-                    background: var(--xdh-input-bg, #222);
-                    border: 1px solid var(--border-standard, #555);
-                    border-radius: 6px;
-                    color: var(--xdh-color-text-primary, #ddd);
+                    background: var(--xdh-input-bg);
+                    border: 1px solid var(--border-standard);
+                    border-radius: var(--radius-sm);
+                    color: var(--xdh-color-text-primary);
                     font-family: inherit;
                     font-size: 13px;
-                    padding: 7px 10px;
+                    padding: var(--space-sm) var(--space-md);
                     width: 100%;
                     box-sizing: border-box;
                     transition: border-color 0.12s;
                 }
                 input[type="number"]:focus, textarea:focus {
                     outline: none;
-                    border-color: var(--xdh-brand-pink, #EA005E);
+                    border-color: var(--color-primary);
                 }
                 input[type="number"]:disabled {
                     opacity: 0.35;
@@ -494,19 +492,19 @@ export class XdhLoraDetail extends BaseElement {
                     align-items: center;
                     justify-content: center;
                     background: transparent;
-                    border: 1px solid var(--border-standard, #555);
-                    border-radius: 6px;
-                    color: var(--xdh-color-text-secondary, #666);
+                    border: 1px solid var(--border-standard);
+                    border-radius: var(--radius-sm);
+                    color: var(--xdh-color-text-secondary);
                     cursor: pointer;
                     margin-bottom: 1px;
                 }
                 .link-btn:hover {
-                    border-color: var(--border-hover, #EA005E);
-                    color: var(--xdh-color-text-primary, #ddd);
+                    border-color: var(--border-hover);
+                    color: var(--xdh-color-text-primary);
                 }
                 .link-btn.linked {
-                    color: var(--xdh-brand-pink, #EA005E);
-                    border-color: var(--xdh-brand-pink, #EA005E);
+                    color: var(--color-primary);
+                    border-color: var(--color-primary);
                 }
 
                 /* ── Trigger words ───────────────────── */
@@ -514,7 +512,7 @@ export class XdhLoraDetail extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    gap: 8px;
+                    gap: var(--space-sm);
                     flex-wrap: nowrap;
                 }
                 .tw-label-row label {
@@ -525,12 +523,12 @@ export class XdhLoraDetail extends BaseElement {
                     flex-shrink: 0;
                     display: inline-flex;
                     align-items: center;
-                    gap: 4px;
-                    padding: 3px 8px;
+                    gap: var(--space-xs);
+                    padding: var(--space-xxs) var(--space-sm);
                     background: transparent;
-                    border: 1px solid var(--border-standard, #555);
-                    border-radius: 5px;
-                    color: var(--xdh-color-text-secondary, #666);
+                    border: 1px solid var(--border-standard);
+                    border-radius: var(--radius-xs);
+                    color: var(--xdh-color-text-secondary);
                     font-size: 10px;
                     letter-spacing: 0.03em;
                     cursor: pointer;
@@ -538,8 +536,8 @@ export class XdhLoraDetail extends BaseElement {
                     font-family: inherit;
                 }
                 .import-meta-btn:hover {
-                    border-color: var(--border-hover, #EA005E);
-                    color: var(--xdh-color-text-primary, #ddd);
+                    border-color: var(--border-hover);
+                    color: var(--xdh-color-text-primary);
                 }
                 .import-meta-btn.loading {
                     opacity: 0.4;
@@ -550,38 +548,37 @@ export class XdhLoraDetail extends BaseElement {
                 .footer-bar {
                     flex-shrink: 0;
                     height: 52px;
-                    padding: 0 14px;
+                    padding: 0 var(--space-md);
                     display: flex;
                     align-items: center;
                     justify-content: flex-end;
-                    gap: 8px;
-                    border-top: 1px solid var(--xdh-color-border, #2e2e2e);
-                    background: var(--xdh-window-header-bg, #171718);
+                    gap: var(--space-sm);
+                    border-top: 1px solid var(--xdh-color-border);
+                    background: var(--xdh-window-header-bg);
                 }
                 button {
                     display: inline-flex;
                     align-items: center;
-                    gap: 6px;
-                    padding: 7px 14px;
-                    border-radius: 6px;
-                    font-size: 13px;
-                    font-weight: 500;
+                    gap: var(--space-xs);
+                    padding: var(--space-sm) var(--space-md);
+                    border-radius: var(--radius-sm);
+                    font: var(--font-button-sm);
                     cursor: pointer;
                     font-family: inherit;
                 }
                 .cancel-btn {
                     background: transparent;
-                    border: 1px solid var(--border-standard, #555);
-                    color: var(--xdh-color-text-secondary, #aaa);
+                    border: 1px solid var(--border-standard);
+                    color: var(--xdh-color-text-secondary);
                 }
                 .cancel-btn:hover {
-                    border-color: var(--border-hover, #EA005E);
-                    color: var(--xdh-color-text-primary, #ddd);
+                    border-color: var(--border-hover);
+                    color: var(--xdh-color-text-primary);
                 }
                 .save-btn {
-                    background: var(--xdh-brand-pink, #EA005E);
+                    background: var(--color-primary);
                     border: none;
-                    color: #fff;
+                    color: var(--color-on-primary);
                 }
                 .save-btn:hover { filter: brightness(1.12); }
                 .save-btn.loading { opacity: 0.55; pointer-events: none; }
@@ -592,8 +589,8 @@ export class XdhLoraDetail extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 10px;
-                    color: var(--xdh-color-text-secondary, #666);
+                    gap: var(--space-md);
+                    color: var(--xdh-color-text-secondary);
                     font-size: 13px;
                 }
             </style>

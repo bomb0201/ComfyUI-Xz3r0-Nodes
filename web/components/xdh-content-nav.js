@@ -515,8 +515,8 @@ export class XdhContentNav extends BaseElement {
                     display: grid;
                     grid-template-columns: 48px minmax(0, 1fr);
                     grid-template-rows: auto auto;
-                    background: var(--xdh-color-surface-1, #1a1a1a);
-                    border-bottom: 1px solid var(--xdh-color-border, #2e2e2e);
+                    background: var(--xdh-color-surface-1);
+                    border-bottom: 1px solid var(--xdh-color-border);
                     position: relative;
                 }
 
@@ -524,8 +524,8 @@ export class XdhContentNav extends BaseElement {
                 .nav-row {
                     display: flex;
                     align-items: center;
-                    gap: 4px;
-                    padding: 3px 8px;
+                    gap: var(--space-xs);
+                    padding: 3px var(--space-sm);
                     container-type: inline-size;
                     container-name: nav;
                     min-width: 0;
@@ -533,7 +533,7 @@ export class XdhContentNav extends BaseElement {
                 .nav-row-path  {
                     grid-column: 2;
                     grid-row: 1;
-                    border-bottom: 1px solid var(--xdh-color-border, #2e2e2e);
+                    border-bottom: 1px solid var(--xdh-color-border);
                     min-height: 32px;
                     overflow: hidden;
                 }
@@ -558,18 +558,18 @@ export class XdhContentNav extends BaseElement {
                     flex-direction: column;
                     align-items: center;
                     justify-content: center;
-                    border-right: 1px solid var(--xdh-color-border, #2e2e2e);
+                    border-right: 1px solid var(--xdh-color-border);
                     box-sizing: border-box;
                     flex-shrink: 0;
-                    gap: 4px;
-                    padding: 5px 3px 6px;
+                    gap: var(--space-xs);
+                    padding: var(--space-xs) 3px 6px;
                     background:
                         linear-gradient(180deg,
-                            color-mix(in srgb, var(--xdh-color-surface-2, #3a3a3a) 42%, transparent),
+                            color-mix(in srgb, var(--xdh-color-surface-2) 42%, transparent),
                             transparent 90%);
                     box-shadow:
-                        inset 0 1px 0 color-mix(in srgb, var(--xdh-color-text-primary, #eeeeee) 6%, transparent),
-                        inset -1px 0 0 color-mix(in srgb, var(--xdh-color-surface-4, #505050) 22%, transparent);
+                        inset 0 1px 0 color-mix(in srgb, var(--xdh-color-text-primary) 6%, transparent),
+                        inset -1px 0 0 color-mix(in srgb, var(--xdh-color-surface-4) 22%, transparent);
                     cursor: pointer;
                     transition: background 0.16s ease;
                     outline: none;
@@ -578,21 +578,21 @@ export class XdhContentNav extends BaseElement {
                 .status-wrap.open .status-panel {
                     background:
                         linear-gradient(180deg,
-                            color-mix(in srgb, var(--xdh-color-surface-2, #3a3a3a) 56%, transparent),
-                            color-mix(in srgb, var(--xdh-color-surface-2, #3a3a3a) 16%, transparent));
+                            color-mix(in srgb, var(--xdh-color-surface-2) 56%, transparent),
+                            color-mix(in srgb, var(--xdh-color-surface-2) 16%, transparent));
                 }
                 .status-panel:focus-visible {
                     box-shadow:
-                        inset 0 1px 0 color-mix(in srgb, var(--xdh-color-text-primary, #eeeeee) 6%, transparent),
-                        inset -1px 0 0 color-mix(in srgb, var(--xdh-color-surface-4, #505050) 22%, transparent),
-                        inset 0 0 0 1px color-mix(in srgb, var(--xdh-color-primary, #ff4f87) 50%, transparent);
+                        inset 0 1px 0 color-mix(in srgb, var(--xdh-color-text-primary) 6%, transparent),
+                        inset -1px 0 0 color-mix(in srgb, var(--xdh-color-surface-4) 22%, transparent),
+                        inset 0 0 0 1px color-mix(in srgb, var(--xdh-color-primary) 50%, transparent);
                 }
                 .nav-status {
                     width: 11px;
                     height: 11px;
-                    border-radius: 999px;
-                    background: var(--xdh-color-success, #4caf50);
-                    box-shadow: 0 0 0 2px var(--xdh-color-surface-1, #333333);
+                    border-radius: var(--radius-full);
+                    background: var(--xdh-color-success);
+                    box-shadow: 0 0 0 2px var(--xdh-color-surface-1);
                     position: relative;
                     flex-shrink: 0;
                 }
@@ -605,20 +605,20 @@ export class XdhContentNav extends BaseElement {
                     transition: opacity 0.18s ease;
                 }
                 .nav-status[data-state="idle"] {
-                    background: var(--xdh-color-success, #4caf50);
-                    color: var(--xdh-color-success, #4caf50);
+                    background: var(--xdh-color-success);
+                    color: var(--xdh-color-success);
                 }
                 .nav-status[data-state="running"] {
-                    background: var(--xdh-color-primary, #ff4f87);
-                    color: var(--xdh-color-primary, #ff4f87);
+                    background: var(--xdh-color-primary);
+                    color: var(--xdh-color-primary);
                 }
                 .nav-status[data-state="queued"] {
-                    background: var(--db-palette-11, #ffbf00);
-                    color: var(--db-palette-11, #ffbf00);
+                    background: var(--db-palette-11);
+                    color: var(--db-palette-11);
                 }
                 .nav-status[data-state="stopping"] {
-                    background: var(--db-palette-09, #d90429);
-                    color: var(--db-palette-09, #d90429);
+                    background: var(--db-palette-09);
+                    color: var(--db-palette-09);
                 }
                 .nav-status[data-busy="true"]::after {
                     opacity: 1;
@@ -634,54 +634,52 @@ export class XdhContentNav extends BaseElement {
                 button {
                     background: transparent;
                     border: 1px solid transparent;
-                    color: var(--xdh-color-text-secondary, #888);
-                    border-radius: 6px;
+                    color: var(--xdh-color-text-secondary);
+                    border-radius: var(--radius-sm);
                     cursor: pointer;
                     height: 28px;
-                    padding: 0 8px;
-                    font-size: 12px;
-                    line-height: 1;
+                    padding: 0 var(--space-sm);
+                    font: var(--font-micro-label);
                     white-space: nowrap;
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 4px;
+                    gap: var(--space-xs);
                     box-sizing: border-box;
                     transition: background 0.14s, color 0.14s;
                     flex-shrink: 0;
                 }
-                button:hover { background: var(--xdh-color-hover, #2a2a2a); color: var(--xdh-color-text-primary, #eee); }
+                button:hover { background: var(--xdh-color-hover); color: var(--xdh-color-text-primary); }
                 button:disabled { opacity: 0.3; cursor: not-allowed; }
                 button.active {
-                    background-color: var(--xdh-color-primary-muted, #1a3050);
-                    color: var(--xdh-color-primary, #4499ff);
-                    border-color: var(--xdh-color-primary, #4499ff);
+                    background-color: var(--xdh-color-primary-muted);
+                    color: var(--xdh-color-primary);
+                    border-color: var(--xdh-color-primary);
                 }
 
                 .nav-arrow { font-size: 14px; width: 28px; padding: 0; }
 
                 /* ── Row 1: Breadcrumb ── */
                 .breadcrumb {
-                    display: flex; align-items: center; gap: 6px;
-                    font-size: 13px; flex: 1; min-width: 0; overflow: hidden;
-                    background: var(--xdh-color-surface-2, #252525);
-                    padding: 4px 10px;
-                    border-radius: 6px;
-                    border: 1px solid var(--xdh-color-border, #333);
+                    display: flex; align-items: center; gap: var(--space-sm);
+                    flex: 1; min-width: 0; overflow: hidden;
+                    background: var(--xdh-color-surface-2);
+                    padding: 4px var(--space-sm);
+                    border-radius: var(--radius-sm);
+                    border: 1px solid var(--xdh-color-border);
+                    font: var(--font-body-sm);
                 }
                 .bc-icon  { flex-shrink: 0; display: flex; align-items: center; }
-                .bc-label { font-weight: 600; color: var(--xdh-color-text-primary, #eee); white-space: nowrap; }
-                .bc-sep   { color: var(--xdh-color-text-secondary, #555); flex-shrink: 0; }
+                .bc-label { font-weight: 600; color: var(--xdh-color-text-primary); white-space: nowrap; }
+                .bc-sep   { color: var(--xdh-color-text-secondary); flex-shrink: 0; }
                 .bc-folder {
-                    color: var(--xdh-color-text-secondary, #999);
+                    color: var(--xdh-color-text-secondary);
                     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
                 }
                 .status-text {
                     display: block;
-                    font-size: 7.5px;
-                    line-height: 1;
-                    color: var(--xdh-color-text-secondary, #999);
-                    font-weight: 700;
+                    font: var(--font-uppercase-tag);
+                    color: var(--xdh-color-text-secondary);
                     letter-spacing: 0.02em;
                     text-align: center;
                     white-space: nowrap;
@@ -694,11 +692,11 @@ export class XdhContentNav extends BaseElement {
                     top: 6px;
                     left: calc(100% + 8px);
                     width: 168px;
-                    padding: 10px 10px 9px;
-                    border: 1px solid var(--xdh-color-border, #2e2e2e);
-                    border-radius: 10px;
-                    background: color-mix(in srgb, var(--xdh-color-surface-1, #1a1a1a) 82%, black 18%);
-                    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.42);
+                    padding: 10px var(--space-sm) 9px;
+                    border: 1px solid var(--xdh-color-border);
+                    border-radius: var(--radius-md);
+                    background: var(--xdh-color-surface-2);
+                    box-shadow: var(--shadow-dialog);
                     display: none;
                 }
                 .status-popover.open {
@@ -712,41 +710,40 @@ export class XdhContentNav extends BaseElement {
                     width: 10px;
                     height: 10px;
                     background: inherit;
-                    border-left: 1px solid var(--xdh-color-border, #2e2e2e);
-                    border-bottom: 1px solid var(--xdh-color-border, #2e2e2e);
+                    border-left: 1px solid var(--xdh-color-border);
+                    border-bottom: 1px solid var(--xdh-color-border);
                     transform: rotate(45deg);
                 }
                 .status-popover-head {
                     display: flex;
                     align-items: center;
-                    gap: 8px;
+                    gap: var(--space-sm);
                     margin-bottom: 9px;
-                    padding-bottom: 8px;
-                    border-bottom: 1px solid color-mix(in srgb, var(--xdh-color-border, #2e2e2e) 80%, transparent);
+                    padding-bottom: var(--space-sm);
+                    border-bottom: 1px solid color-mix(in srgb, var(--xdh-color-border) 80%, transparent);
                 }
                 .status-popover-dot {
                     width: 9px;
                     height: 9px;
-                    border-radius: 999px;
+                    border-radius: var(--radius-full);
                     background: currentColor;
                     flex-shrink: 0;
                 }
                 .status-popover-head[data-state="idle"] {
-                    color: var(--xdh-color-success, #4caf50);
+                    color: var(--xdh-color-success);
                 }
                 .status-popover-head[data-state="running"] {
-                    color: var(--xdh-color-primary, #ff4f87);
+                    color: var(--xdh-color-primary);
                 }
                 .status-popover-head[data-state="queued"] {
-                    color: var(--db-palette-11, #ffbf00);
+                    color: var(--db-palette-11);
                 }
                 .status-popover-head[data-state="stopping"] {
-                    color: var(--db-palette-09, #d90429);
+                    color: var(--db-palette-09);
                 }
                 .status-popover-title {
-                    font-size: 12px;
-                    font-weight: 700;
-                    color: var(--xdh-color-text-primary, #eeeeee);
+                    font: var(--font-micro-label);
+                    color: var(--xdh-color-text-primary);
                     min-width: 0;
                 }
                 .status-grid {
@@ -757,18 +754,17 @@ export class XdhContentNav extends BaseElement {
                     align-items: center;
                 }
                 .status-key {
-                    font-size: 11px;
-                    color: var(--xdh-color-text-secondary, #999999);
+                    font: var(--font-badge);
+                    color: var(--xdh-color-text-secondary);
                 }
                 .status-val {
-                    font-size: 11px;
-                    font-weight: 600;
-                    color: var(--xdh-color-text-primary, #eeeeee);
+                    font: 600 11px/1.18 var(--font-family-base);
+                    color: var(--xdh-color-text-primary);
                     text-align: right;
                 }
 
                 /* ── Row 2: Tools ── */
-                .divider { width: 1px; height: 14px; background: var(--xdh-color-border, #333); margin: 0 2px; flex-shrink: 0; }
+                .divider { width: 1px; height: 14px; background: var(--xdh-color-border); margin: 0 var(--space-xxs); flex-shrink: 0; }
 
                 .search-wrap {
                     position: relative;
@@ -783,12 +779,12 @@ export class XdhContentNav extends BaseElement {
                     min-width: 230px;
                     display: flex;
                     align-items: center;
-                    gap: 6px;
-                    padding: 6px;
-                    border: 1px solid var(--xdh-color-border, #333);
-                    border-radius: 8px;
-                    background: var(--xdh-color-surface-2, #252525);
-                    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.42);
+                    gap: var(--space-sm);
+                    padding: var(--space-sm);
+                    border: 1px solid var(--xdh-color-border);
+                    border-radius: var(--radius-sm);
+                    background: var(--xdh-color-surface-2);
+                    box-shadow: var(--shadow-dialog);
                     opacity: 0;
                     pointer-events: none;
                     transform: translateY(-4px);
@@ -805,22 +801,22 @@ export class XdhContentNav extends BaseElement {
                     flex: 1;
                     min-width: 0;
                     height: 28px;
-                    padding: 0 10px;
-                    border: 1px solid var(--xdh-color-border, #444);
-                    background: var(--xdh-color-surface-1, #1a1a1a);
-                    color: var(--xdh-color-text-primary, #eee);
-                    border-radius: 6px;
-                    font-size: 12px;
+                    padding: 0 var(--space-sm);
+                    border: 1px solid var(--xdh-color-border);
+                    background: var(--xdh-color-surface-1);
+                    color: var(--xdh-color-text-primary);
+                    border-radius: var(--radius-sm);
+                    font: var(--font-micro-label);
                     outline: none;
                     transition: border-color 0.15s ease;
                 }
                 .search-input:focus {
-                    border-color: var(--xdh-color-primary, #4499ff);
+                    border-color: var(--xdh-color-primary);
                 }
                 .search-clear-btn {
                     width: 28px;
                     padding: 0;
-                    border: 1px solid var(--xdh-color-border, #333);
+                    border: 1px solid var(--xdh-color-border);
                 }
                 .search-clear-btn:disabled {
                     opacity: 0.32;
@@ -842,19 +838,20 @@ export class XdhContentNav extends BaseElement {
                 .global-more-wrap { position: relative; }
                 .global-drawer {
                     display: none; position: absolute; right: 0; top: calc(100% + 4px);
-                    background: var(--xdh-color-surface-2, #1e1e1e);
-                    border: 1px solid var(--xdh-color-border, #333);
-                    border-radius: 8px; min-width: 170px; z-index: 200; padding: 4px 0;
-                    box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+                    background: var(--xdh-color-surface-2);
+                    border: 1px solid var(--xdh-color-border);
+                    border-radius: var(--radius-sm); min-width: 170px; z-index: 200; padding: var(--space-xs) 0;
+                    box-shadow: var(--shadow-popup);
                 }
                 .global-drawer.open { display: block; }
                 .drawer-item {
                     padding: 9px 14px; font-size: 13px;
-                    color: var(--xdh-color-text-primary, #eee);
+                    color: var(--xdh-color-text-primary);
                     cursor: pointer; white-space: nowrap; transition: background 0.12s;
                 }
-                .drawer-item:hover { background: var(--xdh-color-hover, #2a2a2a); }
-                .drawer-sep { height: 1px; background: var(--xdh-color-border, #333); margin: 3px 0; }
+                .drawer-item:hover { background: var(--xdh-color-hover); }
+                .drawer-item:active { background: var(--xdh-color-surface-4); }
+                .drawer-sep { height: 1px; background: var(--xdh-color-border); margin: 3px 0; }
                 .drawer-item.danger { color: #e06060; }
                 .drawer-item.danger:hover { background: rgba(200,60,60,0.15); }
 

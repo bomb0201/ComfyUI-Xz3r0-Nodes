@@ -1,48 +1,193 @@
 /*
- * XDataHub Color Tokens (Minimal)
- * ==================================
- * 核心层：3 档中性色 + 品牌粉
- * 语义层：仅保留当前 UI 实际使用 token
+ * XDataHub Color Tokens (Airbnb Design)
+ * ==========================================
+ * 设计源: .agents/设计文档/Airbnb/DESIGN-airbnb.md
+ *
+ * 命名空间说明：
+ *   --color-*     Airbnb 调色板（品牌/表面/文本/边框/语义）
+ *   --font-*      排版层（Inter Variable 字体）
+ *   --radius-*    圆角刻度
+ *   --space-*     间距刻度（4px 网格）
+ *   --shadow-*    阴影层级
+ *   --xdh-*       V1/V2 兼容别名（映射至新 token）
  */
+
+/* ── Inter Variable Font ─────────────────────────── */
+@font-face {
+    font-family: 'Inter';
+    src: url('/extensions/ComfyUI-Xz3r0-Nodes/fonts/web/InterVariable.woff2')
+        format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: normal;
+}
 
 :root,
 body[data-theme="dark"],
 body:not([data-theme]) {
-    /* Core */
-    --xdh-brand-pink: #EA005E;
-    --xdh-neutral-base: #353535;
-    --xdh-neutral-surface: #353535;
-    --xdh-neutral-text: #dddddd;
-    --xdh-icon-color: #dddddd;
-    --xdh-pure-white: #ffffff;
-    --xdh-pure-black: #111111;
+    /* ============================================ */
+    /*  Color Palette (Dark)                        */
+    /* ============================================ */
+    /* Brand & Accent (same as light) */
+    --color-primary:         #ff385c;
+    --color-primary-active:  #e00b41;
+    --color-primary-disabled:#ffd1da;
+    --color-on-primary:      #ffffff;
+    --color-luxe:            #460479;
+    --color-plus:            #92174d;
+
+    /* Surface */
+    --color-canvas:         #0c0c0e;
+    --color-surface-soft:   #161618;
+    --color-surface-card:   #161618;
+    --color-surface-strong: #1d1d20;
+
+    /* Text */
+    --color-ink:        #ffffff;
+    --color-body:       rgba(255,255,255,0.85);
+    --color-muted:      rgba(255,255,255,0.6);
+    --color-muted-soft: rgba(255,255,255,0.4);
+    --color-star-rating:#ffffff;
+
+    /* Hairlines & Borders */
+    --color-hairline:       rgba(255,255,255,0.12);
+    --color-hairline-soft:  rgba(255,255,255,0.06);
+    --color-border-strong:  rgba(255,255,255,0.22);
 
     /* Semantic */
-    --theme-bg-main: #353535;
-    --bg: #353535;
-    --bg-panel: #353535;
-    --surface-input: #222222;
-    --xdh-input-bg: #222222;
+    --color-error:       #c13515;
+    --color-error-hover: #e04a20;
+    --color-legal-link:  #428bff;
 
-    --text-standard: var(--xdh-neutral-text);
-    --text-emphasis: var(--xdh-neutral-text);
-    --text-active: var(--xdh-neutral-text);
+    /* Scrim */
+    --color-scrim: rgba(0,0,0,0.7);
 
-    --border-standard: #666666;
-    --border-hover: var(--xdh-brand-pink);
-    --border-active: #666666;
+    /* ============================================ */
+    /*  Typography (theme-agnostic)                 */
+    /* ============================================ */
+    --font-family-base: 'Inter', 'Airbnb Cereal VF', Circular,
+        -apple-system, system-ui, Roboto, 'Helvetica Neue', sans-serif;
 
-    --btn-active-color: var(--xdh-brand-pink);
-    --hover-accent-bg: #EA005E33; /* 主题粉色 20% */
-    --active-highlight-bg: #ffffff14;
-    --btn-hover-glow-soft: 0 0 0 1px var(--btn-active-color);
-    --btn-hover-glow: 0 0 0 1px var(--btn-active-color),
+    --font-display-xl: 700 28px/1.43 var(--font-family-base);
+    --ls-display-xl: 0;
+    --font-display-lg: 500 22px/1.18 var(--font-family-base);
+    --ls-display-lg: -0.44px;
+    --font-display-md: 700 21px/1.43 var(--font-family-base);
+    --ls-display-md: 0;
+    --font-display-sm: 600 20px/1.20 var(--font-family-base);
+    --ls-display-sm: -0.18px;
+
+    --font-title-md: 600 16px/1.25 var(--font-family-base);
+    --ls-title-md: 0;
+    --font-title-sm: 500 16px/1.25 var(--font-family-base);
+    --ls-title-sm: 0;
+
+    --font-body-md: 400 16px/1.5 var(--font-family-base);
+    --ls-body-md: 0;
+    --font-body-sm: 400 14px/1.43 var(--font-family-base);
+    --ls-body-sm: 0;
+
+    --font-caption: 500 14px/1.29 var(--font-family-base);
+    --ls-caption: 0;
+    --font-caption-sm: 400 13px/1.23 var(--font-family-base);
+    --ls-caption-sm: 0;
+
+    --font-badge: 600 11px/1.18 var(--font-family-base);
+    --ls-badge: 0;
+    --font-micro-label: 700 12px/1.33 var(--font-family-base);
+    --ls-micro-label: 0;
+    --font-uppercase-tag: 700 8px/1.25 var(--font-family-base);
+    --ls-uppercase-tag: 0.32px;
+    --text-transform-uppercase-tag: uppercase;
+
+    --font-button-md: 500 16px/1.25 var(--font-family-base);
+    --ls-button-md: 0;
+    --font-button-sm: 500 14px/1.29 var(--font-family-base);
+    --ls-button-sm: 0;
+
+    --font-link: 400 14px/1.43 var(--font-family-base);
+    --ls-link: 0;
+    --font-nav-link: 600 16px/1.25 var(--font-family-base);
+    --ls-nav-link: 0;
+
+    --font-rating-display: 700 64px/1.1 var(--font-family-base);
+    --ls-rating-display: -1px;
+
+    /* ============================================ */
+    /*  Spacing (4px grid)                          */
+    /* ============================================ */
+    --space-xxs:    2px;
+    --space-xs:     4px;
+    --space-sm:     8px;
+    --space-md:     12px;
+    --space-base:   16px;
+    --space-lg:     24px;
+    --space-xl:     32px;
+    --space-xxl:    48px;
+    --space-section:64px;
+
+    /* ============================================ */
+    /*  Rounded Corners                             */
+    /* ============================================ */
+    --radius-none:  0px;
+    --radius-xs:    4px;
+    --radius-sm:    8px;
+    --radius-md:    14px;
+    --radius-lg:    20px;
+    --radius-xl:    32px;
+    --radius-full:  9999px;
+
+    /* ============================================ */
+    /*  Elevation / Shadows                         */
+    /* ============================================ */
+    --shadow-default: rgba(0,0,0,0.02) 0 0 0 1px,
+                      rgba(0,0,0,0.04) 0 2px 6px,
+                      rgba(0,0,0,0.1)  0 4px 8px;
+    --shadow-popup:  0 8px 24px  rgba(0,0,0,0.15);
+    --shadow-dialog: 0 12px 28px rgba(0,0,0,0.20);
+    --shadow-window: 0 10px 22px rgba(0,0,0,0.50);
+
+    /* ============================================ */
+    /*  Legacy Aliases (V1/V2 Compatibility)        */
+    /* ============================================ */
+    --xdh-brand-pink:        var(--color-primary);
+    --xdh-neutral-base:      var(--color-surface-soft);
+    --xdh-neutral-surface:   var(--color-surface-soft);
+    --xdh-neutral-text:      var(--color-ink);
+    --xdh-icon-color:        var(--color-ink);
+    --xdh-pure-white:        #ffffff;
+    --xdh-pure-black:        #111111;
+
+    --theme-bg-main:         var(--color-canvas);
+    --bg:                    var(--color-canvas);
+    --bg-panel:              var(--color-surface-card);
+    --surface-input:         var(--color-surface-soft);
+    --xdh-input-bg:          var(--color-surface-soft);
+
+    --text-standard:         var(--color-ink);
+    --text-emphasis:         var(--color-ink);
+    --text-active:           var(--color-primary);
+    --text-secondary:        var(--color-body);
+    --text-muted:            var(--color-muted);
+    --text-disabled:         var(--color-muted-soft);
+
+    --border-standard:       var(--color-hairline);
+    --border-hover:          var(--color-primary);
+    --border-active:         var(--color-primary);
+    --border-light:          var(--color-hairline-soft);
+    --border-strong:         var(--color-border-strong);
+
+    --btn-active-color:      var(--color-primary);
+    --hover-accent-bg:       var(--color-surface-soft);
+    --active-highlight-bg:   rgba(255,255,255,0.06);
+    --btn-hover-glow-soft:   0 0 0 1px var(--btn-active-color);
+    --btn-hover-glow:        0 0 0 1px var(--btn-active-color),
         0 0 10px var(--btn-active-color);
     --btn-hover-glow-strong: var(--btn-hover-glow);
-    --btn-press-glow-inset: inset 0 0 0 1px var(--btn-active-color);
-    --xdh-window-shadow: 0 10px 22px rgba(0, 0, 0, 0.7);
+    --btn-press-glow-inset:  inset 0 0 0 1px var(--btn-active-color);
+    --xdh-window-shadow:     var(--shadow-window);
 
-    --state-danger-text-standard: var(--text-active);
+    --state-danger-text-standard: var(--text-standard);
     --state-danger-border-standard: var(--border-standard);
     --state-danger-bg-standard: var(--btn-active-color);
     --state-danger-bg-hover: var(--hover-accent-bg);
@@ -50,55 +195,49 @@ body:not([data-theme]) {
     --state-warn-text-standard: var(--db-palette-02);
     --state-warn-border-standard: var(--db-palette-02);
     --state-warn-bg-standard: color-mix(
-        in srgb,
-        var(--db-palette-02) 14%,
-        transparent
+        in srgb, var(--db-palette-02) 14%, transparent
     );
     --state-warn-bg-hover: color-mix(
-        in srgb,
-        var(--db-palette-02) 22%,
-        transparent
+        in srgb, var(--db-palette-02) 22%, transparent
     );
     --db-critical-border: var(--db-palette-04);
     --db-critical-bg-hover: #FFBF0033;
 
-    --overlay-dialog: rgba(0, 0, 0, 0.01); /* 弹窗外背景近乎透明 */
+    --overlay-dialog: rgba(0,0,0,0.01);
 
     --scrollbar-size: 12px;
-    --scrollbar-track: var(--xdh-neutral-surface);
-    --scrollbar-thumb: #666666;
-    --scrollbar-thumb-hover: var(--btn-active-color);
-    --scrollbar-thumb-active: var(--btn-active-color);
+    --scrollbar-track: var(--color-surface-soft);
+    --scrollbar-thumb: var(--color-border-strong);
+    --scrollbar-thumb-hover: var(--color-primary);
+    --scrollbar-thumb-active: var(--color-primary);
     --scrollbar-corner: transparent;
 
     --shadow-none: none;
     --xdh-window-tab-blur: 0px;
-    --xdh-window-header-bg: #171718;
-    --xdh-tab-strip-bg: #333333;
-    --xdh-tab-strip-divider: #666666;
-    --xdh-history-content-bg: var(--xdh-input-bg);
-    --xdh-history-content-border: #666666;
-    --xdh-history-row-active-border: var(--xdh-brand-pink);
-    --xdh-lightbox-title-bg: transparent;
-    --xdh-lightbox-title-border: var(--border-standard);
-    --xdh-history-content-text: var(--text-standard);
-    --xdh-history-content-icon-filter: brightness(0) saturate(100%)
-        invert(87%);
-    --media-parent-icon-color: #d4d4d4;
+    --xdh-window-header-bg: var(--color-surface-soft);
+    --xdh-tab-strip-bg: var(--color-surface-soft);
+    --xdh-tab-strip-divider: var(--color-hairline);
+    --xdh-history-content-bg: var(--color-surface-soft);
+    --xdh-history-content-border: var(--color-hairline);
+    --xdh-history-row-active-border: var(--color-primary);
+    --xdh-lightbox-title-bg: var(--color-surface-soft);
+    --xdh-lightbox-title-border: var(--color-hairline);
+    --xdh-history-content-text: var(--color-ink);
+    --xdh-history-content-icon-filter: none;
+    --media-parent-icon-color: var(--color-muted);
     --app-shell-padding: 4px 8px 8px 8px;
 
-    --icon-color-filter: brightness(0) saturate(100%) invert(87%);
-    --icon-color-filter-active: brightness(0) saturate(100%) invert(87%);
-    --xdh-inner-icon-filter: brightness(0) saturate(100%) invert(87%);
-    --xdh-inner-icon-filter-active: brightness(0) saturate(100%)
-        invert(87%);
-    --icon-db-mask-url: url("/extensions/ComfyUI-Xz3r0-Nodes/icons/database.svg");
+    /* Icon filters — replaced by currentColor in V2 */
+    --icon-color-filter: none;
+    --icon-color-filter-active: none;
+    --xdh-inner-icon-filter: none;
+    --xdh-inner-icon-filter-active: none;
+    --icon-db-mask-url: url(
+        "/extensions/ComfyUI-Xz3r0-Nodes/icons/database.svg"
+    );
 
     /*
      * DB palette (kept)
-     * 序列号色彩规则（row-id-chip）：
-     * 1) 背景：使用同色盘的减淡色（在 xdatahub_app.html 中通过 color-mix 计算）
-     * 2) 文字：使用同色盘原色（100% 色度，不减淡）
      */
     --db-palette-default: #0066FF;
     --db-palette-01: #0066FF;
@@ -114,224 +253,271 @@ body:not([data-theme]) {
     --db-palette-11: #FFBF00;
     --db-palette-12: #CC00CC;
 
-    /* ── V2 Source Colors (Dark) ─────────────────────────
-     * 深浅主题都基于这组源色生成。后续只需改这一处。
-     * ─────────────────────────────────────────────────── */
-    --xdh-dark-color-background:     #282828;
-    --xdh-dark-color-surface-1:      #333333;
-    --xdh-dark-color-surface-2:      #3a3a3a;
-    --xdh-dark-color-surface-3:      #444444;
-    --xdh-dark-color-surface-4:      #505050;
-    --xdh-dark-color-surface-hover:  #444444;
-    --xdh-dark-color-border:         #666666;
-    --xdh-dark-color-text-primary:   #dddddd;
-    --xdh-dark-color-text-secondary: #aaaaaa;
-    --xdh-dark-color-hover:          #2a2a2a;
-    --xdh-dark-scrollbar-thumb:      #555555;
-
-    /* ── V2 Component Aliases (Dark) ───────────────────── */
-    --xdh-color-background:    var(--xdh-dark-color-background);
-    --xdh-color-surface-1:     var(--xdh-dark-color-surface-1);
-    --xdh-color-surface-2:     var(--xdh-dark-color-surface-2);
-    --xdh-color-surface-3:     var(--xdh-dark-color-surface-3);
-    --xdh-color-surface-4:     var(--xdh-dark-color-surface-4);
-    --xdh-color-surface-hover: var(--xdh-dark-color-surface-hover);
-    --xdh-color-primary:       var(--xdh-brand-pink);
-    --xdh-color-primary-muted: #EA005E33;
-    --xdh-color-border:        var(--xdh-dark-color-border);
-    --xdh-color-text-primary:  var(--xdh-dark-color-text-primary);
-    --xdh-color-text-secondary:var(--xdh-dark-color-text-secondary);
-    --xdh-color-hover:         var(--xdh-dark-color-hover);
+    /* ── V2 Component Aliases (Dark) ───────────── */
+    --xdh-color-background:    var(--color-canvas);
+    --xdh-color-surface-1:     var(--color-canvas);
+    --xdh-color-surface-2:     var(--color-surface-soft);
+    --xdh-color-surface-3:     var(--color-surface-strong);
+    --xdh-color-surface-4:     var(--color-hairline);
+    --xdh-color-surface-hover: var(--color-surface-soft);
+    --xdh-color-primary:       var(--color-primary);
+    --xdh-color-primary-muted: color-mix(
+        in srgb, var(--color-primary) 12%, transparent
+    );
+    --xdh-color-border:        var(--color-hairline);
+    --xdh-color-text-primary:  var(--color-ink);
+    --xdh-color-text-secondary:var(--color-body);
+    --xdh-color-hover:         var(--color-surface-strong);
     --xdh-color-success:       #4caf50;
-    --xdh-scrollbar-thumb:     var(--xdh-dark-scrollbar-thumb);
+    --xdh-scrollbar-thumb:     var(--color-hairline);
     --xdh-scrollbar-track:     transparent;
-    --xdh-scrollbar-thumb-hover: var(--xdh-brand-pink);
+    --xdh-scrollbar-thumb-hover: var(--color-primary);
 }
 
 body[data-theme="light"] {
-    --xdh-neutral-base: #ffffff;
-    --xdh-neutral-surface: #ffffff;
-    --xdh-neutral-text: #222222;
-    --xdh-icon-color: #222222;
-    --xdh-pure-white: #ffffff;
-    --xdh-pure-black: #111111;
+    /* ============================================ */
+    /*  Color Palette (Light)                       */
+    /* ============================================ */
+    --color-primary:         #ff385c;
+    --color-primary-active:  #e00b41;
+    --color-primary-disabled:#ffd1da;
+    --color-on-primary:      #ffffff;
+    --color-luxe:            #460479;
+    --color-plus:            #92174d;
 
-    --theme-bg-main: #ffffff;
-    --bg: #ffffff;
-    --bg-panel: #ffffff;
-    --surface-input: #ffffff;
-    --xdh-input-bg: #d4d4d4;
+    --color-canvas:         #ffffff;
+    --color-surface-soft:   #f7f7f7;
+    --color-surface-card:   #ffffff;
+    --color-surface-strong: #f2f2f2;
 
-    --text-standard: #222222;
-    --text-emphasis: #222222;
-    --text-active: #222222;
+    --color-ink:        #222222;
+    --color-body:       #3f3f3f;
+    --color-muted:      #6a6a6a;
+    --color-muted-soft: #929292;
+    --color-star-rating:#222222;
 
-    --border-standard: #c8c8c8;
-    --border-hover: var(--xdh-brand-pink);
-    --border-active: var(--xdh-brand-pink);
+    --color-hairline:       #dddddd;
+    --color-hairline-soft:  #ebebeb;
+    --color-border-strong:  #c1c1c1;
 
-    --overlay-dialog: rgba(0, 0, 0, 0.01);
-    --scrollbar-track: #ffffff;
-    --scrollbar-thumb: #c8c8c8;
-    --scrollbar-thumb-hover: var(--xdh-brand-pink);
-    --scrollbar-thumb-active: var(--xdh-brand-pink);
-    --xdh-window-header-bg: #ffffff;
-    --xdh-tab-strip-bg: #ffffff;
-    --xdh-tab-strip-divider: #c8c8c8;
-    --xdh-window-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
-    --xdh-history-content-bg: var(--xdh-input-bg);
-    --xdh-history-content-border: #999999;
-    --xdh-history-row-active-border: var(--xdh-brand-pink);
-    --xdh-lightbox-title-bg: #d4d4d4;
-    --xdh-lightbox-title-border: #999999;
-    --xdh-history-content-text: #222222;
-    --xdh-history-content-icon-filter: brightness(0) saturate(100%)
-        invert(13%);
-    --media-parent-icon-color: #d4d4d4;
+    --color-error:       #c13515;
+    --color-error-hover: #b32505;
+    --color-legal-link:  #428bff;
 
-    --icon-color-filter: brightness(0) saturate(100%) invert(13%);
-    --icon-color-filter-active: brightness(0) saturate(100%) invert(13%);
-    --xdh-inner-icon-filter: brightness(0) saturate(100%) invert(13%);
-    --xdh-inner-icon-filter-active: brightness(0) saturate(100%)
-        invert(13%);
+    --color-scrim: rgba(0,0,0,0.50);
 
-    /* ── V2 Component Aliases (Light, formula-driven) ─────
-     * 不是生硬的 1-l，而是“反演 + 压缩 + 偏置”：
-     * 1) 亮度映射保留层级；2) 色度收敛防止脏灰；3) 深色改动自动联动。
-     * ─────────────────────────────────────────────────── */
-    --xdh-color-background: #ffffff;
-    --xdh-color-surface-1: #ffffff;
-    --xdh-color-surface-2: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-color-surface-2)
-            calc(1 - l)
-            calc(c * 0.32)
-            h
-        ) 48%,
-        white 52%
+    /* ============================================ */
+    /*  Legacy Aliases (Light)                      */
+    /* ============================================ */
+    --xdh-brand-pink:        var(--color-primary);
+    --xdh-neutral-base:      var(--color-canvas);
+    --xdh-neutral-surface:   var(--color-canvas);
+    --xdh-neutral-text:      var(--color-ink);
+    --xdh-icon-color:        var(--color-ink);
+    --xdh-pure-white:        #ffffff;
+    --xdh-pure-black:        #111111;
+
+    --theme-bg-main:         var(--color-canvas);
+    --bg:                    var(--color-canvas);
+    --bg-panel:              var(--color-canvas);
+    --surface-input:         var(--color-surface-soft);
+    --xdh-input-bg:          var(--color-surface-soft);
+
+    --text-standard:         var(--color-ink);
+    --text-emphasis:         var(--color-ink);
+    --text-active:           var(--color-primary);
+    --text-secondary:        var(--color-body);
+
+    --border-standard:       var(--color-hairline);
+    --border-hover:          var(--color-primary);
+    --border-active:         var(--color-primary);
+
+    --overlay-dialog:        rgba(0,0,0,0.01);
+    --scrollbar-track:       var(--color-surface-soft);
+    --scrollbar-thumb:       var(--color-border-strong);
+    --scrollbar-thumb-hover: var(--color-primary);
+    --scrollbar-thumb-active: var(--color-primary);
+    --xdh-window-header-bg:  var(--color-canvas);
+    --xdh-tab-strip-bg:      var(--color-surface-soft);
+    --xdh-tab-strip-divider: var(--color-hairline);
+    --xdh-window-shadow:     var(--shadow-window);
+    --xdh-history-content-bg: var(--color-surface-soft);
+    --xdh-history-content-border: var(--color-hairline);
+    --xdh-history-row-active-border: var(--color-primary);
+    --xdh-lightbox-title-bg: var(--color-surface-soft);
+    --xdh-lightbox-title-border: var(--color-hairline);
+    --xdh-history-content-text: var(--color-ink);
+    --xdh-history-content-icon-filter: none;
+    --media-parent-icon-color: var(--color-muted);
+
+    --icon-color-filter: none;
+    --icon-color-filter-active: none;
+    --xdh-inner-icon-filter: none;
+    --xdh-inner-icon-filter-active: none;
+
+    /* ── V2 Component Aliases (Light) ──────────── */
+    --xdh-color-background:    var(--color-canvas);
+    --xdh-color-surface-1:     var(--color-canvas);
+    --xdh-color-surface-2:     var(--color-surface-soft);
+    --xdh-color-surface-3:     var(--color-surface-strong);
+    --xdh-color-surface-4:     var(--color-hairline);
+    --xdh-color-surface-hover: var(--color-surface-soft);
+    --xdh-color-primary:       var(--color-primary);
+    --xdh-color-primary-muted: color-mix(
+        in srgb, var(--color-primary) 10%, transparent
     );
-    --xdh-color-surface-3: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-color-surface-3)
-            calc(1 - l)
-            calc(c * 0.34)
-            h
-        ) 54%,
-        white 46%
-    );
-    --xdh-color-surface-4: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-color-surface-4)
-            calc(1 - l)
-            calc(c * 0.36)
-            h
-        ) 62%,
-        white 38%
-    );
-    --xdh-color-surface-hover: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-color-surface-hover)
-            calc(1 - l)
-            calc(c * 0.34)
-            h
-        ) 58%,
-        white 42%
-    );
-    --xdh-color-primary: var(--xdh-brand-pink);
-    --xdh-color-primary-muted: #EA005E1A;
-    --xdh-color-border: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-color-border)
-            calc(1 - l)
-            calc(c * 0.40)
-            h
-        ) 58%,
-        white 42%
-    );
-    --xdh-color-text-primary: oklch(
-        from var(--xdh-dark-color-text-primary)
-        calc((1 - l) * 0.65 + 0.16)
-        calc(c * 0.55)
-        h
-    );
-    --xdh-color-text-secondary: oklch(
-        from var(--xdh-dark-color-text-secondary)
-        calc((1 - l) * 0.70 + 0.22)
-        calc(c * 0.45)
-        h
-    );
-    --xdh-color-hover: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-color-hover)
-            calc(1 - l)
-            calc(c * 0.32)
-            h
-        ) 56%,
-        white 44%
-    );
-    --xdh-color-success: #4caf50;
-    --xdh-scrollbar-thumb: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-scrollbar-thumb)
-            calc(1 - l)
-            calc(c * 0.36)
-            h
-        ) 55%,
-        white 45%
-    );
-    --xdh-scrollbar-track: transparent;
-    --xdh-scrollbar-thumb-hover: var(--xdh-brand-pink);
+    --xdh-color-border:        var(--color-hairline);
+    --xdh-color-text-primary:  var(--color-ink);
+    --xdh-color-text-secondary:var(--color-body);
+    --xdh-color-hover:         var(--color-surface-strong);
+    --xdh-color-success:       #4caf50;
+    --xdh-scrollbar-thumb:     var(--color-border-strong);
+    --xdh-scrollbar-track:     transparent;
+    --xdh-scrollbar-thumb-hover: var(--color-primary);
 }
 
 .xz3r0-datahub-window[data-theme="light"] {
-    --xdh-neutral-base: #ffffff;
-    --xdh-neutral-surface: #ffffff;
-    --xdh-neutral-text: #222222;
-    --xdh-icon-color: #222222;
+    /* V1 light overrides — map to Airbnb palette tokens */
+    --xdh-brand-pink:        var(--color-primary);
+    --xdh-neutral-base:      var(--color-canvas);
+    --xdh-neutral-surface:   var(--color-canvas);
+    --xdh-neutral-text:      var(--color-ink);
+    --xdh-icon-color:        var(--color-ink);
 
-    --theme-bg-main: #ffffff;
-    --bg: #ffffff;
-    --bg-panel: #ffffff;
-    --surface-input: #ffffff;
-    --xdh-input-bg: #d4d4d4;
+    --theme-bg-main:         var(--color-canvas);
+    --bg:                    var(--color-canvas);
+    --bg-panel:              var(--color-canvas);
+    --surface-input:         var(--color-surface-soft);
+    --xdh-input-bg:          var(--color-surface-soft);
 
-    --text-standard: #222222;
-    --text-emphasis: #222222;
-    --text-active: #222222;
+    --text-standard:         var(--color-ink);
+    --text-emphasis:         var(--color-ink);
+    --text-active:           var(--color-primary);
+    --text-muted:            var(--color-muted);
 
-    --border-standard: #c8c8c8;
-    --border-hover: var(--xdh-brand-pink);
-    --border-active: var(--xdh-brand-pink);
+    --border-standard:       var(--color-hairline);
+    --border-hover:          var(--color-primary);
+    --border-active:         var(--color-primary);
 
-    --overlay-dialog: rgba(0, 0, 0, 0.01);
-    --scrollbar-track: #ffffff;
-    --scrollbar-thumb: #c8c8c8;
-    --scrollbar-thumb-hover: var(--xdh-brand-pink);
-    --scrollbar-thumb-active: var(--xdh-brand-pink);
-    --xdh-window-header-bg: #ffffff;
-    --xdh-tab-strip-bg: #ffffff;
-    --xdh-tab-strip-divider: #c8c8c8;
-    --xdh-window-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
-    --xdh-history-content-bg: var(--xdh-input-bg);
-    --xdh-history-content-border: #999999;
-    --xdh-history-row-active-border: var(--xdh-brand-pink);
-    --xdh-lightbox-title-bg: #d4d4d4;
-    --xdh-lightbox-title-border: #999999;
-    --xdh-history-content-text: #222222;
-    --xdh-history-content-icon-filter: brightness(0) saturate(100%)
-        invert(13%);
-    --media-parent-icon-color: #d4d4d4;
+    --btn-active-color:      var(--color-primary);
+    --btn-hover-glow-soft:   0 0 0 1px var(--btn-active-color);
+    --btn-hover-glow:        0 0 0 1px var(--btn-active-color),
+        0 0 10px var(--btn-active-color);
+    --btn-press-glow-inset:  inset 0 0 0 1px var(--btn-active-color);
+    --hover-accent-bg:       var(--color-surface-soft);
 
-    --icon-color-filter: brightness(0) saturate(100%) invert(13%);
-    --icon-color-filter-active: brightness(0) saturate(100%) invert(13%);
-    --xdh-inner-icon-filter: brightness(0) saturate(100%) invert(13%);
-    --xdh-inner-icon-filter-active: brightness(0) saturate(100%)
-        invert(13%);
+    --overlay-dialog:        rgba(0,0,0,0.01);
+    --scrollbar-track:       var(--color-surface-soft);
+    --scrollbar-thumb:       var(--color-border-strong);
+    --scrollbar-thumb-hover: var(--color-primary);
+    --scrollbar-thumb-active: var(--color-primary);
+    --xdh-window-header-bg:  var(--color-canvas);
+    --xdh-tab-strip-bg:      var(--color-surface-soft);
+    --xdh-tab-strip-divider: var(--color-hairline);
+    --xdh-window-shadow:     var(--shadow-window);
+    --xdh-history-content-bg: var(--color-surface-soft);
+    --xdh-history-content-border: var(--color-hairline);
+    --xdh-history-row-active-border: var(--color-primary);
+    --xdh-lightbox-title-bg: var(--color-surface-soft);
+    --xdh-lightbox-title-border: var(--color-hairline);
+    --xdh-history-content-text: var(--color-ink);
+    --xdh-history-content-icon-filter: none;
+    --media-parent-icon-color: var(--color-muted);
+
+    --icon-color-filter: none;
+    --icon-color-filter-active: none;
+    --xdh-inner-icon-filter: none;
+    --xdh-inner-icon-filter-active: none;
+
+    /* ── V2 Component Aliases (Light, V1 context) ── */
+    --xdh-color-background:    var(--color-canvas);
+    --xdh-color-surface-1:     var(--color-canvas);
+    --xdh-color-surface-2:     var(--color-surface-soft);
+    --xdh-color-surface-3:     var(--color-surface-strong);
+    --xdh-color-surface-4:     var(--color-hairline);
+    --xdh-color-surface-hover: var(--color-surface-soft);
+    --xdh-color-primary:       var(--color-primary);
+    --xdh-color-primary-muted: color-mix(
+        in srgb, var(--color-primary) 10%, transparent
+    );
+    --xdh-color-border:        var(--color-hairline);
+    --xdh-color-text-primary:  var(--color-ink);
+    --xdh-color-text-secondary:var(--color-body);
+    --xdh-color-hover:         var(--color-surface-strong);
+    --xdh-color-success:       #4caf50;
+    --xdh-scrollbar-thumb:     var(--color-hairline);
+    --xdh-scrollbar-track:     transparent;
+    --xdh-scrollbar-thumb-hover: var(--color-primary);
+}
+
+/* ── V1 Dark Overrides ──────────────────────────── */
+.xz3r0-datahub-window[data-theme="dark"] {
+    --xdh-brand-pink:        var(--color-primary);
+    --xdh-neutral-base:      var(--color-surface-soft);
+    --xdh-neutral-surface:   var(--color-surface-soft);
+    --xdh-neutral-text:      var(--color-ink);
+    --xdh-icon-color:        var(--color-ink);
+
+    --theme-bg-main:         var(--color-canvas);
+    --bg:                    var(--color-canvas);
+    --bg-panel:              var(--color-surface-card);
+    --surface-input:         var(--color-surface-soft);
+    --xdh-input-bg:          var(--color-surface-soft);
+
+    --text-standard:         var(--color-ink);
+    --text-emphasis:         var(--color-ink);
+    --text-active:           var(--color-primary);
+    --text-muted:            var(--color-muted);
+    --text-secondary:        var(--color-body);
+
+    --border-standard:       var(--color-hairline);
+    --border-hover:          var(--color-primary);
+    --border-active:         var(--color-primary);
+
+    --btn-active-color:      var(--color-primary);
+    --hover-accent-bg:       var(--color-surface-soft);
+    --active-highlight-bg:   rgba(255,255,255,0.06);
+
+    --overlay-dialog:        rgba(0,0,0,0.01);
+    --scrollbar-track:       var(--color-surface-soft);
+    --scrollbar-thumb:       var(--color-border-strong);
+    --scrollbar-thumb-hover: var(--color-primary);
+    --scrollbar-thumb-active: var(--color-primary);
+    --xdh-window-header-bg:  var(--color-surface-soft);
+    --xdh-tab-strip-bg:      var(--color-surface-soft);
+    --xdh-tab-strip-divider: var(--color-hairline);
+    --xdh-window-shadow:     var(--shadow-window);
+    --xdh-history-content-bg: var(--color-surface-soft);
+    --xdh-history-content-border: var(--color-hairline);
+    --xdh-history-row-active-border: var(--color-primary);
+    --xdh-lightbox-title-bg: var(--color-surface-soft);
+    --xdh-lightbox-title-border: var(--color-hairline);
+    --xdh-history-content-text: var(--color-ink);
+    --xdh-history-content-icon-filter: invert(1);
+    --media-parent-icon-color: var(--color-muted);
+
+    --icon-color-filter: invert(1);
+    --icon-color-filter-active: invert(1);
+    --xdh-inner-icon-filter: invert(1);
+    --xdh-inner-icon-filter-active: invert(1);
+
+    /* ── V2 Component Aliases (Dark, V1 context) ── */
+    --xdh-color-background:    var(--color-canvas);
+    --xdh-color-surface-1:     var(--color-canvas);
+    --xdh-color-surface-2:     var(--color-surface-soft);
+    --xdh-color-surface-3:     var(--color-surface-strong);
+    --xdh-color-surface-4:     var(--color-hairline);
+    --xdh-color-surface-hover: var(--color-surface-soft);
+    --xdh-color-primary:       var(--color-primary);
+    --xdh-color-primary-muted: color-mix(
+        in srgb, var(--color-primary) 12%, transparent
+    );
+    --xdh-color-border:        var(--color-hairline);
+    --xdh-color-text-primary:  var(--color-ink);
+    --xdh-color-text-secondary:var(--color-body);
+    --xdh-color-hover:         var(--color-surface-strong);
+    --xdh-color-success:       #4caf50;
+    --xdh-scrollbar-thumb:     var(--color-hairline);
+    --xdh-scrollbar-track:     transparent;
+    --xdh-scrollbar-thumb-hover: var(--color-primary);
 }

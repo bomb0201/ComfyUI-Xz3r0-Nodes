@@ -1184,11 +1184,6 @@ app.registerExtension({
             }
             .xz3r0-datahub-window-btn:hover {
                 background: var(--hover-accent-bg);
-                box-shadow: var(--btn-hover-glow-soft);
-            }
-            .xz3r0-datahub-window-btn:active {
-                background: var(--btn-active-color);
-                box-shadow: var(--btn-press-glow-inset);
             }
             .xz3r0-datahub-window-btn.active {
                 color: var(--p-button-primary-background, #6366f1);
@@ -1523,7 +1518,7 @@ app.registerExtension({
             .xz3r0-opacity-popup-label {
                 font-size: 11px;
                 font-weight: 700;
-                color: var(--text-muted, #888);
+                color: var(--text-standard);
                 letter-spacing: 0.06em;
                 text-transform: uppercase;
                 display: flex;
@@ -1548,7 +1543,7 @@ app.registerExtension({
             }
             .xz3r0-opacity-slider::-webkit-slider-runnable-track {
                 height: 6px;
-                background: var(--xdh-color-surface-4, var(--border-standard));
+                background: var(--color-surface-soft);
                 border-radius: 999px;
             }
             .xz3r0-opacity-slider::-webkit-slider-thumb {
@@ -1558,10 +1553,10 @@ app.registerExtension({
                 height: 15px;
                 margin-top: -4.5px;
                 background: var(--xdh-color-primary, var(--btn-active-color));
-                border: 2px solid var(--theme-bg-main);
+                border: 2px solid var(--color-surface-strong);
                 border-radius: 50%;
                 cursor: pointer;
-                box-shadow: 0 0 0 1px var(--border-standard);
+                box-shadow: 0 0 0 1px var(--color-border-strong);
                 transition: background 0.2s, box-shadow 0.2s;
             }
             .xz3r0-opacity-slider::-webkit-slider-thumb:hover {
@@ -1571,15 +1566,15 @@ app.registerExtension({
                 width: 15px;
                 height: 15px;
                 background: var(--xdh-color-primary, var(--btn-active-color));
-                border: 2px solid var(--theme-bg-main);
+                border: 2px solid var(--color-surface-strong);
                 border-radius: 50%;
                 cursor: pointer;
-                box-shadow: 0 0 0 1px var(--border-standard);
+                box-shadow: 0 0 0 1px var(--color-border-strong);
                 transition: background 0.2s, box-shadow 0.2s;
             }
             .xz3r0-opacity-slider::-moz-range-track {
                 height: 6px;
-                background: var(--xdh-color-surface-4, var(--border-standard));
+                background: var(--color-surface-soft);
                 border-radius: 999px;
             }
             .xz3r0-opacity-slider::-moz-range-thumb:hover {
@@ -1917,7 +1912,6 @@ const XDataHub = {
         const opacityPopupLabel = document.createElement("div");
         opacityPopupLabel.className = "xz3r0-opacity-popup-label";
         const opacityLabelText = document.createElement("span");
-        opacityLabelText.style.cssText = "color:var(--text-muted,#888)";
         opacityLabelText.textContent = t("opacityLabel", "Opacity");
         const opacityValue = document.createElement("span");
         opacityValue.textContent = "100%";

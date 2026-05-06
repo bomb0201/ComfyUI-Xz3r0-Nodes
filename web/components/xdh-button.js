@@ -23,21 +23,19 @@ export class XdhButton extends BaseElement {
         const disabled = this.hasAttribute('disabled');
         const icon = this.getAttribute('icon');
 
-        // This leverages CSS tokens from xdatahub-color-tokens.css
         return `
             <style>
                 button {
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 8px;
-                    padding: 8px 16px;
-                    font-size: 14px;
-                    font-weight: 500;
+                    gap: var(--space-xs);
+                    padding: var(--space-sm) var(--space-base);
+                    font: var(--font-button-sm);
                     border: none;
-                    border-radius: 6px;
+                    border-radius: var(--radius-sm);
                     cursor: pointer;
-                    transition: all 0.2s ease;
+                    transition: all 0.15s ease;
                     outline: none;
                 }
 
@@ -47,29 +45,27 @@ export class XdhButton extends BaseElement {
                 }
 
                 button.primary {
-                    background: var(--xdh-color-primary, #0066cc);
-                    color: white;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    background: var(--color-primary);
+                    color: var(--color-on-primary);
+                    box-shadow: var(--shadow-default);
                 }
 
                 button.primary:hover:not(:disabled) {
-                    filter: brightness(1.1);
+                    background: var(--color-primary-active);
+                    box-shadow: var(--shadow-popup);
                     transform: translateY(-1px);
-                    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
                 }
 
                 button.secondary {
-                    background: var(--xdh-color-surface-2, #333);
-                    color: var(--xdh-color-text-primary, #eee);
-                    border: 1px solid var(--xdh-color-border, #444);
+                    background: var(--color-surface-card);
+                    color: var(--color-ink);
+                    border: 1px solid var(--color-hairline);
                 }
 
                 button.secondary:hover:not(:disabled) {
-                    background: var(--xdh-color-surface-3, #444);
+                    background: var(--color-surface-strong);
                 }
 
-                /* In compact mode, we might want to drop text and just show icon if a specific attribute is set,
-                   but we agreed to avoid pure icon guesswork where possible. Still, for specific toolbars it might be needed. */
                 @container (max-width: 300px) {
                     .text-label {
                         display: none;

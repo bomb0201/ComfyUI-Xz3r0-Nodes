@@ -200,15 +200,15 @@ function getTooltipElement() {
         position: "fixed",
         zIndex: "999999",
         pointerEvents: "none",
-        background: "rgba(16, 16, 16, 0.97)",
-        border: "1px solid #666",
-        borderRadius: "8px",
+        background: "var(--xdh-color-surface-3)",
+        border: "1px solid var(--color-hairline, #666)",
+        borderRadius: "var(--radius-sm)",
         padding: "6px 10px",
         maxWidth: "240px",
         boxSizing: "border-box",
-        color: "#f2f2f2",
-        boxShadow: "0 8px 22px rgba(0, 0, 0, 0.55)",
-        fontSize: "12px",
+        color: "var(--xdh-color-text-primary)",
+        boxShadow: "var(--shadow-popup)",
+        font: "var(--font-micro-label)",
         lineHeight: "1.35",
         whiteSpace: "normal",
         overflowWrap: "break-word",
@@ -459,15 +459,15 @@ function ensureStyles() {
             min-width: 40px;
             height: 22px;
             padding: 0 8px;
-            border-radius: 6px;
-            border: 1px solid var(--borderColor, #555);
-            background: var(--bgColor, #222);
-            color: #f2f2f2;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--color-hairline);
+            background: var(--color-surface-strong);
+            color: var(--xdh-color-text-primary);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 12px;
+            font: var(--font-micro-label);
             line-height: 1;
             transition: border-color 120ms ease, background-color 120ms ease;
             flex: 0 0 auto;
@@ -479,8 +479,8 @@ function ensureStyles() {
         .ximageget-mask-btn:focus-visible,
         .ximageget-clear-btn:hover,
         .ximageget-clear-btn:focus-visible {
-            border-color: var(--ximageget-accent, #888);
-            background: #2b2b2b;
+            border-color: var(--ximageget-accent);
+            background: var(--color-surface-strong);
             outline: none;
         }
         .ximageget-mask-btn:disabled,
@@ -494,9 +494,9 @@ function ensureStyles() {
             gap: 6px;
             padding: 4px 12px;
             margin-right: auto;
-            border-radius: 999px;
-            border: 1px solid var(--ximageget-accent, #888);
-            background: var(--bgColor, #222);
+            border-radius: var(--radius-full);
+            border: 1px solid var(--ximageget-accent);
+            background: var(--color-surface-strong);
         }
         .ximageget-badge-chip {
             font-size: 16px;
@@ -505,20 +505,20 @@ function ensureStyles() {
             font-variant-numeric: tabular-nums;
             font-family: ui-monospace, "Cascadia Mono", "Consolas", monospace;
             letter-spacing: 0.15px;
-            color: var(--ximageget-accent, #888);
+            color: var(--ximageget-accent);
         }
         .ximageget-badge-swatch {
             width: 18px;
             height: 18px;
-            border-radius: 5px;
-            background: var(--ximageget-accent, #888);
-            box-shadow: inset 0 0 0 1px var(--borderColor, #555);
+            border-radius: var(--radius-xs);
+            background: var(--ximageget-accent);
+            box-shadow: inset 0 0 0 1px var(--color-hairline);
         }
         .ximageget-preview {
             width: 100%;
             min-height: 180px;
-            border: 1px solid var(--borderColor, #555);
-            background: var(--bgColor, #222);
+            border: 1px solid var(--color-hairline);
+            background: var(--color-surface-card);
             position: relative;
             display: flex;
             align-items: center;
@@ -527,8 +527,8 @@ function ensureStyles() {
             flex: 1 1 auto;
         }
         .ximageget-preview.drag-over {
-            border-color: var(--xdh-brand-pink, #EA005E);
-            box-shadow: 0 0 0 1px var(--xdh-brand-pink, #EA005E);
+            border-color: var(--xdh-brand-pink);
+            box-shadow: 0 0 0 1px var(--xdh-brand-pink);
         }
         .ximageget-preview.has-media .ximageget-base-image {
             display: block;
@@ -575,17 +575,14 @@ function ensureStyles() {
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            font-size: 13px;
-            color: #ffffff;
+            font: var(--font-caption-sm);
+            color: var(--xdh-color-text-primary);
             font-weight: 600;
             width: calc(100% - 24px);
             max-width: 220px;
             text-align: center;
             line-height: 1.45;
             pointer-events: none;
-            text-shadow:
-                0 0 6px rgba(0, 0, 0, 0.9),
-                0 0 10px rgba(0, 0, 0, 0.75);
         }
         .ximageget-placeholder:empty {
             display: none;
@@ -598,11 +595,11 @@ function ensureStyles() {
             min-height: 24px;
         }
         .ximageget-title {
-            font-size: 12px;
-            color: #ffffff;
-            background: #222222;
-            padding: 4px 6px;
-            border-radius: 6px;
+            font: var(--font-micro-label);
+            color: var(--xdh-color-text-primary);
+            background: var(--color-surface-soft);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
             min-height: 24px;
             display: block;
             flex: 1 1 auto;
@@ -613,11 +610,11 @@ function ensureStyles() {
             line-height: 1.3;
         }
         .ximageget-title::placeholder {
-            color: rgba(255, 255, 255, 0.65);
+            color: var(--xdh-color-text-secondary);
         }
         .ximageget-title:focus {
-            border-color: var(--xdh-brand-pink, #EA005E);
-            box-shadow: 0 0 0 1px var(--xdh-brand-pink, #EA005E);
+            border-color: var(--xdh-brand-pink);
+            box-shadow: 0 0 0 1px var(--xdh-brand-pink);
         }
     `;
     document.head.appendChild(style);
