@@ -536,6 +536,27 @@ export class XdhHistoryView extends BaseElement {
                 .action-btn.active {
                     color: #f5c518;
                 }
+                .icon-bookmark {
+                    display: inline-block;
+                    width: 14px;
+                    height: 14px;
+                    flex-shrink: 0;
+                    vertical-align: middle;
+                    background-color: currentColor;
+                    -webkit-mask-repeat: no-repeat;
+                    -webkit-mask-position: center;
+                    -webkit-mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                    mask-size: contain;
+                    -webkit-mask-image: url(icons/bookmark.svg);
+                    mask-image: url(icons/bookmark.svg);
+                }
+                .favorite-btn.active .icon-bookmark,
+                .favorite-btn:hover .icon-bookmark {
+                    -webkit-mask-image: url(icons/bookmark-filled.svg);
+                    mask-image: url(icons/bookmark-filled.svg);
+                }
                 .row-footer {
                     display: flex;
                     align-items: center;
@@ -663,7 +684,7 @@ export class XdhHistoryView extends BaseElement {
                                                     <div class="row-title xdh-tooltip xdh-tooltip-down" data-tooltip="${escapeHtml(title)}">${escapeHtml(title)}</div>
                                                     <div class="row-actions">
                                                         <button class="action-btn favorite-btn xdh-tooltip xdh-tooltip-down ${isFav ? 'active' : ''}" data-id="${item.id}" data-record-id="${recordId}" data-fav-id="${favId}" data-db-name="${escapeHtml(dbName)}" data-extra-header="${escapeHtml(item.raw?.extra?.extra_header || '')}" data-data-type="${escapeHtml(item.raw?.extra?.data_type || '')}" data-source="${escapeHtml(item.raw?.extra?.source || '')}" data-tooltip="${isFav ? t('history.btn.unfavorite') : t('history.btn.favorite')}">
-                                                            ${icon('bookmark', 14)}
+                                                            <span class="icon-bookmark"></span>
                                                         </button>
                                                     </div>
                                                 </div>
