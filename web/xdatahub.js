@@ -135,7 +135,7 @@ const HOST_TABS = [
     { id: "audio", icon: "audio-lines", textKey: UI_KEYS.tabAudio },
     { id: "lora", icon: "wand-sparkles", textKey: UI_KEYS.tabLora },
 ];
-const XDATAHUB_ASSET_VER = "20260426-1";
+const XDATAHUB_ASSET_VER = "20260508-1";
 const XDATAHUB_THEME_CSS_ID = "xdatahub-color-tokens-css";
 const XDATAHUB_THEME_CSS_HREF =
     "/extensions/ComfyUI-Xz3r0-Nodes/xdatahub-color-tokens.css"
@@ -1102,7 +1102,7 @@ app.registerExtension({
                 background: linear-gradient(
                     120deg,
                     transparent 0%,
-                    var(--hover-accent-bg) 50%,
+                    var(--xdh-pure-white) 50%,
                     transparent 100%
                 );
                 opacity: 0;
@@ -1131,7 +1131,7 @@ app.registerExtension({
             }
             .xz3r0-datahub-menu-btn:hover {
                 border-color: var(--border-hover);
-                background: var(--hover-accent-bg) !important;
+                background: var(--xdh-pure-white) !important;
                 box-shadow:
                     inset 0 1px 0 var(--border-hover),
                     inset 0 -1px 0 var(--border-hover),
@@ -1141,7 +1141,7 @@ app.registerExtension({
             }
             .xz3r0-datahub-menu-btn:active {
                 border-color: var(--border-hover);
-                background: var(--hover-accent-bg) !important;
+                background: var(--xdh-pure-white) !important;
                 box-shadow:
                     inset 0 1px 0 var(--border-hover),
                     inset 0 -1px 0 var(--border-hover),

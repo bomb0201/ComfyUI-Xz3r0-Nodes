@@ -374,6 +374,9 @@ export class XdhContentNav extends BaseElement {
             if (this._refreshPending) return;
             this._refreshPending = true;
             btnRefresh.disabled = true;
+            btnRefresh.classList.add("refreshing");
+            const origTooltip = btnRefresh.getAttribute("data-tooltip");
+            btnRefresh.setAttribute("data-tooltip", t("nav.btn.refreshing"));
             const category = String(store.state.activeCategory || "");
             const shouldBlock = ["image", "video", "audio", "lora"].includes(category);
             if (shouldBlock) {
@@ -399,6 +402,8 @@ export class XdhContentNav extends BaseElement {
             } finally {
                 this._refreshPending = false;
                 btnRefresh.disabled = false;
+                btnRefresh.classList.remove("refreshing");
+                btnRefresh.setAttribute("data-tooltip", origTooltip);
             }
         });
         if (btnBack) btnBack.addEventListener("click", () => {
@@ -630,6 +635,9 @@ export class XdhContentNav extends BaseElement {
                     70% { transform: scale(1.6); opacity: 0; }
                     100% { transform: scale(1.6); opacity: 0; }
                 }
+                @keyframes xdh-spin {
+                    to { transform: rotate(360deg); }
+                }
 
                 button {
                     background: transparent;
@@ -658,6 +666,10 @@ export class XdhContentNav extends BaseElement {
                 }
 
                 .nav-arrow { font-size: 14px; width: 28px; padding: 0; }
+                .nav-refresh.refreshing { opacity: 1; }
+                .nav-refresh.refreshing .xdh-icon {
+                    animation: xdh-spin 0.8s linear infinite;
+                }
 
                 /* ── Row 1: Breadcrumb ── */
                 .breadcrumb {
