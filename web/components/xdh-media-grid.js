@@ -459,7 +459,8 @@ function formatDate(mtime) {
     const d = new Date(mtime * 1000);
     return `${d.getMonth() + 1}/${d.getDate()} `
         + `${String(d.getHours()).padStart(2, "0")}`
-        + `:${String(d.getMinutes()).padStart(2, "0")}`;
+        + `:${String(d.getMinutes()).padStart(2, "0")}`
+        + `:${String(d.getSeconds()).padStart(2, "0")}`;
 }
 
 function formatDateFull(mtime) {

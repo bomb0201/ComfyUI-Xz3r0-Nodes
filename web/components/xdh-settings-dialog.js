@@ -12,6 +12,7 @@ const HOST_CONTROLLED_SETTING_KEYS = new Set([
     "auto_show_on_startup",
     "default_open_layout",
     "close_behavior",
+    "edge_peek",
 ]);
 const OPEN_LAYOUT_OPTIONS = [
     ["center", "settings.default_open_layout.center"],
@@ -453,9 +454,7 @@ export class XdhSettingsDialog extends BaseElement {
                     ),
                     this._renderRow(
                         "settings.edge_peek",
-                        this._renderLocalToggle(
-                            "Xz3r0.XDataHub.EdgePeek", false
-                        ),
+                        this._renderToggle("edge_peek", false),
                         "settings.edge_peek_tooltip"
                     ),
                 ])}

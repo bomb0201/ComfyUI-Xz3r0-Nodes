@@ -68,7 +68,6 @@ const OPEN_LAYOUT_VALUE_RIGHT = "right";
 const OPEN_LAYOUT_VALUE_MAXIMIZED = "maximized";
 const CLOSE_BEHAVIOR_VALUE_HIDE = "hide";
 const CLOSE_BEHAVIOR_VALUE_DESTROY = "destroy";
-const EDGE_PEEK_SETTING_ID = "Xz3r0.XDataHub.EdgePeek";
 const AUTO_SHOW_SETTING_ID = "Xz3r0.XDataHub.AutoShow";
 const HOST_SETTINGS_MIGRATION_FLAG =
     "Xz3r0.XDataHub.HostSettingsMigrated.v1";
@@ -995,7 +994,12 @@ app.registerExtension({
         installLocaleSync();
         await loadHostBehaviorSettings();
         installGlobalHotkeyListener();
-        edgePeekEnabled = !!(localStorage.getItem("Xz3r0.XDataHub.EdgePeek") === "true");
+        try {
+            const settings = await fetchXDataHubSettings();
+            edgePeekEnabled = settings.edge_peek === true;
+        } catch {
+            edgePeekEnabled = false;
+        }
         ensureColorTokensStylesheet();
         await syncThemeModeFromSettings();
         try {
@@ -3378,6 +3382,12 @@ window.addEventListener("message", (event) => {
         )) {
             applyThemeMode(settings.theme_mode);
         }
+        if (settings && Object.prototype.hasOwnProperty.call(
+            settings, "edge_peek"
+        )) {
+            edgePeekEnabled = settings.edge_peek === true;
+            xdataHubRef?.instance?.applyEdgePeek?.();
+        }
         applyHostBehaviorSettings(settings, {
             applyLayout: Object.prototype.hasOwnProperty.call(
                 settings || {},
@@ -3391,10 +3401,6 @@ window.addEventListener("message", (event) => {
         return;
     }
     if (payload.type === "xdatahub:ls-setting") {
-        if (payload.key === EDGE_PEEK_SETTING_ID) {
-            edgePeekEnabled = !!payload.value;
-            xdataHubRef?.instance?.applyEdgePeek?.();
-        }
         return;
     }
     if (payload.type === "xdatahub:toggle-window-request") {
