@@ -952,7 +952,7 @@ export class XdhMediaGrid extends BaseElement {
                     opacity: 0;
                     pointer-events: none;
                     transition: opacity 0.18s ease;
-                    z-index: 2;
+                    z-index: 3;
                 }
                 .media-card:hover .card-actions {
                     opacity: 1;
