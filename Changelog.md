@@ -1,5 +1,45 @@
 # 更新日志 | Changelog
 
+## 🎉 v2.2.0
+
+<details>
+
+### 1. 🛠️ 增强和调整以及修复 `XDataHub` 数据中心
+`ComfyUI Web Interface Extension - ComfyUI.Xz3r0.XDataHub`
+- 明亮和暗黑双主题配色已改为贴近 Airbnb 网站风格
+    - 感谢 `VoltAgent/awesome-design-md` Github 项目提供的文件作为参考🙏
+- 所有和 XDataHub 配套的节点的界面组件也已经同步主题配色
+- 新增 目录树栏宽度拉伸功能
+- 新增 顶部刷新按钮的正在刷新时的图标旋转动画
+- 设置面板中的 贴边隐藏（滑出）功能设置从原先的持久化保存在浏览器里改为保存到 XDataHub 的配置文件中
+- 媒体卡片显示的文件日期精确到秒
+- 修复 XDataHub 的主题配色和语言切换不同步
+- 修复音频文件卡片缺少文件日期
+
+### 2. 🛠️ 增强 XMaskEditor 遮罩编辑器
+- 新增 支持鼠标悬停在滑块拉条上使用滚轮调整数值
+
+---
+
+### 1. 🛠️ Enhanced & Adjusted `XDataHub` Data Center
+`ComfyUI Web Interface Extension - ComfyUI.Xz3r0.XDataHub`
+- Updated both light and dark themes to closely match the Airbnb website style
+    - Thanks to the `VoltAgent/awesome-design-md` GitHub project for reference files 🙏
+- All companion node UIs synced with the new theme
+- Added directory tree column width resizing
+- Added spinning animation for the refresh button while refreshing
+- "Edge Peek (auto-hide when docked)" setting is now persisted in the XDataHub config file instead of browser localStorage
+- Media card dates now display with second precision
+- Fixed theme and language switching not syncing in XDataHub
+- Fixed audio file cards missing date display
+
+### 2. 🛠️ Enhanced `XMaskEditor` Mask Editor
+- Added mouse wheel value adjustment support when hovering over slider bars
+
+</details>
+
+---
+
 ## 🎉 v2.1.1
 
 <details>

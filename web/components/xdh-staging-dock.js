@@ -348,12 +348,12 @@ export class XdhStagingDock extends BaseElement {
                     white-space: nowrap;
                     flex-shrink: 0;
                     border-radius: var(--radius-xs);
+                    width: 24px;
                     height: 24px;
                     padding: 0;
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
-                    gap: var(--space-xs);
                     transition: background-color 0.15s ease,
                         color 0.15s ease,
                         border-color 0.15s ease;
