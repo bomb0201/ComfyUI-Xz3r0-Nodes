@@ -415,6 +415,7 @@ function thumbFor(item, previewState = null) {
                 <div class="thumb-container audio-thumb">
                     ${statusBadgeHtml}
                     <span class="audio-icon">${icon("audio-lines", 40)}</span>
+                    ${metaHtml}
                 </div>`;
         case "video": {
             const thumbContent = item.isVideoNativeThumb
