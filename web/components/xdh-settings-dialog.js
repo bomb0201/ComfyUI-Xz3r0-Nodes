@@ -529,7 +529,7 @@ export class XdhSettingsDialog extends BaseElement {
                     position: fixed;
                     inset: 0;
                     z-index: 5000;
-                    background: var(--color-scrim);
+                    background: var(--xdh-clr-scrim);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -538,8 +538,8 @@ export class XdhSettingsDialog extends BaseElement {
                 .dialog {
                     background: var(--xdh-color-surface-1);
                     border: 1px solid var(--xdh-color-border);
-                    border-radius: var(--radius-md);
-                    box-shadow: var(--shadow-dialog);
+                    border-radius: var(--xdh-radius-md);
+                    box-shadow: var(--xdh-shadow-dialog);
                     width: 460px;
                     max-width: calc(100vw - 32px);
                     /* 面板高度接近全屏，保留 16px 上下边缘 */
@@ -553,17 +553,17 @@ export class XdhSettingsDialog extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    padding: var(--space-md) var(--space-base) var(--space-md);
+                    padding: var(--xdh-space-md) var(--xdh-space-base) var(--xdh-space-md);
                     border-bottom: 1px solid var(--xdh-color-border);
                     flex-shrink: 0;
                 }
 
                 .dialog-title {
-                    font: var(--font-button-sm);
+                    font: var(--xdh-font-button-sm);
                     color: var(--xdh-color-text-primary);
                     display: flex;
                     align-items: center;
-                    gap: var(--space-sm);
+                    gap: var(--xdh-space-sm);
                 }
 
                 .btn-close-head {
@@ -571,8 +571,8 @@ export class XdhSettingsDialog extends BaseElement {
                     border: none;
                     color: var(--xdh-color-text-secondary);
                     cursor: pointer;
-                    padding: var(--space-xs);
-                    border-radius: var(--radius-sm);
+                    padding: var(--xdh-space-xs);
+                    border-radius: var(--xdh-radius-sm);
                     display: flex;
                     align-items: center;
                     transition: color 0.13s, background 0.13s;
@@ -586,27 +586,27 @@ export class XdhSettingsDialog extends BaseElement {
                 .dialog-body {
                     overflow-y: auto;
                     flex: 1;
-                    padding: var(--space-xs) 0 var(--space-md);
+                    padding: var(--xdh-space-xs) 0 var(--xdh-space-md);
                 }
 
                 .loading-msg {
-                    padding: var(--space-xl);
+                    padding: var(--xdh-space-xl);
                     text-align: center;
                     color: var(--xdh-color-text-secondary);
                     font-size: 13px;
                 }
 
                 .section {
-                    padding: var(--space-md) var(--space-base) var(--space-xs);
+                    padding: var(--xdh-space-md) var(--xdh-space-base) var(--xdh-space-xs);
                 }
 
                 .sect-title {
-                    font: var(--font-badge);
+                    font: var(--xdh-font-badge);
                     letter-spacing: 0.07em;
                     text-transform: uppercase;
                     color: var(--xdh-color-text-secondary);
-                    margin-bottom: var(--space-sm);
-                    padding-bottom: var(--space-xs);
+                    margin-bottom: var(--xdh-space-sm);
+                    padding-bottom: var(--xdh-space-xs);
                     border-bottom: 1px solid var(--xdh-color-border);
                 }
 
@@ -614,12 +614,12 @@ export class XdhSettingsDialog extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    padding: var(--space-sm) 0;
-                    gap: var(--space-md);
+                    padding: var(--xdh-space-sm) 0;
+                    gap: var(--xdh-space-md);
                 }
 
                 .row-label {
-                    font: var(--font-body-sm);
+                    font: var(--xdh-font-body-sm);
                     color: var(--xdh-color-text-primary);
                     flex: 1;
                     min-width: 0;
@@ -649,7 +649,7 @@ export class XdhSettingsDialog extends BaseElement {
                     width: 36px;
                     height: 20px;
                     background: var(--xdh-color-surface-2);
-                    border-radius: var(--radius-full);
+                    border-radius: var(--xdh-radius-full);
                     border: 1px solid var(--xdh-color-border);
                     transition: background 0.15s, border-color 0.15s;
                     position: relative;
@@ -664,12 +664,12 @@ export class XdhSettingsDialog extends BaseElement {
                     transition: transform 0.15s, background 0.15s;
                 }
                 .toggle input:checked + .track {
-                    background: var(--color-primary);
-                    border-color: var(--color-primary);
+                    background: var(--xdh-clr-primary);
+                    border-color: var(--xdh-clr-primary);
                 }
                 .toggle input:checked + .track::after {
                     transform: translateX(16px);
-                    background: var(--color-on-primary);
+                    background: var(--xdh-clr-on-primary);
                 }
                 .toggle.disabled {
                     opacity: 0.45;
@@ -681,14 +681,14 @@ export class XdhSettingsDialog extends BaseElement {
                     margin-top: -4px;
                 }
                 .ffmpeg-status-text {
-                    font: var(--font-badge);
+                    font: var(--xdh-font-badge);
                     opacity: 0.75;
                 }
                 .ffmpeg-status.is-available .ffmpeg-status-text {
                     color: var(--xdh-color-text-secondary);
                 }
                 .ffmpeg-status.is-missing .ffmpeg-status-text {
-                    color: var(--color-primary);
+                    color: var(--xdh-clr-primary);
                     opacity: 0.9;
                 }
 
@@ -697,15 +697,15 @@ export class XdhSettingsDialog extends BaseElement {
                     background: var(--xdh-color-surface-2);
                     border: 1px solid var(--xdh-color-border);
                     color: var(--xdh-color-text-primary);
-                    border-radius: var(--radius-sm);
-                    padding: var(--space-xs) var(--space-sm);
-                    font: var(--font-micro-label);
+                    border-radius: var(--xdh-radius-sm);
+                    padding: var(--xdh-space-xs) var(--xdh-space-sm);
+                    font: var(--xdh-font-micro-label);
                     outline: none;
                     cursor: pointer;
                     transition: border-color 0.13s;
                 }
                 .select-input:focus {
-                    border-color: var(--color-primary);
+                    border-color: var(--xdh-clr-primary);
                 }
 
                 .text-input {
@@ -714,15 +714,15 @@ export class XdhSettingsDialog extends BaseElement {
                     background: var(--xdh-color-surface-2);
                     border: 1px solid var(--xdh-color-border);
                     color: var(--xdh-color-text-primary);
-                    border-radius: var(--radius-sm);
-                    padding: var(--space-xs) var(--space-sm);
-                    font: var(--font-micro-label);
+                    border-radius: var(--xdh-radius-sm);
+                    padding: var(--xdh-space-xs) var(--xdh-space-sm);
+                    font: var(--xdh-font-micro-label);
                     outline: none;
                     transition: border-color 0.13s;
                 }
 
                 .text-input:focus {
-                    border-color: var(--color-primary);
+                    border-color: var(--xdh-clr-primary);
                 }
 
                 /* ── Custom folder list ── */
@@ -730,29 +730,29 @@ export class XdhSettingsDialog extends BaseElement {
                     /* 最多显示约 3 条，超出内部滚动 */
                     max-height: 96px;
                     overflow-y: auto;
-                    margin-bottom: var(--space-sm);
+                    margin-bottom: var(--xdh-space-sm);
                     display: flex;
                     flex-direction: column;
-                    gap: var(--space-xs);
+                    gap: var(--xdh-space-xs);
                 }
                 .folder-empty {
-                    font: var(--font-micro-label);
+                    font: var(--xdh-font-micro-label);
                     color: var(--xdh-color-text-secondary);
-                    padding: var(--space-xs) 0;
+                    padding: var(--xdh-space-xs) 0;
                 }
                 .folder-tag {
                     display: flex;
                     align-items: center;
-                    gap: var(--space-xs);
+                    gap: var(--xdh-space-xs);
                     background: var(--xdh-color-surface-2);
                     border: 1px solid var(--xdh-color-border);
-                    border-radius: var(--radius-sm);
-                    padding: var(--space-xs) var(--space-sm);
+                    border-radius: var(--xdh-radius-sm);
+                    padding: var(--xdh-space-xs) var(--xdh-space-sm);
                 }
                 .folder-tag-text {
                     flex: 1;
                     min-width: 0;
-                    font: var(--font-micro-label);
+                    font: var(--xdh-font-micro-label);
                     color: var(--xdh-color-text-primary);
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -761,8 +761,8 @@ export class XdhSettingsDialog extends BaseElement {
                 .folder-del {
                     background: transparent;
                     border: none;
-                    padding: var(--space-xxs);
-                    border-radius: var(--radius-xs);
+                    padding: var(--xdh-space-xxs);
+                    border-radius: var(--xdh-radius-xs);
                     cursor: pointer;
                     color: var(--xdh-color-text-secondary);
                     display: flex;
@@ -771,13 +771,13 @@ export class XdhSettingsDialog extends BaseElement {
                     transition: color 0.12s, background 0.12s;
                 }
                 .folder-del:hover {
-                    color: var(--color-error);
-                    background: color-mix(in srgb, var(--color-error) 15%, transparent);
+                    color: var(--xdh-clr-error);
+                    background: color-mix(in srgb, var(--xdh-clr-error) 15%, transparent);
                 }
 
                 .folder-add-row {
                     display: flex;
-                    gap: var(--space-xs);
+                    gap: var(--xdh-space-xs);
                     align-items: center;
                 }
                 .folder-input {
@@ -786,63 +786,63 @@ export class XdhSettingsDialog extends BaseElement {
                     background: var(--xdh-color-surface-2);
                     border: 1px solid var(--xdh-color-border);
                     color: var(--xdh-color-text-primary);
-                    border-radius: var(--radius-sm);
-                    padding: var(--space-xs) var(--space-sm);
-                    font: var(--font-micro-label);
+                    border-radius: var(--xdh-radius-sm);
+                    padding: var(--xdh-space-xs) var(--xdh-space-sm);
+                    font: var(--xdh-font-micro-label);
                     outline: none;
                     transition: border-color 0.13s;
                 }
                 .folder-input:focus {
-                    border-color: var(--color-primary);
+                    border-color: var(--xdh-clr-primary);
                 }
                 .folder-add-btn {
                     flex-shrink: 0;
                     background: var(--xdh-color-surface-2);
                     border: 1px solid var(--xdh-color-border);
                     color: var(--xdh-color-text-primary);
-                    border-radius: var(--radius-sm);
-                    padding: var(--space-xs) var(--space-md);
-                    font: var(--font-micro-label);
+                    border-radius: var(--xdh-radius-sm);
+                    padding: var(--xdh-space-xs) var(--xdh-space-md);
+                    font: var(--xdh-font-micro-label);
                     cursor: pointer;
                     transition: background 0.13s, border-color 0.13s;
                     white-space: nowrap;
                 }
                 .folder-add-btn:hover {
                     background: var(--xdh-color-hover);
-                    border-color: var(--color-primary);
-                    color: var(--color-primary);
+                    border-color: var(--xdh-clr-primary);
+                    color: var(--xdh-clr-primary);
                 }
 
                 .confirm-overlay {
                     position: fixed;
                     inset: 0;
                     z-index: 5001;
-                    background: var(--color-scrim);
+                    background: var(--xdh-clr-scrim);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    padding: var(--space-base);
+                    padding: var(--xdh-space-base);
                 }
 
                 .confirm-dialog {
                     width: min(460px, calc(100vw - 32px));
                     background: var(--xdh-color-surface-1);
                     border: 1px solid var(--xdh-color-border);
-                    border-radius: var(--radius-md);
-                    box-shadow: var(--shadow-dialog);
-                    padding: var(--space-base);
+                    border-radius: var(--xdh-radius-md);
+                    box-shadow: var(--xdh-shadow-dialog);
+                    padding: var(--xdh-space-base);
                     display: flex;
                     flex-direction: column;
-                    gap: var(--space-md);
+                    gap: var(--xdh-space-md);
                 }
 
                 .confirm-title {
-                    font: var(--font-title-sm);
+                    font: var(--xdh-font-title-sm);
                     color: var(--xdh-color-text-primary);
                 }
 
                 .confirm-message {
-                    font: var(--font-body-sm);
+                    font: var(--xdh-font-body-sm);
                     line-height: 1.6;
                     color: var(--xdh-color-text-secondary);
                 }
@@ -850,28 +850,28 @@ export class XdhSettingsDialog extends BaseElement {
                 .confirm-path-list {
                     display: flex;
                     flex-direction: column;
-                    gap: var(--space-sm);
+                    gap: var(--xdh-space-sm);
                 }
 
                 .confirm-path-card {
                     background: var(--xdh-color-surface-2);
                     border: 1px solid var(--xdh-color-border);
-                    border-radius: var(--radius-sm);
-                    padding: var(--space-sm) var(--space-md);
+                    border-radius: var(--xdh-radius-sm);
+                    padding: var(--xdh-space-sm) var(--xdh-space-md);
                     display: flex;
                     flex-direction: column;
-                    gap: var(--space-xs);
+                    gap: var(--xdh-space-xs);
                 }
 
                 .confirm-path-label {
-                    font: var(--font-badge);
+                    font: var(--xdh-font-badge);
                     color: var(--xdh-color-text-secondary);
                     text-transform: uppercase;
                     letter-spacing: 0.05em;
                 }
 
                 .confirm-path-value {
-                    font: var(--font-micro-label);
+                    font: var(--xdh-font-micro-label);
                     line-height: 1.5;
                     color: var(--xdh-color-text-primary);
                     word-break: break-all;
@@ -881,16 +881,16 @@ export class XdhSettingsDialog extends BaseElement {
                     display: flex;
                     justify-content: flex-end;
                     flex-wrap: wrap;
-                    gap: var(--space-sm);
+                    gap: var(--xdh-space-sm);
                 }
 
                 .confirm-btn {
                     background: var(--xdh-color-surface-4);
                     border: 1px solid var(--xdh-color-surface-4);
                     color: var(--xdh-color-text-primary);
-                    border-radius: var(--radius-sm);
-                    padding: var(--space-sm) var(--space-md);
-                    font: var(--font-button-sm);
+                    border-radius: var(--xdh-radius-sm);
+                    padding: var(--xdh-space-sm) var(--xdh-space-md);
+                    font: var(--xdh-font-button-sm);
                     cursor: pointer;
                     transition: background 0.13s, border-color 0.13s,
                         color 0.13s;

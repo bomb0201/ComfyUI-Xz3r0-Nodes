@@ -142,13 +142,13 @@ function getTooltipElement() {
         zIndex: "999999",
         pointerEvents: "none",
         background: "var(--xdh-color-surface-3)",
-        border: "1px solid var(--color-hairline, #666)",
-        borderRadius: "var(--radius-sm)",
+        border: "1px solid var(--xdh-clr-hairline, #666)",
+        borderRadius: "var(--xdh-radius-sm)",
         padding: "6px 10px",
         maxWidth: "240px",
         boxSizing: "border-box",
         color: "var(--xdh-color-text-primary)",
-        boxShadow: "var(--shadow-popup)",
+        boxShadow: "var(--xdh-shadow-popup)",
         fontSize: "12px",
         lineHeight: "1.35",
         whiteSpace: "normal",
@@ -543,15 +543,15 @@ function ensureStyles() {
             min-width: 40px;
             height: 22px;
             padding: 0 8px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--color-hairline);
-            background: var(--color-surface-strong);
+            border-radius: var(--xdh-radius-sm);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
             color: var(--xdh-color-text-primary);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font: var(--font-micro-label);
+            font: var(--xdh-font-micro-label);
             line-height: 1;
             transition: border-color 120ms ease, background-color 120ms ease;
             flex: 0 0 auto;
@@ -560,7 +560,7 @@ function ensureStyles() {
         .ximageget-mask-btn:hover,
         .ximageget-mask-btn:focus-visible {
             border-color: var(--ximageget-accent);
-            background: var(--color-surface-strong);
+            background: var(--xdh-clr-surface-strong);
             outline: none;
         }
         .ximageget-mask-btn:disabled {
@@ -572,9 +572,9 @@ function ensureStyles() {
             align-items: center;
             gap: 6px;
             padding: 4px 12px;
-            border-radius: var(--radius-full);
+            border-radius: var(--xdh-radius-full);
             border: 1px solid var(--ximageget-accent);
-            background: var(--color-surface-strong);
+            background: var(--xdh-clr-surface-strong);
         }
         .ximageget-badge-chip {
             font-size: 16px;
@@ -588,30 +588,30 @@ function ensureStyles() {
         .ximageget-badge-swatch {
             width: 18px;
             height: 18px;
-            border-radius: var(--radius-xs);
+            border-radius: var(--xdh-radius-xs);
             background: var(--ximageget-accent);
-            box-shadow: inset 0 0 0 1px var(--color-hairline);
+            box-shadow: inset 0 0 0 1px var(--xdh-clr-hairline);
         }
         .ximageget-clear-btn {
             width: 22px;
             height: 22px;
             padding: 0;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--color-hairline);
-            background: var(--color-surface-strong);
+            border-radius: var(--xdh-radius-sm);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
             color: var(--xdh-color-text-primary);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font: var(--font-micro-label);
+            font: var(--xdh-font-micro-label);
             line-height: 1;
             transition: border-color 120ms ease, background-color 120ms ease;
         }
         .ximageget-clear-btn:hover,
         .ximageget-clear-btn:focus-visible {
             border-color: var(--ximageget-accent);
-            background: var(--color-surface-strong);
+            background: var(--xdh-clr-surface-strong);
             outline: none;
         }
         .ximageget-clear-btn:active {
@@ -627,8 +627,8 @@ function ensureStyles() {
         .ximageget-preview {
             width: 100%;
             min-height: 180px;
-            border: 1px solid var(--color-hairline);
-            background: var(--color-surface-card);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-card);
             position: relative;
             display: flex;
             align-items: center;
@@ -664,9 +664,9 @@ function ensureStyles() {
             height: calc(100% - 16px);
             margin: 8px;
             padding: 10px 12px;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--color-hairline);
-            background: var(--color-surface-strong);
+            border-radius: var(--xdh-radius-sm);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
             color: var(--xdh-color-text-primary);
             font-size: 13px;
             line-height: 1.45;
@@ -703,7 +703,7 @@ function ensureStyles() {
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            font: var(--font-caption-sm);
+            font: var(--xdh-font-caption-sm);
             color: var(--xdh-color-text-primary);
             font-weight: 600;
             opacity: 1;
@@ -717,14 +717,14 @@ function ensureStyles() {
             display: none;
         }
         .ximageget-title {
-            font: var(--font-micro-label);
+            font: var(--xdh-font-micro-label);
             color: var(--xdh-color-text-primary);
             opacity: 1;
             user-select: text;
             cursor: text;
-            background: var(--color-surface-soft);
-            padding: var(--space-xs) var(--space-sm);
-            border-radius: var(--radius-sm);
+            background: var(--xdh-clr-surface-soft);
+            padding: var(--xdh-space-xs) var(--xdh-space-sm);
+            border-radius: var(--xdh-radius-sm);
             min-height: 24px;
             display: block;
             flex: 1 1 auto;

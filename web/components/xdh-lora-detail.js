@@ -353,7 +353,7 @@ export class XdhLoraDetail extends BaseElement {
                 .header {
                     flex-shrink: 0;
                     height: 44px;
-                    padding: 0 var(--space-sm) 0 var(--space-md);
+                    padding: 0 var(--xdh-space-sm) 0 var(--xdh-space-md);
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
@@ -363,9 +363,9 @@ export class XdhLoraDetail extends BaseElement {
                 .title-wrap {
                     display: flex;
                     align-items: center;
-                    gap: var(--space-sm);
+                    gap: var(--xdh-space-sm);
                     color: var(--xdh-color-text-primary);
-                    font: var(--font-title-sm);
+                    font: var(--xdh-font-title-sm);
                     min-width: 0;
                 }
                 .title-text {
@@ -382,12 +382,12 @@ export class XdhLoraDetail extends BaseElement {
                     justify-content: center;
                     background: transparent;
                     border: none;
-                    border-radius: var(--radius-xs);
+                    border-radius: var(--xdh-radius-xs);
                     color: var(--xdh-color-text-secondary);
                     cursor: pointer;
                 }
                 .lb-close:hover {
-                    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+                    background: color-mix(in srgb, var(--xdh-clr-ink) 8%, transparent);
                     color: var(--xdh-color-text-primary);
                 }
 
@@ -395,7 +395,7 @@ export class XdhLoraDetail extends BaseElement {
                 .preview-area {
                     flex-shrink: 0;
                     height: 200px;
-                    background: var(--color-canvas);
+                    background: var(--xdh-clr-canvas);
                     border-bottom: 1px solid var(--xdh-color-border);
                     position: relative;
                     display: flex;
@@ -433,17 +433,17 @@ export class XdhLoraDetail extends BaseElement {
                 .form-scroll {
                     flex: 1;
                     overflow-y: auto;
-                    padding: var(--space-md) var(--space-base);
+                    padding: var(--xdh-space-md) var(--xdh-space-base);
                     display: flex;
                     flex-direction: column;
-                    gap: var(--space-md);
+                    gap: var(--xdh-space-md);
                 }
 
                 /* ── Strength row ────────────────────── */
                 .strength-row {
                     display: flex;
                     align-items: flex-end;
-                    gap: var(--space-xs);
+                    gap: var(--xdh-space-xs);
                 }
                 .strength-row .field-group { flex: 1; min-width: 0; }
 
@@ -451,10 +451,10 @@ export class XdhLoraDetail extends BaseElement {
                 .field-group {
                     display: flex;
                     flex-direction: column;
-                    gap: var(--space-xs);
+                    gap: var(--xdh-space-xs);
                 }
                 label {
-                    font: var(--font-micro-label);
+                    font: var(--xdh-font-micro-label);
                     color: var(--xdh-color-text-secondary);
                     text-transform: uppercase;
                     letter-spacing: 0.06em;
@@ -462,18 +462,18 @@ export class XdhLoraDetail extends BaseElement {
                 input[type="number"], textarea {
                     background: var(--xdh-input-bg);
                     border: 1px solid var(--border-standard);
-                    border-radius: var(--radius-sm);
+                    border-radius: var(--xdh-radius-sm);
                     color: var(--xdh-color-text-primary);
                     font-family: inherit;
                     font-size: 13px;
-                    padding: var(--space-sm) var(--space-md);
+                    padding: var(--xdh-space-sm) var(--xdh-space-md);
                     width: 100%;
                     box-sizing: border-box;
                     transition: border-color 0.12s;
                 }
                 input[type="number"]:focus, textarea:focus {
                     outline: none;
-                    border-color: var(--color-primary);
+                    border-color: var(--xdh-clr-primary);
                 }
                 input[type="number"]:disabled {
                     opacity: 0.35;
@@ -493,7 +493,7 @@ export class XdhLoraDetail extends BaseElement {
                     justify-content: center;
                     background: transparent;
                     border: 1px solid var(--border-standard);
-                    border-radius: var(--radius-sm);
+                    border-radius: var(--xdh-radius-sm);
                     color: var(--xdh-color-text-secondary);
                     cursor: pointer;
                     margin-bottom: 1px;
@@ -503,8 +503,8 @@ export class XdhLoraDetail extends BaseElement {
                     color: var(--xdh-color-text-primary);
                 }
                 .link-btn.linked {
-                    color: var(--color-primary);
-                    border-color: var(--color-primary);
+                    color: var(--xdh-clr-primary);
+                    border-color: var(--xdh-clr-primary);
                 }
 
                 /* ── Trigger words ───────────────────── */
@@ -512,7 +512,7 @@ export class XdhLoraDetail extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    gap: var(--space-sm);
+                    gap: var(--xdh-space-sm);
                     flex-wrap: nowrap;
                 }
                 .tw-label-row label {
@@ -523,11 +523,11 @@ export class XdhLoraDetail extends BaseElement {
                     flex-shrink: 0;
                     display: inline-flex;
                     align-items: center;
-                    gap: var(--space-xs);
-                    padding: var(--space-xxs) var(--space-sm);
+                    gap: var(--xdh-space-xs);
+                    padding: var(--xdh-space-xxs) var(--xdh-space-sm);
                     background: transparent;
                     border: 1px solid var(--border-standard);
-                    border-radius: var(--radius-xs);
+                    border-radius: var(--xdh-radius-xs);
                     color: var(--xdh-color-text-secondary);
                     font-size: 10px;
                     letter-spacing: 0.03em;
@@ -548,21 +548,21 @@ export class XdhLoraDetail extends BaseElement {
                 .footer-bar {
                     flex-shrink: 0;
                     height: 52px;
-                    padding: 0 var(--space-md);
+                    padding: 0 var(--xdh-space-md);
                     display: flex;
                     align-items: center;
                     justify-content: flex-end;
-                    gap: var(--space-sm);
+                    gap: var(--xdh-space-sm);
                     border-top: 1px solid var(--xdh-color-border);
                     background: var(--xdh-window-header-bg);
                 }
                 button {
                     display: inline-flex;
                     align-items: center;
-                    gap: var(--space-xs);
-                    padding: var(--space-sm) var(--space-md);
-                    border-radius: var(--radius-sm);
-                    font: var(--font-button-sm);
+                    gap: var(--xdh-space-xs);
+                    padding: var(--xdh-space-sm) var(--xdh-space-md);
+                    border-radius: var(--xdh-radius-sm);
+                    font: var(--xdh-font-button-sm);
                     cursor: pointer;
                     font-family: inherit;
                 }
@@ -576,9 +576,9 @@ export class XdhLoraDetail extends BaseElement {
                     color: var(--xdh-color-text-primary);
                 }
                 .save-btn {
-                    background: var(--color-primary);
+                    background: var(--xdh-clr-primary);
                     border: none;
-                    color: var(--color-on-primary);
+                    color: var(--xdh-clr-on-primary);
                 }
                 .save-btn:hover { filter: brightness(1.12); }
                 .save-btn.loading { opacity: 0.55; pointer-events: none; }
@@ -589,7 +589,7 @@ export class XdhLoraDetail extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: var(--space-md);
+                    gap: var(--xdh-space-md);
                     color: var(--xdh-color-text-secondary);
                     font-size: 13px;
                 }

@@ -529,8 +529,8 @@ export class XdhContentNav extends BaseElement {
                 .nav-row {
                     display: flex;
                     align-items: center;
-                    gap: var(--space-xs);
-                    padding: 3px var(--space-sm);
+                    gap: var(--xdh-space-xs);
+                    padding: 3px var(--xdh-space-sm);
                     container-type: inline-size;
                     container-name: nav;
                     min-width: 0;
@@ -566,8 +566,8 @@ export class XdhContentNav extends BaseElement {
                     border-right: 1px solid var(--xdh-color-border);
                     box-sizing: border-box;
                     flex-shrink: 0;
-                    gap: var(--space-xs);
-                    padding: var(--space-xs) 3px 6px;
+                    gap: var(--xdh-space-xs);
+                    padding: var(--xdh-space-xs) 3px 6px;
                     background:
                         linear-gradient(180deg,
                             color-mix(in srgb, var(--xdh-color-surface-2) 42%, transparent),
@@ -595,7 +595,7 @@ export class XdhContentNav extends BaseElement {
                 .nav-status {
                     width: 11px;
                     height: 11px;
-                    border-radius: var(--radius-full);
+                    border-radius: var(--xdh-radius-full);
                     background: var(--xdh-color-success);
                     box-shadow: 0 0 0 2px var(--xdh-color-surface-1);
                     position: relative;
@@ -643,16 +643,16 @@ export class XdhContentNav extends BaseElement {
                     background: transparent;
                     border: 1px solid transparent;
                     color: var(--xdh-color-text-secondary);
-                    border-radius: var(--radius-sm);
+                    border-radius: var(--xdh-radius-sm);
                     cursor: pointer;
                     height: 28px;
-                    padding: 0 var(--space-sm);
-                    font: var(--font-micro-label);
+                    padding: 0 var(--xdh-space-sm);
+                    font: var(--xdh-font-micro-label);
                     white-space: nowrap;
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
-                    gap: var(--space-xs);
+                    gap: var(--xdh-space-xs);
                     box-sizing: border-box;
                     transition: background 0.14s, color 0.14s;
                     flex-shrink: 0;
@@ -673,13 +673,13 @@ export class XdhContentNav extends BaseElement {
 
                 /* ── Row 1: Breadcrumb ── */
                 .breadcrumb {
-                    display: flex; align-items: center; gap: var(--space-sm);
+                    display: flex; align-items: center; gap: var(--xdh-space-sm);
                     flex: 1; min-width: 0; overflow: hidden;
                     background: var(--xdh-color-surface-2);
-                    padding: 4px var(--space-sm);
-                    border-radius: var(--radius-sm);
+                    padding: 4px var(--xdh-space-sm);
+                    border-radius: var(--xdh-radius-sm);
                     border: 1px solid var(--xdh-color-border);
-                    font: var(--font-body-sm);
+                    font: var(--xdh-font-body-sm);
                 }
                 .bc-icon  { flex-shrink: 0; display: flex; align-items: center; }
                 .bc-label { font-weight: 600; color: var(--xdh-color-text-primary); white-space: nowrap; }
@@ -690,7 +690,7 @@ export class XdhContentNav extends BaseElement {
                 }
                 .status-text {
                     display: block;
-                    font: var(--font-uppercase-tag);
+                    font: var(--xdh-font-uppercase-tag);
                     color: var(--xdh-color-text-secondary);
                     letter-spacing: 0.02em;
                     text-align: center;
@@ -704,11 +704,11 @@ export class XdhContentNav extends BaseElement {
                     top: 6px;
                     left: calc(100% + 8px);
                     width: 168px;
-                    padding: 10px var(--space-sm) 9px;
+                    padding: 10px var(--xdh-space-sm) 9px;
                     border: 1px solid var(--xdh-color-border);
-                    border-radius: var(--radius-md);
+                    border-radius: var(--xdh-radius-md);
                     background: var(--xdh-color-surface-2);
-                    box-shadow: var(--shadow-dialog);
+                    box-shadow: var(--xdh-shadow-dialog);
                     display: none;
                 }
                 .status-popover.open {
@@ -729,15 +729,15 @@ export class XdhContentNav extends BaseElement {
                 .status-popover-head {
                     display: flex;
                     align-items: center;
-                    gap: var(--space-sm);
+                    gap: var(--xdh-space-sm);
                     margin-bottom: 9px;
-                    padding-bottom: var(--space-sm);
+                    padding-bottom: var(--xdh-space-sm);
                     border-bottom: 1px solid color-mix(in srgb, var(--xdh-color-border) 80%, transparent);
                 }
                 .status-popover-dot {
                     width: 9px;
                     height: 9px;
-                    border-radius: var(--radius-full);
+                    border-radius: var(--xdh-radius-full);
                     background: currentColor;
                     flex-shrink: 0;
                 }
@@ -754,7 +754,7 @@ export class XdhContentNav extends BaseElement {
                     color: var(--db-palette-09);
                 }
                 .status-popover-title {
-                    font: var(--font-micro-label);
+                    font: var(--xdh-font-micro-label);
                     color: var(--xdh-color-text-primary);
                     min-width: 0;
                 }
@@ -766,17 +766,17 @@ export class XdhContentNav extends BaseElement {
                     align-items: center;
                 }
                 .status-key {
-                    font: var(--font-badge);
+                    font: var(--xdh-font-badge);
                     color: var(--xdh-color-text-secondary);
                 }
                 .status-val {
-                    font: 600 11px/1.18 var(--font-family-base);
+                    font: 600 11px/1.18 var(--xdh-font-family-base);
                     color: var(--xdh-color-text-primary);
                     text-align: right;
                 }
 
                 /* ── Row 2: Tools ── */
-                .divider { width: 1px; height: 14px; background: var(--xdh-color-border); margin: 0 var(--space-xxs); flex-shrink: 0; }
+                .divider { width: 1px; height: 14px; background: var(--xdh-color-border); margin: 0 var(--xdh-space-xxs); flex-shrink: 0; }
 
                 .search-wrap {
                     position: relative;
@@ -791,12 +791,12 @@ export class XdhContentNav extends BaseElement {
                     min-width: 230px;
                     display: flex;
                     align-items: center;
-                    gap: var(--space-sm);
-                    padding: var(--space-sm);
+                    gap: var(--xdh-space-sm);
+                    padding: var(--xdh-space-sm);
                     border: 1px solid var(--xdh-color-border);
-                    border-radius: var(--radius-sm);
+                    border-radius: var(--xdh-radius-sm);
                     background: var(--xdh-color-surface-2);
-                    box-shadow: var(--shadow-dialog);
+                    box-shadow: var(--xdh-shadow-dialog);
                     opacity: 0;
                     pointer-events: none;
                     transform: translateY(-4px);
@@ -813,12 +813,12 @@ export class XdhContentNav extends BaseElement {
                     flex: 1;
                     min-width: 0;
                     height: 28px;
-                    padding: 0 var(--space-sm);
+                    padding: 0 var(--xdh-space-sm);
                     border: 1px solid var(--xdh-color-border);
                     background: var(--xdh-color-surface-1);
                     color: var(--xdh-color-text-primary);
-                    border-radius: var(--radius-sm);
-                    font: var(--font-micro-label);
+                    border-radius: var(--xdh-radius-sm);
+                    font: var(--xdh-font-micro-label);
                     outline: none;
                     transition: border-color 0.15s ease;
                 }
@@ -852,8 +852,8 @@ export class XdhContentNav extends BaseElement {
                     display: none; position: absolute; right: 0; top: calc(100% + 4px);
                     background: var(--xdh-color-surface-2);
                     border: 1px solid var(--xdh-color-border);
-                    border-radius: var(--radius-sm); min-width: 170px; z-index: 200; padding: var(--space-xs) 0;
-                    box-shadow: var(--shadow-popup);
+                    border-radius: var(--xdh-radius-sm); min-width: 170px; z-index: 200; padding: var(--xdh-space-xs) 0;
+                    box-shadow: var(--xdh-shadow-popup);
                 }
                 .global-drawer.open { display: block; }
                 .drawer-item {

@@ -1547,7 +1547,7 @@ app.registerExtension({
             }
             .xz3r0-opacity-slider::-webkit-slider-runnable-track {
                 height: 6px;
-                background: var(--color-surface-soft);
+                background: var(--xdh-clr-surface-soft);
                 border-radius: 999px;
             }
             .xz3r0-opacity-slider::-webkit-slider-thumb {
@@ -1557,10 +1557,10 @@ app.registerExtension({
                 height: 15px;
                 margin-top: -4.5px;
                 background: var(--xdh-color-primary, var(--btn-active-color));
-                border: 2px solid var(--color-surface-strong);
+                border: 2px solid var(--xdh-clr-surface-strong);
                 border-radius: 50%;
                 cursor: pointer;
-                box-shadow: 0 0 0 1px var(--color-border-strong);
+                box-shadow: 0 0 0 1px var(--xdh-clr-border-strong);
                 transition: background 0.2s, box-shadow 0.2s;
             }
             .xz3r0-opacity-slider::-webkit-slider-thumb:hover {
@@ -1570,15 +1570,15 @@ app.registerExtension({
                 width: 15px;
                 height: 15px;
                 background: var(--xdh-color-primary, var(--btn-active-color));
-                border: 2px solid var(--color-surface-strong);
+                border: 2px solid var(--xdh-clr-surface-strong);
                 border-radius: 50%;
                 cursor: pointer;
-                box-shadow: 0 0 0 1px var(--color-border-strong);
+                box-shadow: 0 0 0 1px var(--xdh-clr-border-strong);
                 transition: background 0.2s, box-shadow 0.2s;
             }
             .xz3r0-opacity-slider::-moz-range-track {
                 height: 6px;
-                background: var(--color-surface-soft);
+                background: var(--xdh-clr-surface-soft);
                 border-radius: 999px;
             }
             .xz3r0-opacity-slider::-moz-range-thumb:hover {

@@ -253,23 +253,23 @@ export class XdhStagingDock extends BaseElement {
 
                 :host-context(body[data-theme="light"]) {
                     --dock-panel-bg: var(--xdh-color-surface-2);
-                    --dock-header-bg: var(--color-surface-strong);
+                    --dock-header-bg: var(--xdh-clr-surface-strong);
                     --dock-inner-bg: var(--xdh-color-surface-1);
-                    --dock-muted-bg: var(--color-surface-strong);
-                    --dock-hover-bg: var(--color-hairline);
+                    --dock-muted-bg: var(--xdh-clr-surface-strong);
+                    --dock-hover-bg: var(--xdh-clr-hairline);
                     --dock-border: var(--xdh-color-border);
                     --dock-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
                     --dock-active-bg: color-mix(
-                        in srgb, var(--color-primary) 10%, transparent
+                        in srgb, var(--xdh-clr-primary) 10%, transparent
                     );
-                    --dock-active-color: var(--color-primary);
+                    --dock-active-color: var(--xdh-clr-primary);
                     --dock-secondary-text: var(--xdh-color-text-secondary);
                 }
 
                 .dock-container {
                     background: var(--dock-panel-bg);
                     border: 1px solid var(--dock-border);
-                    border-radius: var(--radius-md);
+                    border-radius: var(--xdh-radius-md);
                     box-shadow: var(--dock-shadow);
                     pointer-events: auto;
                     transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1),
@@ -289,7 +289,7 @@ export class XdhStagingDock extends BaseElement {
                     height: 24px;
                     background: var(--dock-panel-bg);
                     border: 1px solid var(--dock-border);
-                    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+                    border-radius: var(--xdh-radius-sm) var(--xdh-radius-sm) 0 0;
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -307,7 +307,7 @@ export class XdhStagingDock extends BaseElement {
                 /* standalone (collapsed) state */
                 .dock-toggle.solo {
                     border-bottom: 1px solid var(--dock-border);
-                    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+                    border-radius: var(--xdh-radius-sm) var(--xdh-radius-sm) 0 0;
                     height: 24px;
                     box-shadow: var(--dock-shadow);
                     margin-bottom: 0px;
@@ -317,10 +317,10 @@ export class XdhStagingDock extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    padding: var(--space-xs) var(--space-md);
+                    padding: var(--xdh-space-xs) var(--xdh-space-md);
                     background: var(--dock-header-bg);
-                    gap: var(--space-sm);
-                    border-radius: var(--radius-md) var(--radius-md) 0 0;
+                    gap: var(--xdh-space-sm);
+                    border-radius: var(--xdh-radius-md) var(--xdh-radius-md) 0 0;
                     white-space: nowrap;
                     transition: background-color 0.15s ease, color 0.15s ease;
                     border-bottom: 1px solid var(--dock-border);
@@ -329,13 +329,13 @@ export class XdhStagingDock extends BaseElement {
                 .dock-title {
                     display: flex;
                     align-items: center;
-                    gap: var(--space-sm);
+                    gap: var(--xdh-space-sm);
                     flex-shrink: 0;
                 }
 
                 .dock-actions {
                     display: flex;
-                    gap: var(--space-sm);
+                    gap: var(--xdh-space-sm);
                     align-items: center;
                     flex-shrink: 0;
                 }
@@ -347,7 +347,7 @@ export class XdhStagingDock extends BaseElement {
                     cursor: pointer;
                     white-space: nowrap;
                     flex-shrink: 0;
-                    border-radius: var(--radius-xs);
+                    border-radius: var(--xdh-radius-xs);
                     width: 24px;
                     height: 24px;
                     padding: 0;
@@ -377,24 +377,24 @@ export class XdhStagingDock extends BaseElement {
 
                 .badge {
                     background: var(--xdh-color-primary);
-                    color: var(--color-on-primary);
-                    border-radius: var(--radius-sm);
-                    padding: var(--space-xxs) var(--space-sm);
-                    font: var(--font-micro-label);
+                    color: var(--xdh-clr-on-primary);
+                    border-radius: var(--xdh-radius-sm);
+                    padding: var(--xdh-space-xxs) var(--xdh-space-sm);
+                    font: var(--xdh-font-micro-label);
                     flex-shrink: 0;
                 }
 
                 .dock-body {
                     display: block;
-                    padding: var(--space-md) var(--space-md) var(--space-xs);
+                    padding: var(--xdh-space-md) var(--xdh-space-md) var(--xdh-space-xs);
                 }
 
                 .selected-item {
                     margin-bottom: 8px;
                     background: color-mix(in srgb, var(--dock-inner-bg) 88%, var(--dock-active-color, #4499ff) 12%);
                     border: 1px solid color-mix(in srgb, var(--dock-border) 50%, var(--dock-active-color, #4499ff) 50%);
-                    border-radius: var(--radius-sm);
-                    padding: var(--space-xs) var(--space-sm);
+                    border-radius: var(--xdh-radius-sm);
+                    padding: var(--xdh-space-xs) var(--xdh-space-sm);
                     color: var(--xdh-color-text-primary);
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -403,8 +403,8 @@ export class XdhStagingDock extends BaseElement {
                 .batch-target-row {
                     display: flex;
                     flex-direction: column;
-                    gap: var(--space-xs);
-                    padding: var(--space-sm) 0 0;
+                    gap: var(--xdh-space-xs);
+                    padding: var(--xdh-space-sm) 0 0;
                 }
 
                 .batch-target-label {
@@ -415,11 +415,11 @@ export class XdhStagingDock extends BaseElement {
                 }
 
                 .actions {
-                    padding: 0 var(--space-md) var(--space-sm);
+                    padding: 0 var(--xdh-space-md) var(--xdh-space-sm);
                     display: flex;
                     justify-content: flex-end;
-                    gap: var(--space-sm);
-                    border-radius: 0 0 var(--radius-md) var(--radius-md);
+                    gap: var(--xdh-space-sm);
+                    border-radius: 0 0 var(--xdh-radius-md) var(--xdh-radius-md);
                 }
             </style>
 

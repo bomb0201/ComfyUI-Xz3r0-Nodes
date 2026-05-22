@@ -29,11 +29,11 @@ export class XdhButton extends BaseElement {
                     display: inline-flex;
                     align-items: center;
                     justify-content: center;
-                    gap: var(--space-xs);
-                    padding: var(--space-sm) var(--space-base);
-                    font: var(--font-button-sm);
+                    gap: var(--xdh-space-xs);
+                    padding: var(--xdh-space-sm) var(--xdh-space-base);
+                    font: var(--xdh-font-button-sm);
                     border: none;
-                    border-radius: var(--radius-sm);
+                    border-radius: var(--xdh-radius-sm);
                     cursor: pointer;
                     transition: all 0.15s ease;
                     outline: none;
@@ -45,25 +45,25 @@ export class XdhButton extends BaseElement {
                 }
 
                 button.primary {
-                    background: var(--color-primary);
-                    color: var(--color-on-primary);
-                    box-shadow: var(--shadow-default);
+                    background: var(--xdh-clr-primary);
+                    color: var(--xdh-clr-on-primary);
+                    box-shadow: var(--xdh-shadow-default);
                 }
 
                 button.primary:hover:not(:disabled) {
-                    background: var(--color-primary-active);
-                    box-shadow: var(--shadow-popup);
+                    background: var(--xdh-clr-primary-active);
+                    box-shadow: var(--xdh-shadow-popup);
                     transform: translateY(-1px);
                 }
 
                 button.secondary {
-                    background: var(--color-surface-card);
-                    color: var(--color-ink);
-                    border: 1px solid var(--color-hairline);
+                    background: var(--xdh-clr-surface-card);
+                    color: var(--xdh-clr-ink);
+                    border: 1px solid var(--xdh-clr-hairline);
                 }
 
                 button.secondary:hover:not(:disabled) {
-                    background: var(--color-surface-strong);
+                    background: var(--xdh-clr-surface-strong);
                 }
 
                 @container (max-width: 300px) {

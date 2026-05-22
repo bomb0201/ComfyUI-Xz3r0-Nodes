@@ -125,9 +125,9 @@ export class XdhPagination extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: var(--space-md);
+                    gap: var(--xdh-space-md);
                     min-height: 44px;
-                    padding: 0 var(--space-md);
+                    padding: 0 var(--xdh-space-md);
                     background: var(--xdh-color-surface-1);
                     border-top: 1px solid var(--xdh-color-border);
                     border-bottom: 1px solid var(--xdh-color-border);
@@ -143,7 +143,7 @@ export class XdhPagination extends BaseElement {
                     padding: 0;
                     background: var(--xdh-color-surface-2);
                     border: 1px solid var(--xdh-color-border);
-                    border-radius: var(--radius-sm);
+                    border-radius: var(--xdh-radius-sm);
                     color: var(--xdh-color-text-secondary);
                     line-height: 0;
                     cursor: pointer;
@@ -175,18 +175,18 @@ export class XdhPagination extends BaseElement {
                 .page-jump {
                     display: flex;
                     align-items: center;
-                    gap: var(--space-sm);
+                    gap: var(--xdh-space-sm);
                     min-width: 0;
-                    padding: 0 var(--space-md);
+                    padding: 0 var(--xdh-space-md);
                     min-height: 40px;
                     border: 1px solid var(--xdh-color-border);
-                    border-radius: var(--radius-sm);
+                    border-radius: var(--xdh-radius-sm);
                     background: var(--xdh-color-surface-2);
                     transition: border-color 0.14s ease, box-shadow 0.14s ease;
                 }
 
                 .page-label {
-                    font: var(--font-micro-label);
+                    font: var(--xdh-font-micro-label);
                     color: var(--xdh-color-text-secondary);
                     white-space: nowrap;
                 }
@@ -195,7 +195,7 @@ export class XdhPagination extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: var(--space-xs);
+                    gap: var(--xdh-space-xs);
                 }
 
                 .page-input {
@@ -220,7 +220,7 @@ export class XdhPagination extends BaseElement {
 
                 .page-divider,
                 .page-total {
-                    font: var(--font-micro-label);
+                    font: var(--xdh-font-micro-label);
                     color: var(--xdh-color-text-secondary);
                     white-space: nowrap;
                 }

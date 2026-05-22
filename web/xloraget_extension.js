@@ -705,9 +705,9 @@ function ensureStyles() {
             gap: 8px;
             min-height: 260px;
             flex: 1 1 auto;
-            border: 1px solid var(--color-hairline);
-            background: var(--color-surface-strong);
-            border-radius: var(--radius-sm);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
+            border-radius: var(--xdh-radius-sm);
             padding: 8px;
             box-sizing: border-box;
             overflow-x: auto;
@@ -719,9 +719,9 @@ function ensureStyles() {
             align-items: flex-start;
             justify-content: space-between;
             gap: 10px;
-            border: 1px solid var(--color-hairline);
-            background: var(--color-surface-strong);
-            border-radius: var(--radius-sm);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
+            border-radius: var(--xdh-radius-sm);
             padding: 8px 10px;
             box-sizing: border-box;
         }
@@ -763,9 +763,9 @@ function ensureStyles() {
             width: 24px;
             min-width: 24px;
             height: 14px;
-            border-radius: var(--radius-full);
-            border: 1px solid var(--color-hairline);
-            background: var(--color-surface-strong);
+            border-radius: var(--xdh-radius-full);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
             box-sizing: border-box;
             transition: background 0.15s ease, border-color 0.15s ease,
                 box-shadow 0.15s ease;
@@ -778,27 +778,27 @@ function ensureStyles() {
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: var(--color-ink);
+            background: var(--xdh-clr-ink);
             transition: transform 0.15s ease, background 0.15s ease;
         }
         .xlora-switch-input:checked + .xlora-switch-track {
-            border-color: var(--color-primary);
+            border-color: var(--xdh-clr-primary);
             background: var(--xdh-color-primary-muted);
         }
         .xlora-switch-input:checked + .xlora-switch-track::after {
             transform: translateX(10px);
-            background: var(--color-primary);
+            background: var(--xdh-clr-primary);
         }
         .xlora-switch-input:focus-visible + .xlora-switch-track {
-            box-shadow: 0 0 0 1px var(--color-primary);
+            box-shadow: 0 0 0 1px var(--xdh-clr-primary);
         }
         .xlora-node-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             border: 1px solid var(--xlora-accent);
-            border-radius: var(--radius-full);
-            background: var(--color-surface-strong);
+            border-radius: var(--xdh-radius-full);
+            background: var(--xdh-clr-surface-strong);
             padding: 4px 12px;
             color: var(--xdh-color-text-primary);
             flex: 0 0 auto;
@@ -815,9 +815,9 @@ function ensureStyles() {
         .xlora-node-badge-swatch {
             width: 18px;
             height: 18px;
-            border-radius: var(--radius-xs);
+            border-radius: var(--xdh-radius-xs);
             background: var(--xlora-accent);
-            box-shadow: inset 0 0 0 1px var(--color-hairline);
+            box-shadow: inset 0 0 0 1px var(--xdh-clr-hairline);
         }
         .xlora-kind-emoji {
             display: inline-flex;
@@ -840,7 +840,7 @@ function ensureStyles() {
             box-shadow: 0 0 0 1px var(--xdh-brand-pink);
         }
         .xlora-empty {
-            font: var(--font-micro-label);
+            font: var(--xdh-font-micro-label);
             text-align: center;
             color: var(--xdh-color-text-primary);
             opacity: 0.85;
@@ -848,9 +848,9 @@ function ensureStyles() {
             line-height: 1.5;
         }
         .xlora-row {
-            border: 1px solid var(--color-hairline);
-            border-radius: var(--radius-sm);
-            background: var(--color-surface-strong);
+            border: 1px solid var(--xdh-clr-hairline);
+            border-radius: var(--xdh-radius-sm);
+            background: var(--xdh-clr-surface-strong);
             padding: 8px;
             box-sizing: border-box;
             display: flex;
@@ -878,16 +878,16 @@ function ensureStyles() {
             width: 20px;
             min-width: 20px;
             height: 20px;
-            border-radius: var(--radius-xs);
-            border: 1px solid var(--color-hairline);
+            border-radius: var(--xdh-radius-xs);
+            border: 1px solid var(--xdh-clr-hairline);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font: var(--font-micro-label);
+            font: var(--xdh-font-micro-label);
             color: var(--xdh-color-text-primary);
             cursor: grab;
             user-select: none;
-            background: var(--color-surface-strong);
+            background: var(--xdh-clr-surface-strong);
         }
         .xlora-active {
             display: inline-flex;
@@ -908,7 +908,7 @@ function ensureStyles() {
         .xlora-name {
             flex: 1 1 auto;
             min-width: 0;
-            font: var(--font-micro-label);
+            font: var(--xdh-font-micro-label);
             color: var(--xdh-color-text-primary);
             overflow: hidden;
             text-overflow: ellipsis;
@@ -952,7 +952,7 @@ function ensureStyles() {
             border: 1px solid var(--xdh-color-primary);
             background: var(--xdh-color-primary-muted);
             color: var(--xdh-color-text-primary);
-            border-radius: var(--radius-full);
+            border-radius: var(--xdh-radius-full);
             padding: 0 10px;
             box-sizing: border-box;
             font-size: 11px;
@@ -966,7 +966,7 @@ function ensureStyles() {
         .xlora-trigger-more {
             height: 24px;
             min-width: 54px;
-            border-radius: var(--radius-full);
+            border-radius: var(--xdh-radius-full);
             border: 1px solid var(--xdh-color-border);
             background: var(--xdh-color-surface-2);
             color: var(--xdh-color-text-primary);
@@ -979,7 +979,7 @@ function ensureStyles() {
         .xlora-trigger-panel {
             border: 1px solid var(--xdh-color-border);
             background: var(--xdh-color-surface-2);
-            border-radius: var(--radius-sm);
+            border-radius: var(--xdh-radius-sm);
             padding: 8px;
             display: flex;
             flex-direction: column;
@@ -995,7 +995,7 @@ function ensureStyles() {
             flex: 1 1 auto;
             min-width: 0;
             height: 24px;
-            border-radius: var(--radius-xs);
+            border-radius: var(--xdh-radius-xs);
             border: 1px solid var(--xdh-color-border);
             background: var(--xdh-color-surface-2);
             color: var(--xdh-color-text-primary);
@@ -1011,7 +1011,7 @@ function ensureStyles() {
         }
         .xlora-trigger-action {
             height: 24px;
-            border-radius: var(--radius-xs);
+            border-radius: var(--xdh-radius-xs);
             border: 1px solid var(--xdh-color-border);
             background: var(--xdh-color-surface-2);
             color: var(--xdh-color-text-primary);
@@ -1052,7 +1052,7 @@ function ensureStyles() {
             width: 22px;
             min-width: 22px;
             height: 22px;
-            border-radius: var(--radius-xs);
+            border-radius: var(--xdh-radius-xs);
             border: 1px solid var(--xdh-color-border);
             background: var(--xdh-color-surface-2);
             color: var(--xdh-color-text-primary);
@@ -1091,9 +1091,9 @@ function ensureStyles() {
         .xlora-input {
             width: 68px;
             height: 24px;
-            border-radius: var(--radius-xs);
-            border: 1px solid var(--color-hairline);
-            background: var(--color-surface-soft);
+            border-radius: var(--xdh-radius-xs);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-soft);
             color: var(--xdh-color-text-primary);
             padding: 0 6px;
             box-sizing: border-box;
@@ -1103,9 +1103,9 @@ function ensureStyles() {
             width: 22px;
             min-width: 22px;
             height: 22px;
-            border-radius: var(--radius-xs);
-            border: 1px solid var(--color-hairline);
-            background: var(--color-surface-strong);
+            border-radius: var(--xdh-radius-xs);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
             color: var(--xdh-color-text-primary);
             font-size: 12px;
             line-height: 1;
@@ -1116,16 +1116,16 @@ function ensureStyles() {
             padding: 0;
         }
         .xlora-lock-btn.active {
-            border-color: var(--color-primary);
-            color: var(--color-primary);
+            border-color: var(--xdh-clr-primary);
+            color: var(--xdh-clr-primary);
         }
         .xlora-remove {
             width: 22px;
             min-width: 22px;
             height: 22px;
-            border-radius: var(--radius-xs);
-            border: 1px solid var(--color-hairline);
-            background: var(--color-surface-strong);
+            border-radius: var(--xdh-radius-xs);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
             color: var(--xdh-color-text-primary);
             font-size: 12px;
             line-height: 1;
@@ -1140,14 +1140,14 @@ function ensureStyles() {
             z-index: 99999;
             pointer-events: none;
             background: var(--xdh-color-surface-3);
-            border: 1px solid var(--color-hairline);
-            border-radius: var(--radius-sm);
+            border: 1px solid var(--xdh-clr-hairline);
+            border-radius: var(--xdh-radius-sm);
             padding: 8px;
             width: 212px;
             max-width: 212px;
             box-sizing: border-box;
             color: var(--xdh-color-text-primary);
-            box-shadow: var(--shadow-popup);
+            box-shadow: var(--xdh-shadow-popup);
             display: none;
         }
         .xlora-tooltip img {
@@ -1156,11 +1156,11 @@ function ensureStyles() {
             display: block;
             object-fit: contain;
             background: #000;
-            border-radius: var(--radius-xs);
+            border-radius: var(--xdh-radius-xs);
             margin: 0 auto;
         }
         .xlora-tooltip-name {
-            font: var(--font-micro-label);
+            font: var(--xdh-font-micro-label);
             line-height: 1.35;
             white-space: normal;
             word-break: keep-all;

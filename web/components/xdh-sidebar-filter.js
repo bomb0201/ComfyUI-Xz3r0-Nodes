@@ -113,7 +113,7 @@ export class XdhSidebarFilter extends BaseElement {
                     display: block;
                     height: 1px;
                     background: var(--xdh-color-border);
-                    margin: var(--space-xxs) var(--space-sm);
+                    margin: var(--xdh-space-xxs) var(--xdh-space-sm);
                 }
 
                 .filter-item {
@@ -122,10 +122,10 @@ export class XdhSidebarFilter extends BaseElement {
                     justify-content: center;
                     width: 36px;
                     height: 36px;
-                    margin: var(--space-xxs) var(--space-sm);
+                    margin: var(--xdh-space-xxs) var(--xdh-space-sm);
                     box-sizing: border-box;
                     cursor: pointer;
-                    border-radius: var(--radius-sm);
+                    border-radius: var(--xdh-radius-sm);
                     transition: background 0.15s ease;
                     color: var(--xdh-color-text-primary);
                     position: relative;
@@ -143,7 +143,7 @@ export class XdhSidebarFilter extends BaseElement {
                     top: 6px;
                     bottom: 6px;
                     width: 3px;
-                    border-radius: var(--radius-xs);
+                    border-radius: var(--xdh-radius-xs);
                     background: var(--xdh-color-primary);
                 }
 

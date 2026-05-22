@@ -152,14 +152,14 @@ export class XdhBanner extends BaseElement {
                 }
                 .toast {
                     position: fixed;
-                    top: var(--space-base);
+                    top: var(--xdh-space-base);
                     left: 50%;
                     transform: translateX(-50%) translateY(0);
                     width: min(480px, calc(100vw - 48px));
                     display: flex;
                     align-items: center;
-                    gap: var(--space-md);
-                    padding: 0 var(--space-md);
+                    gap: var(--xdh-space-md);
+                    padding: 0 var(--xdh-space-md);
                     height: 44px;
                     background: color-mix(
                         in srgb,
@@ -167,12 +167,12 @@ export class XdhBanner extends BaseElement {
                         var(--xdh-color-surface-1) 20%
                     );
                     border: 1px solid ${cfg.border};
-                    border-radius: var(--radius-sm);
-                    font: var(--font-body-sm);
+                    border-radius: var(--xdh-radius-sm);
+                    font: var(--xdh-font-body-sm);
                     color: var(--xdh-color-text-primary);
                     backdrop-filter: blur(12px) saturate(1.4);
                     -webkit-backdrop-filter: blur(12px) saturate(1.4);
-                    box-shadow: var(--shadow-dialog);
+                    box-shadow: var(--xdh-shadow-dialog);
                     z-index: 900;
                     white-space: nowrap;
                     animation: toast-in 0.22s cubic-bezier(0.34,1.56,0.64,1)
@@ -224,9 +224,9 @@ export class XdhBanner extends BaseElement {
                     background: transparent;
                     border: 1px solid ${cfg.color};
                     color: ${cfg.color};
-                    padding: var(--space-xxs) var(--space-md);
-                    border-radius: var(--radius-xs);
-                    font: var(--font-micro-label);
+                    padding: var(--xdh-space-xxs) var(--xdh-space-md);
+                    border-radius: var(--xdh-radius-xs);
+                    font: var(--xdh-font-micro-label);
                     cursor: pointer;
                     flex-shrink: 0;
                     transition: background 0.15s;
@@ -242,8 +242,8 @@ export class XdhBanner extends BaseElement {
                     flex-shrink: 0;
                     display: flex;
                     align-items: center;
-                    padding: var(--space-xs);
-                    border-radius: var(--radius-xs);
+                    padding: var(--xdh-space-xs);
+                    border-radius: var(--xdh-radius-xs);
                     transition: color 0.15s;
                 }
                 .btn-close:hover {

@@ -1297,10 +1297,10 @@ const _execOverlay = (() => {
     Object.assign(label.style, {
         color: "var(--xdh-color-text-primary, #f0f0f0)",
         fontSize: "15px",
-        fontFamily: "var(--font-family-base, system-ui, sans-serif)",
+        fontFamily: "var(--xdh-font-family-base, system-ui, sans-serif)",
         fontWeight: "500",
         letterSpacing: "0.03em",
-        textShadow: "0 1px 4px color-mix(in srgb, var(--color-canvas, #000) 60%, transparent)",
+        textShadow: "0 1px 4px color-mix(in srgb, var(--xdh-clr-canvas, #000) 60%, transparent)",
         padding: "12px 24px",
         background: "color-mix(in srgb, var(--xdh-color-surface-2, #333) 95%, transparent)",
         border: "1px solid var(--xdh-color-border, #2e2e2e)",

@@ -705,7 +705,7 @@ export class XdhFolderTree extends BaseElement {
                     position: relative;
                     background: var(--xdh-color-surface-1);
                     border-right: 1px solid var(--xdh-color-border);
-                    box-shadow: var(--shadow-window);
+                    box-shadow: var(--xdh-shadow-window);
                     opacity: 0;
                     transform: translateX(-18px);
                     transition:
@@ -755,14 +755,14 @@ export class XdhFolderTree extends BaseElement {
                     height: 40px;
                     display: flex;
                     align-items: center;
-                    gap: var(--space-sm);
-                    padding: 0 var(--space-sm);
+                    gap: var(--xdh-space-sm);
+                    padding: 0 var(--xdh-space-sm);
                     border-bottom: 1px solid var(--xdh-color-border);
                     color: var(--xdh-color-text-secondary);
                 }
 
                 .tree-head-title {
-                    font: var(--font-micro-label);
+                    font: var(--xdh-font-micro-label);
                     color: var(--xdh-color-text-primary);
                     white-space: nowrap;
                     overflow: hidden;
@@ -786,7 +786,7 @@ export class XdhFolderTree extends BaseElement {
                     height: 100%;
                     overflow-y: scroll;
                     overflow-x: scroll;
-                    padding: var(--space-xs);
+                    padding: var(--xdh-space-xs);
                     scrollbar-gutter: stable;
                 }
 
@@ -806,9 +806,9 @@ export class XdhFolderTree extends BaseElement {
                     min-height: 30px;
                     display: flex;
                     align-items: center;
-                    gap: var(--space-sm);
+                    gap: var(--xdh-space-sm);
                     border: 1px solid transparent;
-                    border-radius: var(--radius-sm);
+                    border-radius: var(--xdh-radius-sm);
                     background: transparent;
                     color: var(--xdh-color-text-secondary);
                     cursor: pointer;
@@ -819,8 +819,8 @@ export class XdhFolderTree extends BaseElement {
                 }
 
                 .tree-root-row {
-                    padding: 0 var(--space-sm);
-                    margin-bottom: var(--space-xs);
+                    padding: 0 var(--xdh-space-sm);
+                    margin-bottom: var(--xdh-space-xs);
                     font-weight: 600;
                     position: relative;
                 }
@@ -847,7 +847,7 @@ export class XdhFolderTree extends BaseElement {
                     height: 18px;
                     padding: 0;
                     border: 0;
-                    border-radius: var(--radius-xs);
+                    border-radius: var(--xdh-radius-xs);
                     color: inherit;
                     background: transparent;
                     flex-shrink: 0;
@@ -866,7 +866,7 @@ export class XdhFolderTree extends BaseElement {
                     justify-content: center;
                     line-height: 1;
                     border: 1px solid transparent;
-                    border-radius: var(--radius-sm);
+                    border-radius: var(--xdh-radius-sm);
                     color: var(--xdh-color-text-secondary);
                     background: transparent;
                     flex-shrink: 0;
@@ -913,9 +913,9 @@ export class XdhFolderTree extends BaseElement {
                     min-height: 26px;
                     display: flex;
                     align-items: center;
-                    font: var(--font-badge);
+                    font: var(--xdh-font-badge);
                     color: var(--xdh-color-text-secondary);
-                    padding-right: var(--space-sm);
+                    padding-right: var(--xdh-space-sm);
                 }
 
                 .tree-status.is-danger {
