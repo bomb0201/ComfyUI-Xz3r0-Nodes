@@ -1451,6 +1451,11 @@ function restoreState(state) {
 
     updateModeButtons(state);
     updateSlider(state);
+
+    if (state.canvas) {
+        state.canvas.style.cursor = state.mode === MODE.SPOTLIGHT ? "none" : "crosshair";
+    }
+
     render(state);
 
     if (state.mode === MODE.PINGPONG && state.loaded) {
