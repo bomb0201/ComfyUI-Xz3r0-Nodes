@@ -1,48 +1,193 @@
 /*
- * XDataHub Color Tokens (Minimal)
- * ==================================
- * 核心层：3 档中性色 + 品牌粉
- * 语义层：仅保留当前 UI 实际使用 token
+ * XDataHub Color Tokens (Airbnb Design)
+ * ==========================================
+ * 设计源: .agents/设计文档/Airbnb/DESIGN-airbnb.md
+ *
+ * 命名空间说明：
+ *   --xdh-clr-*     Airbnb 调色板（品牌/表面/文本/边框/语义）
+ *   --xdh-font-*      排版层（Inter Variable 字体）
+ *   --xdh-radius-*    圆角刻度
+ *   --xdh-space-*     间距刻度（4px 网格）
+ *   --xdh-shadow-*    阴影层级
+ *   --xdh-*       V1/V2 兼容别名（映射至新 token）
  */
+
+/* ── Inter Variable Font ─────────────────────────── */
+@font-face {
+    font-family: 'Inter';
+    src: url('/extensions/ComfyUI-Xz3r0-Nodes/fonts/web/InterVariable.woff2')
+        format('woff2');
+    font-weight: 100 900;
+    font-display: swap;
+    font-style: normal;
+}
 
 :root,
 body[data-theme="dark"],
 body:not([data-theme]) {
-    /* Core */
-    --xdh-brand-pink: #EA005E;
-    --xdh-neutral-base: #353535;
-    --xdh-neutral-surface: #353535;
-    --xdh-neutral-text: #dddddd;
-    --xdh-icon-color: #dddddd;
-    --xdh-pure-white: #ffffff;
-    --xdh-pure-black: #111111;
+    /* ============================================ */
+    /*  Color Palette (Dark)                        */
+    /* ============================================ */
+    /* Brand & Accent (same as light) */
+    --xdh-clr-primary:         #ff385c;
+    --xdh-clr-primary-active:  #e00b41;
+    --xdh-clr-primary-disabled:#ffd1da;
+    --xdh-clr-on-primary:      #ffffff;
+    --xdh-clr-luxe:            #460479;
+    --xdh-clr-plus:            #92174d;
+
+    /* Surface */
+    --xdh-clr-canvas:         #0c0c0e;
+    --xdh-clr-surface-soft:   #161618;
+    --xdh-clr-surface-card:   #161618;
+    --xdh-clr-surface-strong: #1d1d20;
+
+    /* Text */
+    --xdh-clr-ink:        #ffffff;
+    --xdh-clr-body:       rgba(255,255,255,0.85);
+    --xdh-clr-muted:      rgba(255,255,255,0.6);
+    --xdh-clr-muted-soft: rgba(255,255,255,0.4);
+    --xdh-clr-star-rating:#ffffff;
+
+    /* Hairlines & Borders */
+    --xdh-clr-hairline:       rgba(255,255,255,0.12);
+    --xdh-clr-hairline-soft:  rgba(255,255,255,0.06);
+    --xdh-clr-border-strong:  rgba(255,255,255,0.22);
 
     /* Semantic */
-    --theme-bg-main: #353535;
-    --bg: #353535;
-    --bg-panel: #353535;
-    --surface-input: #222222;
-    --xdh-input-bg: #222222;
+    --xdh-clr-error:       #c13515;
+    --xdh-clr-error-hover: #e04a20;
+    --xdh-clr-legal-link:  #428bff;
 
-    --text-standard: var(--xdh-neutral-text);
-    --text-emphasis: var(--xdh-neutral-text);
-    --text-active: var(--xdh-neutral-text);
+    /* Scrim */
+    --xdh-clr-scrim: rgba(0,0,0,0.7);
 
-    --border-standard: #666666;
-    --border-hover: var(--xdh-brand-pink);
-    --border-active: #666666;
+    /* ============================================ */
+    /*  Typography (theme-agnostic)                 */
+    /* ============================================ */
+    --xdh-font-family-base: 'Inter', 'Airbnb Cereal VF', Circular,
+        -apple-system, system-ui, Roboto, 'Helvetica Neue', sans-serif;
 
-    --btn-active-color: var(--xdh-brand-pink);
-    --hover-accent-bg: #EA005E33; /* 主题粉色 20% */
-    --active-highlight-bg: #ffffff14;
-    --btn-hover-glow-soft: 0 0 0 1px var(--btn-active-color);
-    --btn-hover-glow: 0 0 0 1px var(--btn-active-color),
+    --xdh-font-display-xl: 700 28px/1.43 var(--xdh-font-family-base);
+    --xdh-ls-display-xl: 0;
+    --xdh-font-display-lg: 500 22px/1.18 var(--xdh-font-family-base);
+    --xdh-ls-display-lg: -0.44px;
+    --xdh-font-display-md: 700 21px/1.43 var(--xdh-font-family-base);
+    --xdh-ls-display-md: 0;
+    --xdh-font-display-sm: 600 20px/1.20 var(--xdh-font-family-base);
+    --xdh-ls-display-sm: -0.18px;
+
+    --xdh-font-title-md: 600 16px/1.25 var(--xdh-font-family-base);
+    --xdh-ls-title-md: 0;
+    --xdh-font-title-sm: 500 16px/1.25 var(--xdh-font-family-base);
+    --xdh-ls-title-sm: 0;
+
+    --xdh-font-body-md: 400 16px/1.5 var(--xdh-font-family-base);
+    --xdh-ls-body-md: 0;
+    --xdh-font-body-sm: 400 14px/1.43 var(--xdh-font-family-base);
+    --xdh-ls-body-sm: 0;
+
+    --xdh-font-caption: 500 14px/1.29 var(--xdh-font-family-base);
+    --xdh-ls-caption: 0;
+    --xdh-font-caption-sm: 400 13px/1.23 var(--xdh-font-family-base);
+    --xdh-ls-caption-sm: 0;
+
+    --xdh-font-badge: 600 11px/1.18 var(--xdh-font-family-base);
+    --xdh-ls-badge: 0;
+    --xdh-font-micro-label: 700 12px/1.33 var(--xdh-font-family-base);
+    --xdh-ls-micro-label: 0;
+    --xdh-font-uppercase-tag: 700 8px/1.25 var(--xdh-font-family-base);
+    --xdh-ls-uppercase-tag: 0.32px;
+    --xdh-text-transform-uppercase-tag: uppercase;
+
+    --xdh-font-button-md: 500 16px/1.25 var(--xdh-font-family-base);
+    --xdh-ls-button-md: 0;
+    --xdh-font-button-sm: 500 14px/1.29 var(--xdh-font-family-base);
+    --xdh-ls-button-sm: 0;
+
+    --xdh-font-link: 400 14px/1.43 var(--xdh-font-family-base);
+    --xdh-ls-link: 0;
+    --xdh-font-nav-link: 600 16px/1.25 var(--xdh-font-family-base);
+    --xdh-ls-nav-link: 0;
+
+    --xdh-font-rating-display: 700 64px/1.1 var(--xdh-font-family-base);
+    --xdh-ls-rating-display: -1px;
+
+    /* ============================================ */
+    /*  Spacing (4px grid)                          */
+    /* ============================================ */
+    --xdh-space-xxs:    2px;
+    --xdh-space-xs:     4px;
+    --xdh-space-sm:     8px;
+    --xdh-space-md:     12px;
+    --xdh-space-base:   16px;
+    --xdh-space-lg:     24px;
+    --xdh-space-xl:     32px;
+    --xdh-space-xxl:    48px;
+    --xdh-space-section:64px;
+
+    /* ============================================ */
+    /*  Rounded Corners                             */
+    /* ============================================ */
+    --xdh-radius-none:  0px;
+    --xdh-radius-xs:    4px;
+    --xdh-radius-sm:    8px;
+    --xdh-radius-md:    14px;
+    --xdh-radius-lg:    20px;
+    --xdh-radius-xl:    32px;
+    --xdh-radius-full:  9999px;
+
+    /* ============================================ */
+    /*  Elevation / Shadows                         */
+    /* ============================================ */
+    --xdh-shadow-default: rgba(0,0,0,0.02) 0 0 0 1px,
+                      rgba(0,0,0,0.04) 0 2px 6px,
+                      rgba(0,0,0,0.1)  0 4px 8px;
+    --xdh-shadow-popup:  0 8px 24px  rgba(0,0,0,0.15);
+    --xdh-shadow-dialog: 0 12px 28px rgba(0,0,0,0.20);
+    --xdh-shadow-window: 0 10px 22px rgba(0,0,0,0.50);
+
+    /* ============================================ */
+    /*  Legacy Aliases (V1/V2 Compatibility)        */
+    /* ============================================ */
+    --xdh-brand-pink:        var(--xdh-clr-primary);
+    --xdh-neutral-base:      var(--xdh-clr-surface-soft);
+    --xdh-neutral-surface:   var(--xdh-clr-surface-soft);
+    --xdh-neutral-text:      var(--xdh-clr-ink);
+    --xdh-icon-color:        var(--xdh-clr-ink);
+    --xdh-pure-white:        #ffffff;
+    --xdh-pure-black:        #111111;
+
+    --theme-bg-main:         var(--xdh-clr-canvas);
+    --bg:                    var(--xdh-clr-canvas);
+    --bg-panel:              var(--xdh-clr-surface-card);
+    --surface-input:         var(--xdh-clr-surface-soft);
+    --xdh-input-bg:          var(--xdh-clr-surface-soft);
+
+    --text-standard:         var(--xdh-clr-ink);
+    --text-emphasis:         var(--xdh-clr-ink);
+    --text-active:           var(--xdh-clr-primary);
+    --text-secondary:        var(--xdh-clr-body);
+    --text-muted:            var(--xdh-clr-muted);
+    --text-disabled:         var(--xdh-clr-muted-soft);
+
+    --border-standard:       var(--xdh-clr-hairline);
+    --border-hover:          var(--xdh-clr-primary);
+    --border-active:         var(--xdh-clr-primary);
+    --border-light:          var(--xdh-clr-hairline-soft);
+    --border-strong:         var(--xdh-clr-border-strong);
+
+    --btn-active-color:      var(--xdh-clr-primary);
+    --hover-accent-bg:       var(--xdh-clr-surface-soft);
+    --active-highlight-bg:   rgba(255,255,255,0.06);
+    --btn-hover-glow-soft:   0 0 0 1px var(--btn-active-color);
+    --btn-hover-glow:        0 0 0 1px var(--btn-active-color),
         0 0 10px var(--btn-active-color);
     --btn-hover-glow-strong: var(--btn-hover-glow);
-    --btn-press-glow-inset: inset 0 0 0 1px var(--btn-active-color);
-    --xdh-window-shadow: 0 10px 22px rgba(0, 0, 0, 0.7);
+    --btn-press-glow-inset:  inset 0 0 0 1px var(--btn-active-color);
+    --xdh-window-shadow:     var(--xdh-shadow-window);
 
-    --state-danger-text-standard: var(--text-active);
+    --state-danger-text-standard: var(--text-standard);
     --state-danger-border-standard: var(--border-standard);
     --state-danger-bg-standard: var(--btn-active-color);
     --state-danger-bg-hover: var(--hover-accent-bg);
@@ -50,55 +195,49 @@ body:not([data-theme]) {
     --state-warn-text-standard: var(--db-palette-02);
     --state-warn-border-standard: var(--db-palette-02);
     --state-warn-bg-standard: color-mix(
-        in srgb,
-        var(--db-palette-02) 14%,
-        transparent
+        in srgb, var(--db-palette-02) 14%, transparent
     );
     --state-warn-bg-hover: color-mix(
-        in srgb,
-        var(--db-palette-02) 22%,
-        transparent
+        in srgb, var(--db-palette-02) 22%, transparent
     );
     --db-critical-border: var(--db-palette-04);
     --db-critical-bg-hover: #FFBF0033;
 
-    --overlay-dialog: rgba(0, 0, 0, 0.01); /* 弹窗外背景近乎透明 */
+    --overlay-dialog: rgba(0,0,0,0.01);
 
     --scrollbar-size: 12px;
-    --scrollbar-track: var(--xdh-neutral-surface);
-    --scrollbar-thumb: #666666;
-    --scrollbar-thumb-hover: var(--btn-active-color);
-    --scrollbar-thumb-active: var(--btn-active-color);
+    --scrollbar-track: var(--xdh-clr-surface-soft);
+    --scrollbar-thumb: var(--xdh-clr-border-strong);
+    --scrollbar-thumb-hover: var(--xdh-clr-primary);
+    --scrollbar-thumb-active: var(--xdh-clr-primary);
     --scrollbar-corner: transparent;
 
-    --shadow-none: none;
+    --xdh-shadow-none: none;
     --xdh-window-tab-blur: 0px;
-    --xdh-window-header-bg: #171718;
-    --xdh-tab-strip-bg: #333333;
-    --xdh-tab-strip-divider: #666666;
-    --xdh-history-content-bg: var(--xdh-input-bg);
-    --xdh-history-content-border: #666666;
-    --xdh-history-row-active-border: var(--xdh-brand-pink);
-    --xdh-lightbox-title-bg: transparent;
-    --xdh-lightbox-title-border: var(--border-standard);
-    --xdh-history-content-text: var(--text-standard);
-    --xdh-history-content-icon-filter: brightness(0) saturate(100%)
-        invert(87%);
-    --media-parent-icon-color: #d4d4d4;
+    --xdh-window-header-bg: var(--xdh-clr-surface-soft);
+    --xdh-tab-strip-bg: var(--xdh-clr-surface-soft);
+    --xdh-tab-strip-divider: var(--xdh-clr-hairline);
+    --xdh-history-content-bg: var(--xdh-clr-surface-soft);
+    --xdh-history-content-border: var(--xdh-clr-hairline);
+    --xdh-history-row-active-border: var(--xdh-clr-primary);
+    --xdh-lightbox-title-bg: var(--xdh-clr-surface-soft);
+    --xdh-lightbox-title-border: var(--xdh-clr-hairline);
+    --xdh-history-content-text: var(--xdh-clr-ink);
+    --xdh-history-content-icon-filter: none;
+    --media-parent-icon-color: var(--xdh-clr-muted);
     --app-shell-padding: 4px 8px 8px 8px;
 
-    --icon-color-filter: brightness(0) saturate(100%) invert(87%);
-    --icon-color-filter-active: brightness(0) saturate(100%) invert(87%);
-    --xdh-inner-icon-filter: brightness(0) saturate(100%) invert(87%);
-    --xdh-inner-icon-filter-active: brightness(0) saturate(100%)
-        invert(87%);
-    --icon-db-mask-url: url("/extensions/ComfyUI-Xz3r0-Nodes/icons/database.svg");
+    /* Icon filters — replaced by currentColor in V2 */
+    --icon-color-filter: none;
+    --icon-color-filter-active: none;
+    --xdh-inner-icon-filter: none;
+    --xdh-inner-icon-filter-active: none;
+    --icon-db-mask-url: url(
+        "/extensions/ComfyUI-Xz3r0-Nodes/icons/database.svg"
+    );
 
     /*
      * DB palette (kept)
-     * 序列号色彩规则（row-id-chip）：
-     * 1) 背景：使用同色盘的减淡色（在 xdatahub_app.html 中通过 color-mix 计算）
-     * 2) 文字：使用同色盘原色（100% 色度，不减淡）
      */
     --db-palette-default: #0066FF;
     --db-palette-01: #0066FF;
@@ -114,224 +253,271 @@ body:not([data-theme]) {
     --db-palette-11: #FFBF00;
     --db-palette-12: #CC00CC;
 
-    /* ── V2 Source Colors (Dark) ─────────────────────────
-     * 深浅主题都基于这组源色生成。后续只需改这一处。
-     * ─────────────────────────────────────────────────── */
-    --xdh-dark-color-background:     #282828;
-    --xdh-dark-color-surface-1:      #333333;
-    --xdh-dark-color-surface-2:      #3a3a3a;
-    --xdh-dark-color-surface-3:      #444444;
-    --xdh-dark-color-surface-4:      #505050;
-    --xdh-dark-color-surface-hover:  #444444;
-    --xdh-dark-color-border:         #666666;
-    --xdh-dark-color-text-primary:   #dddddd;
-    --xdh-dark-color-text-secondary: #aaaaaa;
-    --xdh-dark-color-hover:          #2a2a2a;
-    --xdh-dark-scrollbar-thumb:      #555555;
-
-    /* ── V2 Component Aliases (Dark) ───────────────────── */
-    --xdh-color-background:    var(--xdh-dark-color-background);
-    --xdh-color-surface-1:     var(--xdh-dark-color-surface-1);
-    --xdh-color-surface-2:     var(--xdh-dark-color-surface-2);
-    --xdh-color-surface-3:     var(--xdh-dark-color-surface-3);
-    --xdh-color-surface-4:     var(--xdh-dark-color-surface-4);
-    --xdh-color-surface-hover: var(--xdh-dark-color-surface-hover);
-    --xdh-color-primary:       var(--xdh-brand-pink);
-    --xdh-color-primary-muted: #EA005E33;
-    --xdh-color-border:        var(--xdh-dark-color-border);
-    --xdh-color-text-primary:  var(--xdh-dark-color-text-primary);
-    --xdh-color-text-secondary:var(--xdh-dark-color-text-secondary);
-    --xdh-color-hover:         var(--xdh-dark-color-hover);
+    /* ── V2 Component Aliases (Dark) ───────────── */
+    --xdh-color-background:    var(--xdh-clr-canvas);
+    --xdh-color-surface-1:     var(--xdh-clr-canvas);
+    --xdh-color-surface-2:     var(--xdh-clr-surface-soft);
+    --xdh-color-surface-3:     var(--xdh-clr-surface-strong);
+    --xdh-color-surface-4:     var(--xdh-clr-hairline);
+    --xdh-color-surface-hover: var(--xdh-clr-surface-soft);
+    --xdh-color-primary:       var(--xdh-clr-primary);
+    --xdh-color-primary-muted: color-mix(
+        in srgb, var(--xdh-clr-primary) 12%, transparent
+    );
+    --xdh-color-border:        var(--xdh-clr-hairline);
+    --xdh-color-text-primary:  var(--xdh-clr-ink);
+    --xdh-color-text-secondary:var(--xdh-clr-body);
+    --xdh-color-hover:         var(--xdh-clr-surface-strong);
     --xdh-color-success:       #4caf50;
-    --xdh-scrollbar-thumb:     var(--xdh-dark-scrollbar-thumb);
+    --xdh-scrollbar-thumb:     var(--xdh-clr-hairline);
     --xdh-scrollbar-track:     transparent;
-    --xdh-scrollbar-thumb-hover: var(--xdh-brand-pink);
+    --xdh-scrollbar-thumb-hover: var(--xdh-clr-primary);
 }
 
 body[data-theme="light"] {
-    --xdh-neutral-base: #ffffff;
-    --xdh-neutral-surface: #ffffff;
-    --xdh-neutral-text: #222222;
-    --xdh-icon-color: #222222;
-    --xdh-pure-white: #ffffff;
-    --xdh-pure-black: #111111;
+    /* ============================================ */
+    /*  Color Palette (Light)                       */
+    /* ============================================ */
+    --xdh-clr-primary:         #ff385c;
+    --xdh-clr-primary-active:  #e00b41;
+    --xdh-clr-primary-disabled:#ffd1da;
+    --xdh-clr-on-primary:      #ffffff;
+    --xdh-clr-luxe:            #460479;
+    --xdh-clr-plus:            #92174d;
 
-    --theme-bg-main: #ffffff;
-    --bg: #ffffff;
-    --bg-panel: #ffffff;
-    --surface-input: #ffffff;
-    --xdh-input-bg: #d4d4d4;
+    --xdh-clr-canvas:         #ffffff;
+    --xdh-clr-surface-soft:   #f7f7f7;
+    --xdh-clr-surface-card:   #ffffff;
+    --xdh-clr-surface-strong: #f2f2f2;
 
-    --text-standard: #222222;
-    --text-emphasis: #222222;
-    --text-active: #222222;
+    --xdh-clr-ink:        #222222;
+    --xdh-clr-body:       #3f3f3f;
+    --xdh-clr-muted:      #6a6a6a;
+    --xdh-clr-muted-soft: #929292;
+    --xdh-clr-star-rating:#222222;
 
-    --border-standard: #c8c8c8;
-    --border-hover: var(--xdh-brand-pink);
-    --border-active: var(--xdh-brand-pink);
+    --xdh-clr-hairline:       #dddddd;
+    --xdh-clr-hairline-soft:  #ebebeb;
+    --xdh-clr-border-strong:  #c1c1c1;
 
-    --overlay-dialog: rgba(0, 0, 0, 0.01);
-    --scrollbar-track: #ffffff;
-    --scrollbar-thumb: #c8c8c8;
-    --scrollbar-thumb-hover: var(--xdh-brand-pink);
-    --scrollbar-thumb-active: var(--xdh-brand-pink);
-    --xdh-window-header-bg: #ffffff;
-    --xdh-tab-strip-bg: #ffffff;
-    --xdh-tab-strip-divider: #c8c8c8;
-    --xdh-window-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
-    --xdh-history-content-bg: var(--xdh-input-bg);
-    --xdh-history-content-border: #999999;
-    --xdh-history-row-active-border: var(--xdh-brand-pink);
-    --xdh-lightbox-title-bg: #d4d4d4;
-    --xdh-lightbox-title-border: #999999;
-    --xdh-history-content-text: #222222;
-    --xdh-history-content-icon-filter: brightness(0) saturate(100%)
-        invert(13%);
-    --media-parent-icon-color: #d4d4d4;
+    --xdh-clr-error:       #c13515;
+    --xdh-clr-error-hover: #b32505;
+    --xdh-clr-legal-link:  #428bff;
 
-    --icon-color-filter: brightness(0) saturate(100%) invert(13%);
-    --icon-color-filter-active: brightness(0) saturate(100%) invert(13%);
-    --xdh-inner-icon-filter: brightness(0) saturate(100%) invert(13%);
-    --xdh-inner-icon-filter-active: brightness(0) saturate(100%)
-        invert(13%);
+    --xdh-clr-scrim: rgba(0,0,0,0.50);
 
-    /* ── V2 Component Aliases (Light, formula-driven) ─────
-     * 不是生硬的 1-l，而是“反演 + 压缩 + 偏置”：
-     * 1) 亮度映射保留层级；2) 色度收敛防止脏灰；3) 深色改动自动联动。
-     * ─────────────────────────────────────────────────── */
-    --xdh-color-background: #ffffff;
-    --xdh-color-surface-1: #ffffff;
-    --xdh-color-surface-2: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-color-surface-2)
-            calc(1 - l)
-            calc(c * 0.32)
-            h
-        ) 48%,
-        white 52%
+    /* ============================================ */
+    /*  Legacy Aliases (Light)                      */
+    /* ============================================ */
+    --xdh-brand-pink:        var(--xdh-clr-primary);
+    --xdh-neutral-base:      var(--xdh-clr-canvas);
+    --xdh-neutral-surface:   var(--xdh-clr-canvas);
+    --xdh-neutral-text:      var(--xdh-clr-ink);
+    --xdh-icon-color:        var(--xdh-clr-ink);
+    --xdh-pure-white:        #ffffff;
+    --xdh-pure-black:        #111111;
+
+    --theme-bg-main:         var(--xdh-clr-canvas);
+    --bg:                    var(--xdh-clr-canvas);
+    --bg-panel:              var(--xdh-clr-canvas);
+    --surface-input:         var(--xdh-clr-surface-soft);
+    --xdh-input-bg:          var(--xdh-clr-surface-soft);
+
+    --text-standard:         var(--xdh-clr-ink);
+    --text-emphasis:         var(--xdh-clr-ink);
+    --text-active:           var(--xdh-clr-primary);
+    --text-secondary:        var(--xdh-clr-body);
+
+    --border-standard:       var(--xdh-clr-hairline);
+    --border-hover:          var(--xdh-clr-primary);
+    --border-active:         var(--xdh-clr-primary);
+
+    --overlay-dialog:        rgba(0,0,0,0.01);
+    --scrollbar-track:       var(--xdh-clr-surface-soft);
+    --scrollbar-thumb:       var(--xdh-clr-border-strong);
+    --scrollbar-thumb-hover: var(--xdh-clr-primary);
+    --scrollbar-thumb-active: var(--xdh-clr-primary);
+    --xdh-window-header-bg:  var(--xdh-clr-canvas);
+    --xdh-tab-strip-bg:      var(--xdh-clr-surface-soft);
+    --xdh-tab-strip-divider: var(--xdh-clr-hairline);
+    --xdh-window-shadow:     var(--xdh-shadow-window);
+    --xdh-history-content-bg: var(--xdh-clr-surface-soft);
+    --xdh-history-content-border: var(--xdh-clr-hairline);
+    --xdh-history-row-active-border: var(--xdh-clr-primary);
+    --xdh-lightbox-title-bg: var(--xdh-clr-surface-soft);
+    --xdh-lightbox-title-border: var(--xdh-clr-hairline);
+    --xdh-history-content-text: var(--xdh-clr-ink);
+    --xdh-history-content-icon-filter: none;
+    --media-parent-icon-color: var(--xdh-clr-muted);
+
+    --icon-color-filter: none;
+    --icon-color-filter-active: none;
+    --xdh-inner-icon-filter: none;
+    --xdh-inner-icon-filter-active: none;
+
+    /* ── V2 Component Aliases (Light) ──────────── */
+    --xdh-color-background:    var(--xdh-clr-canvas);
+    --xdh-color-surface-1:     var(--xdh-clr-canvas);
+    --xdh-color-surface-2:     var(--xdh-clr-surface-soft);
+    --xdh-color-surface-3:     var(--xdh-clr-surface-strong);
+    --xdh-color-surface-4:     var(--xdh-clr-hairline);
+    --xdh-color-surface-hover: var(--xdh-clr-surface-soft);
+    --xdh-color-primary:       var(--xdh-clr-primary);
+    --xdh-color-primary-muted: color-mix(
+        in srgb, var(--xdh-clr-primary) 10%, transparent
     );
-    --xdh-color-surface-3: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-color-surface-3)
-            calc(1 - l)
-            calc(c * 0.34)
-            h
-        ) 54%,
-        white 46%
-    );
-    --xdh-color-surface-4: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-color-surface-4)
-            calc(1 - l)
-            calc(c * 0.36)
-            h
-        ) 62%,
-        white 38%
-    );
-    --xdh-color-surface-hover: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-color-surface-hover)
-            calc(1 - l)
-            calc(c * 0.34)
-            h
-        ) 58%,
-        white 42%
-    );
-    --xdh-color-primary: var(--xdh-brand-pink);
-    --xdh-color-primary-muted: #EA005E1A;
-    --xdh-color-border: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-color-border)
-            calc(1 - l)
-            calc(c * 0.40)
-            h
-        ) 58%,
-        white 42%
-    );
-    --xdh-color-text-primary: oklch(
-        from var(--xdh-dark-color-text-primary)
-        calc((1 - l) * 0.65 + 0.16)
-        calc(c * 0.55)
-        h
-    );
-    --xdh-color-text-secondary: oklch(
-        from var(--xdh-dark-color-text-secondary)
-        calc((1 - l) * 0.70 + 0.22)
-        calc(c * 0.45)
-        h
-    );
-    --xdh-color-hover: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-color-hover)
-            calc(1 - l)
-            calc(c * 0.32)
-            h
-        ) 56%,
-        white 44%
-    );
-    --xdh-color-success: #4caf50;
-    --xdh-scrollbar-thumb: color-mix(
-        in oklch,
-        oklch(
-            from var(--xdh-dark-scrollbar-thumb)
-            calc(1 - l)
-            calc(c * 0.36)
-            h
-        ) 55%,
-        white 45%
-    );
-    --xdh-scrollbar-track: transparent;
-    --xdh-scrollbar-thumb-hover: var(--xdh-brand-pink);
+    --xdh-color-border:        var(--xdh-clr-hairline);
+    --xdh-color-text-primary:  var(--xdh-clr-ink);
+    --xdh-color-text-secondary:var(--xdh-clr-body);
+    --xdh-color-hover:         var(--xdh-clr-surface-strong);
+    --xdh-color-success:       #4caf50;
+    --xdh-scrollbar-thumb:     var(--xdh-clr-border-strong);
+    --xdh-scrollbar-track:     transparent;
+    --xdh-scrollbar-thumb-hover: var(--xdh-clr-primary);
 }
 
 .xz3r0-datahub-window[data-theme="light"] {
-    --xdh-neutral-base: #ffffff;
-    --xdh-neutral-surface: #ffffff;
-    --xdh-neutral-text: #222222;
-    --xdh-icon-color: #222222;
+    /* V1 light overrides — map to Airbnb palette tokens */
+    --xdh-brand-pink:        var(--xdh-clr-primary);
+    --xdh-neutral-base:      var(--xdh-clr-canvas);
+    --xdh-neutral-surface:   var(--xdh-clr-canvas);
+    --xdh-neutral-text:      var(--xdh-clr-ink);
+    --xdh-icon-color:        var(--xdh-clr-ink);
 
-    --theme-bg-main: #ffffff;
-    --bg: #ffffff;
-    --bg-panel: #ffffff;
-    --surface-input: #ffffff;
-    --xdh-input-bg: #d4d4d4;
+    --theme-bg-main:         var(--xdh-clr-canvas);
+    --bg:                    var(--xdh-clr-canvas);
+    --bg-panel:              var(--xdh-clr-canvas);
+    --surface-input:         var(--xdh-clr-surface-soft);
+    --xdh-input-bg:          var(--xdh-clr-surface-soft);
 
-    --text-standard: #222222;
-    --text-emphasis: #222222;
-    --text-active: #222222;
+    --text-standard:         var(--xdh-clr-ink);
+    --text-emphasis:         var(--xdh-clr-ink);
+    --text-active:           var(--xdh-clr-primary);
+    --text-muted:            var(--xdh-clr-muted);
 
-    --border-standard: #c8c8c8;
-    --border-hover: var(--xdh-brand-pink);
-    --border-active: var(--xdh-brand-pink);
+    --border-standard:       var(--xdh-clr-hairline);
+    --border-hover:          var(--xdh-clr-primary);
+    --border-active:         var(--xdh-clr-primary);
 
-    --overlay-dialog: rgba(0, 0, 0, 0.01);
-    --scrollbar-track: #ffffff;
-    --scrollbar-thumb: #c8c8c8;
-    --scrollbar-thumb-hover: var(--xdh-brand-pink);
-    --scrollbar-thumb-active: var(--xdh-brand-pink);
-    --xdh-window-header-bg: #ffffff;
-    --xdh-tab-strip-bg: #ffffff;
-    --xdh-tab-strip-divider: #c8c8c8;
-    --xdh-window-shadow: 0 10px 22px rgba(0, 0, 0, 0.35);
-    --xdh-history-content-bg: var(--xdh-input-bg);
-    --xdh-history-content-border: #999999;
-    --xdh-history-row-active-border: var(--xdh-brand-pink);
-    --xdh-lightbox-title-bg: #d4d4d4;
-    --xdh-lightbox-title-border: #999999;
-    --xdh-history-content-text: #222222;
-    --xdh-history-content-icon-filter: brightness(0) saturate(100%)
-        invert(13%);
-    --media-parent-icon-color: #d4d4d4;
+    --btn-active-color:      var(--xdh-clr-primary);
+    --btn-hover-glow-soft:   0 0 0 1px var(--btn-active-color);
+    --btn-hover-glow:        0 0 0 1px var(--btn-active-color),
+        0 0 10px var(--btn-active-color);
+    --btn-press-glow-inset:  inset 0 0 0 1px var(--btn-active-color);
+    --hover-accent-bg:       var(--xdh-clr-surface-soft);
 
-    --icon-color-filter: brightness(0) saturate(100%) invert(13%);
-    --icon-color-filter-active: brightness(0) saturate(100%) invert(13%);
-    --xdh-inner-icon-filter: brightness(0) saturate(100%) invert(13%);
-    --xdh-inner-icon-filter-active: brightness(0) saturate(100%)
-        invert(13%);
+    --overlay-dialog:        rgba(0,0,0,0.01);
+    --scrollbar-track:       var(--xdh-clr-surface-soft);
+    --scrollbar-thumb:       var(--xdh-clr-border-strong);
+    --scrollbar-thumb-hover: var(--xdh-clr-primary);
+    --scrollbar-thumb-active: var(--xdh-clr-primary);
+    --xdh-window-header-bg:  var(--xdh-clr-canvas);
+    --xdh-tab-strip-bg:      var(--xdh-clr-surface-soft);
+    --xdh-tab-strip-divider: var(--xdh-clr-hairline);
+    --xdh-window-shadow:     var(--xdh-shadow-window);
+    --xdh-history-content-bg: var(--xdh-clr-surface-soft);
+    --xdh-history-content-border: var(--xdh-clr-hairline);
+    --xdh-history-row-active-border: var(--xdh-clr-primary);
+    --xdh-lightbox-title-bg: var(--xdh-clr-surface-soft);
+    --xdh-lightbox-title-border: var(--xdh-clr-hairline);
+    --xdh-history-content-text: var(--xdh-clr-ink);
+    --xdh-history-content-icon-filter: none;
+    --media-parent-icon-color: var(--xdh-clr-muted);
+
+    --icon-color-filter: none;
+    --icon-color-filter-active: none;
+    --xdh-inner-icon-filter: none;
+    --xdh-inner-icon-filter-active: none;
+
+    /* ── V2 Component Aliases (Light, V1 context) ── */
+    --xdh-color-background:    var(--xdh-clr-canvas);
+    --xdh-color-surface-1:     var(--xdh-clr-canvas);
+    --xdh-color-surface-2:     var(--xdh-clr-surface-soft);
+    --xdh-color-surface-3:     var(--xdh-clr-surface-strong);
+    --xdh-color-surface-4:     var(--xdh-clr-hairline);
+    --xdh-color-surface-hover: var(--xdh-clr-surface-soft);
+    --xdh-color-primary:       var(--xdh-clr-primary);
+    --xdh-color-primary-muted: color-mix(
+        in srgb, var(--xdh-clr-primary) 10%, transparent
+    );
+    --xdh-color-border:        var(--xdh-clr-hairline);
+    --xdh-color-text-primary:  var(--xdh-clr-ink);
+    --xdh-color-text-secondary:var(--xdh-clr-body);
+    --xdh-color-hover:         var(--xdh-clr-surface-strong);
+    --xdh-color-success:       #4caf50;
+    --xdh-scrollbar-thumb:     var(--xdh-clr-hairline);
+    --xdh-scrollbar-track:     transparent;
+    --xdh-scrollbar-thumb-hover: var(--xdh-clr-primary);
+}
+
+/* ── V1 Dark Overrides ──────────────────────────── */
+.xz3r0-datahub-window[data-theme="dark"] {
+    --xdh-brand-pink:        var(--xdh-clr-primary);
+    --xdh-neutral-base:      var(--xdh-clr-surface-soft);
+    --xdh-neutral-surface:   var(--xdh-clr-surface-soft);
+    --xdh-neutral-text:      var(--xdh-clr-ink);
+    --xdh-icon-color:        var(--xdh-clr-ink);
+
+    --theme-bg-main:         var(--xdh-clr-canvas);
+    --bg:                    var(--xdh-clr-canvas);
+    --bg-panel:              var(--xdh-clr-surface-card);
+    --surface-input:         var(--xdh-clr-surface-soft);
+    --xdh-input-bg:          var(--xdh-clr-surface-soft);
+
+    --text-standard:         var(--xdh-clr-ink);
+    --text-emphasis:         var(--xdh-clr-ink);
+    --text-active:           var(--xdh-clr-primary);
+    --text-muted:            var(--xdh-clr-muted);
+    --text-secondary:        var(--xdh-clr-body);
+
+    --border-standard:       var(--xdh-clr-hairline);
+    --border-hover:          var(--xdh-clr-primary);
+    --border-active:         var(--xdh-clr-primary);
+
+    --btn-active-color:      var(--xdh-clr-primary);
+    --hover-accent-bg:       var(--xdh-clr-surface-soft);
+    --active-highlight-bg:   rgba(255,255,255,0.06);
+
+    --overlay-dialog:        rgba(0,0,0,0.01);
+    --scrollbar-track:       var(--xdh-clr-surface-soft);
+    --scrollbar-thumb:       var(--xdh-clr-border-strong);
+    --scrollbar-thumb-hover: var(--xdh-clr-primary);
+    --scrollbar-thumb-active: var(--xdh-clr-primary);
+    --xdh-window-header-bg:  var(--xdh-clr-surface-soft);
+    --xdh-tab-strip-bg:      var(--xdh-clr-surface-soft);
+    --xdh-tab-strip-divider: var(--xdh-clr-hairline);
+    --xdh-window-shadow:     var(--xdh-shadow-window);
+    --xdh-history-content-bg: var(--xdh-clr-surface-soft);
+    --xdh-history-content-border: var(--xdh-clr-hairline);
+    --xdh-history-row-active-border: var(--xdh-clr-primary);
+    --xdh-lightbox-title-bg: var(--xdh-clr-surface-soft);
+    --xdh-lightbox-title-border: var(--xdh-clr-hairline);
+    --xdh-history-content-text: var(--xdh-clr-ink);
+    --xdh-history-content-icon-filter: invert(1);
+    --media-parent-icon-color: var(--xdh-clr-muted);
+
+    --icon-color-filter: invert(1);
+    --icon-color-filter-active: invert(1);
+    --xdh-inner-icon-filter: invert(1);
+    --xdh-inner-icon-filter-active: invert(1);
+
+    /* ── V2 Component Aliases (Dark, V1 context) ── */
+    --xdh-color-background:    var(--xdh-clr-canvas);
+    --xdh-color-surface-1:     var(--xdh-clr-canvas);
+    --xdh-color-surface-2:     var(--xdh-clr-surface-soft);
+    --xdh-color-surface-3:     var(--xdh-clr-surface-strong);
+    --xdh-color-surface-4:     var(--xdh-clr-hairline);
+    --xdh-color-surface-hover: var(--xdh-clr-surface-soft);
+    --xdh-color-primary:       var(--xdh-clr-primary);
+    --xdh-color-primary-muted: color-mix(
+        in srgb, var(--xdh-clr-primary) 12%, transparent
+    );
+    --xdh-color-border:        var(--xdh-clr-hairline);
+    --xdh-color-text-primary:  var(--xdh-clr-ink);
+    --xdh-color-text-secondary:var(--xdh-clr-body);
+    --xdh-color-hover:         var(--xdh-clr-surface-strong);
+    --xdh-color-success:       #4caf50;
+    --xdh-scrollbar-thumb:     var(--xdh-clr-hairline);
+    --xdh-scrollbar-track:     transparent;
+    --xdh-scrollbar-thumb-hover: var(--xdh-clr-primary);
 }

@@ -187,6 +187,38 @@
       }
     }
   },
+  "XImageCompare": {
+    "display_name": "XImageCompare",
+    "description": "交互式 A/B 图像对比，支持滑动、聚光、混合和自动乒乓 4 种模式。",
+    "inputs": {
+      "image_a": {
+        "name": "图像/遮罩 A",
+        "tooltip": "用于对比的第一张图像或遮罩（可选）"
+      },
+      "image_b": {
+        "name": "图像/遮罩 B",
+        "tooltip": "用于对比的第二张图像或遮罩（可选）"
+      },
+      "save_to_output": {
+        "name": "保存到 Output",
+        "tooltip": "开：保存到 output（持久）。关：临时缓存"
+      },
+      "swap_ab": {
+        "name": "交换 A/B",
+        "tooltip": "交换图像/遮罩 A 和 B 的显示与输出顺序"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "A",
+        "tooltip": "A 透传"
+      },
+      "1": {
+        "name": "B",
+        "tooltip": "B 透传"
+      }
+    }
+  },
   "XKleinRefConditioning": {
     "display_name": "XKleinRefConditioning",
     "description": "自动对已连接参考图执行 VAE 编码，并将参考 latent 同步追加到正面与负面条件链。",

@@ -44,6 +44,7 @@ from .xnode.xworkflowsave import XWorkflowSave
 from .xnode.xanygate10 import XAnyGate10
 from .xnode.xanytostring import XAnyToString
 from .xnode.xdatetimestring import XDateTimeString
+from .xnode.ximagecompare import XImageCompare
 from .xnode.xkleinrefconditioning import XKleinRefConditioning
 from .xnode.xmath import XMath
 from .xnode.xmemorycleanup import XMemoryCleanup
@@ -104,6 +105,7 @@ REGISTERED_NODE_CLASSES: tuple[type[io.ComfyNode], ...] = (
     XAnyGate10,
     XAnyToString,
     XDateTimeString,
+    XImageCompare,
     XKleinRefConditioning,
     XMath,
     XMemoryCleanup,

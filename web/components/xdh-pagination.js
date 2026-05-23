@@ -125,12 +125,12 @@ export class XdhPagination extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 10px;
+                    gap: var(--xdh-space-md);
                     min-height: 44px;
-                    padding: 0 12px;
-                    background: var(--xdh-color-surface-1, #1a1a1a);
-                    border-top: 1px solid var(--xdh-color-border, #2e2e2e);
-                    border-bottom: 1px solid var(--xdh-color-border, #2e2e2e);
+                    padding: 0 var(--xdh-space-md);
+                    background: var(--xdh-color-surface-1);
+                    border-top: 1px solid var(--xdh-color-border);
+                    border-bottom: 1px solid var(--xdh-color-border);
                 }
 
                 .page-btn {
@@ -141,10 +141,10 @@ export class XdhPagination extends BaseElement {
                     width: 40px;
                     height: 40px;
                     padding: 0;
-                    background: var(--xdh-color-surface-2, #3a3a3a);
-                    border: 1px solid var(--xdh-color-border, #2e2e2e);
-                    border-radius: 6px;
-                    color: var(--xdh-color-text-secondary, #888);
+                    background: var(--xdh-color-surface-2);
+                    border: 1px solid var(--xdh-color-border);
+                    border-radius: var(--xdh-radius-sm);
+                    color: var(--xdh-color-text-secondary);
                     line-height: 0;
                     cursor: pointer;
                     transition:
@@ -159,13 +159,13 @@ export class XdhPagination extends BaseElement {
                     transform: translateY(-0.5px);
                 }
                 .page-btn:hover:not(:disabled) {
-                    background: var(--xdh-color-surface-hover, #444444);
-                    color: var(--xdh-color-text-primary, #eee);
+                    background: var(--xdh-color-surface-hover);
+                    color: var(--xdh-color-text-primary);
                 }
                 .page-btn:focus-visible,
                 .page-jump:focus-within {
                     outline: none;
-                    box-shadow: 0 0 0 1px var(--border-hover, var(--xdh-color-primary));
+                    box-shadow: 0 0 0 1px var(--border-hover);
                 }
                 .page-btn:disabled {
                     opacity: 0.3;
@@ -175,19 +175,19 @@ export class XdhPagination extends BaseElement {
                 .page-jump {
                     display: flex;
                     align-items: center;
-                    gap: 8px;
+                    gap: var(--xdh-space-sm);
                     min-width: 0;
-                    padding: 0 10px;
+                    padding: 0 var(--xdh-space-md);
                     min-height: 40px;
-                    border: 1px solid var(--xdh-color-border, #2e2e2e);
-                    border-radius: 8px;
-                    background: var(--xdh-color-surface-2, #3a3a3a);
+                    border: 1px solid var(--xdh-color-border);
+                    border-radius: var(--xdh-radius-sm);
+                    background: var(--xdh-color-surface-2);
                     transition: border-color 0.14s ease, box-shadow 0.14s ease;
                 }
 
                 .page-label {
-                    font-size: 12px;
-                    color: var(--xdh-color-text-secondary, #888);
+                    font: var(--xdh-font-micro-label);
+                    color: var(--xdh-color-text-secondary);
                     white-space: nowrap;
                 }
 
@@ -195,7 +195,7 @@ export class XdhPagination extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 6px;
+                    gap: var(--xdh-space-xs);
                 }
 
                 .page-input {
@@ -204,7 +204,7 @@ export class XdhPagination extends BaseElement {
                     padding: 0;
                     border: none;
                     background: transparent;
-                    color: var(--xdh-color-text-primary, #eee);
+                    color: var(--xdh-color-text-primary);
                     font: inherit;
                     font-size: 13px;
                     font-weight: 600;
@@ -220,13 +220,13 @@ export class XdhPagination extends BaseElement {
 
                 .page-divider,
                 .page-total {
-                    font-size: 12px;
-                    color: var(--xdh-color-text-secondary, #888);
+                    font: var(--xdh-font-micro-label);
+                    color: var(--xdh-color-text-secondary);
                     white-space: nowrap;
                 }
                 .page-total {
                     min-width: 20px;
-                    color: var(--xdh-color-text-primary, #eee);
+                    color: var(--xdh-color-text-primary);
                     text-align: left;
                 }
 

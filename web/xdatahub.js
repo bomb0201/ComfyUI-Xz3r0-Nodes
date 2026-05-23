@@ -68,7 +68,6 @@ const OPEN_LAYOUT_VALUE_RIGHT = "right";
 const OPEN_LAYOUT_VALUE_MAXIMIZED = "maximized";
 const CLOSE_BEHAVIOR_VALUE_HIDE = "hide";
 const CLOSE_BEHAVIOR_VALUE_DESTROY = "destroy";
-const EDGE_PEEK_SETTING_ID = "Xz3r0.XDataHub.EdgePeek";
 const AUTO_SHOW_SETTING_ID = "Xz3r0.XDataHub.AutoShow";
 const HOST_SETTINGS_MIGRATION_FLAG =
     "Xz3r0.XDataHub.HostSettingsMigrated.v1";
@@ -135,7 +134,7 @@ const HOST_TABS = [
     { id: "audio", icon: "audio-lines", textKey: UI_KEYS.tabAudio },
     { id: "lora", icon: "wand-sparkles", textKey: UI_KEYS.tabLora },
 ];
-const XDATAHUB_ASSET_VER = "20260426-1";
+const XDATAHUB_ASSET_VER = "20260508-1";
 const XDATAHUB_THEME_CSS_ID = "xdatahub-color-tokens-css";
 const XDATAHUB_THEME_CSS_HREF =
     "/extensions/ComfyUI-Xz3r0-Nodes/xdatahub-color-tokens.css"
@@ -995,7 +994,12 @@ app.registerExtension({
         installLocaleSync();
         await loadHostBehaviorSettings();
         installGlobalHotkeyListener();
-        edgePeekEnabled = !!(localStorage.getItem("Xz3r0.XDataHub.EdgePeek") === "true");
+        try {
+            const settings = await fetchXDataHubSettings();
+            edgePeekEnabled = settings.edge_peek === true;
+        } catch {
+            edgePeekEnabled = false;
+        }
         ensureColorTokensStylesheet();
         await syncThemeModeFromSettings();
         try {
@@ -1102,7 +1106,7 @@ app.registerExtension({
                 background: linear-gradient(
                     120deg,
                     transparent 0%,
-                    var(--hover-accent-bg) 50%,
+                    var(--xdh-pure-white) 50%,
                     transparent 100%
                 );
                 opacity: 0;
@@ -1131,7 +1135,7 @@ app.registerExtension({
             }
             .xz3r0-datahub-menu-btn:hover {
                 border-color: var(--border-hover);
-                background: var(--hover-accent-bg) !important;
+                background: var(--xdh-pure-white) !important;
                 box-shadow:
                     inset 0 1px 0 var(--border-hover),
                     inset 0 -1px 0 var(--border-hover),
@@ -1141,7 +1145,7 @@ app.registerExtension({
             }
             .xz3r0-datahub-menu-btn:active {
                 border-color: var(--border-hover);
-                background: var(--hover-accent-bg) !important;
+                background: var(--xdh-pure-white) !important;
                 box-shadow:
                     inset 0 1px 0 var(--border-hover),
                     inset 0 -1px 0 var(--border-hover),
@@ -1184,11 +1188,6 @@ app.registerExtension({
             }
             .xz3r0-datahub-window-btn:hover {
                 background: var(--hover-accent-bg);
-                box-shadow: var(--btn-hover-glow-soft);
-            }
-            .xz3r0-datahub-window-btn:active {
-                background: var(--btn-active-color);
-                box-shadow: var(--btn-press-glow-inset);
             }
             .xz3r0-datahub-window-btn.active {
                 color: var(--p-button-primary-background, #6366f1);
@@ -1523,7 +1522,7 @@ app.registerExtension({
             .xz3r0-opacity-popup-label {
                 font-size: 11px;
                 font-weight: 700;
-                color: var(--text-muted, #888);
+                color: var(--text-standard);
                 letter-spacing: 0.06em;
                 text-transform: uppercase;
                 display: flex;
@@ -1548,7 +1547,7 @@ app.registerExtension({
             }
             .xz3r0-opacity-slider::-webkit-slider-runnable-track {
                 height: 6px;
-                background: var(--xdh-color-surface-4, var(--border-standard));
+                background: var(--xdh-clr-surface-soft);
                 border-radius: 999px;
             }
             .xz3r0-opacity-slider::-webkit-slider-thumb {
@@ -1558,10 +1557,10 @@ app.registerExtension({
                 height: 15px;
                 margin-top: -4.5px;
                 background: var(--xdh-color-primary, var(--btn-active-color));
-                border: 2px solid var(--theme-bg-main);
+                border: 2px solid var(--xdh-clr-surface-strong);
                 border-radius: 50%;
                 cursor: pointer;
-                box-shadow: 0 0 0 1px var(--border-standard);
+                box-shadow: 0 0 0 1px var(--xdh-clr-border-strong);
                 transition: background 0.2s, box-shadow 0.2s;
             }
             .xz3r0-opacity-slider::-webkit-slider-thumb:hover {
@@ -1571,15 +1570,15 @@ app.registerExtension({
                 width: 15px;
                 height: 15px;
                 background: var(--xdh-color-primary, var(--btn-active-color));
-                border: 2px solid var(--theme-bg-main);
+                border: 2px solid var(--xdh-clr-surface-strong);
                 border-radius: 50%;
                 cursor: pointer;
-                box-shadow: 0 0 0 1px var(--border-standard);
+                box-shadow: 0 0 0 1px var(--xdh-clr-border-strong);
                 transition: background 0.2s, box-shadow 0.2s;
             }
             .xz3r0-opacity-slider::-moz-range-track {
                 height: 6px;
-                background: var(--xdh-color-surface-4, var(--border-standard));
+                background: var(--xdh-clr-surface-soft);
                 border-radius: 999px;
             }
             .xz3r0-opacity-slider::-moz-range-thumb:hover {
@@ -1917,7 +1916,6 @@ const XDataHub = {
         const opacityPopupLabel = document.createElement("div");
         opacityPopupLabel.className = "xz3r0-opacity-popup-label";
         const opacityLabelText = document.createElement("span");
-        opacityLabelText.style.cssText = "color:var(--text-muted,#888)";
         opacityLabelText.textContent = t("opacityLabel", "Opacity");
         const opacityValue = document.createElement("span");
         opacityValue.textContent = "100%";
@@ -3151,6 +3149,7 @@ const XDataHub = {
             applyThemeMode(mode) {
                 const normalized = normalizeThemeMode(mode);
                 windowEl.setAttribute("data-theme", normalized);
+                document.body.dataset.theme = normalized;
                 postThemeModeToDataFrame();
             },
             postInterruptRequestedToDataFrame() {
@@ -3378,6 +3377,17 @@ window.addEventListener("message", (event) => {
     }
     if (payload.type === "xdatahub:host-settings-updated") {
         const settings = payload.settings;
+        if (settings && Object.prototype.hasOwnProperty.call(
+            settings, "theme_mode"
+        )) {
+            applyThemeMode(settings.theme_mode);
+        }
+        if (settings && Object.prototype.hasOwnProperty.call(
+            settings, "edge_peek"
+        )) {
+            edgePeekEnabled = settings.edge_peek === true;
+            xdataHubRef?.instance?.applyEdgePeek?.();
+        }
         applyHostBehaviorSettings(settings, {
             applyLayout: Object.prototype.hasOwnProperty.call(
                 settings || {},
@@ -3391,10 +3401,6 @@ window.addEventListener("message", (event) => {
         return;
     }
     if (payload.type === "xdatahub:ls-setting") {
-        if (payload.key === EDGE_PEEK_SETTING_ID) {
-            edgePeekEnabled = !!payload.value;
-            xdataHubRef?.instance?.applyEdgePeek?.();
-        }
         return;
     }
     if (payload.type === "xdatahub:toggle-window-request") {

@@ -705,9 +705,9 @@ function ensureStyles() {
             gap: 8px;
             min-height: 260px;
             flex: 1 1 auto;
-            border: 1px solid var(--borderColor, #555);
-            background: var(--bgColor, #222);
-            border-radius: 8px;
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
+            border-radius: var(--xdh-radius-sm);
             padding: 8px;
             box-sizing: border-box;
             overflow-x: auto;
@@ -719,9 +719,9 @@ function ensureStyles() {
             align-items: flex-start;
             justify-content: space-between;
             gap: 10px;
-            border: 1px solid var(--borderColor, #555);
-            background: var(--bgColor, #222);
-            border-radius: 8px;
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
+            border-radius: var(--xdh-radius-sm);
             padding: 8px 10px;
             box-sizing: border-box;
         }
@@ -734,7 +734,7 @@ function ensureStyles() {
         }
         .xlora-toolbar-desc {
             font-size: 11px;
-            color: #d7d7d7;
+            color: var(--xdh-color-text-primary);
             opacity: 0.92;
             line-height: 1.35;
         }
@@ -743,7 +743,7 @@ function ensureStyles() {
             align-items: center;
             gap: 7px;
             font-size: 11px;
-            color: #ddd;
+            color: var(--xdh-color-text-primary);
             user-select: none;
             white-space: nowrap;
             flex: 0 0 auto;
@@ -763,9 +763,9 @@ function ensureStyles() {
             width: 24px;
             min-width: 24px;
             height: 14px;
-            border-radius: 999px;
-            border: 1px solid var(--borderColor, #555);
-            background: #3a3a3a;
+            border-radius: var(--xdh-radius-full);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
             box-sizing: border-box;
             transition: background 0.15s ease, border-color 0.15s ease,
                 box-shadow 0.15s ease;
@@ -778,29 +778,29 @@ function ensureStyles() {
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: #f3f3f3;
+            background: var(--xdh-clr-ink);
             transition: transform 0.15s ease, background 0.15s ease;
         }
         .xlora-switch-input:checked + .xlora-switch-track {
-            border-color: #EA005E;
-            background: rgba(234, 0, 94, 0.24);
+            border-color: var(--xdh-clr-primary);
+            background: var(--xdh-color-primary-muted);
         }
         .xlora-switch-input:checked + .xlora-switch-track::after {
             transform: translateX(10px);
-            background: #EA005E;
+            background: var(--xdh-clr-primary);
         }
         .xlora-switch-input:focus-visible + .xlora-switch-track {
-            box-shadow: 0 0 0 1px #EA005E;
+            box-shadow: 0 0 0 1px var(--xdh-clr-primary);
         }
         .xlora-node-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            border: 1px solid var(--xlora-accent, #0066FF);
-            border-radius: 999px;
-            background: var(--bgColor, #222);
+            border: 1px solid var(--xlora-accent);
+            border-radius: var(--xdh-radius-full);
+            background: var(--xdh-clr-surface-strong);
             padding: 4px 12px;
-            color: #f2f2f2;
+            color: var(--xdh-color-text-primary);
             flex: 0 0 auto;
         }
         .xlora-node-badge-chip {
@@ -809,15 +809,15 @@ function ensureStyles() {
             font-variant-numeric: tabular-nums;
             font-family: ui-monospace, "Cascadia Mono", "Consolas", monospace;
             letter-spacing: 0.15px;
-            color: var(--xlora-accent, #0066FF);
+            color: var(--xlora-accent);
             font-weight: 700;
         }
         .xlora-node-badge-swatch {
             width: 18px;
             height: 18px;
-            border-radius: 5px;
-            background: var(--xlora-accent, #0066FF);
-            box-shadow: inset 0 0 0 1px var(--borderColor, #555);
+            border-radius: var(--xdh-radius-xs);
+            background: var(--xlora-accent);
+            box-shadow: inset 0 0 0 1px var(--xdh-clr-hairline);
         }
         .xlora-kind-emoji {
             display: inline-flex;
@@ -836,21 +836,21 @@ function ensureStyles() {
             margin-left: auto;
         }
         .xlora-list.drag-over {
-            border-color: #EA005E;
-            box-shadow: 0 0 0 1px #EA005E;
+            border-color: var(--xdh-brand-pink);
+            box-shadow: 0 0 0 1px var(--xdh-brand-pink);
         }
         .xlora-empty {
-            font-size: 12px;
+            font: var(--xdh-font-micro-label);
             text-align: center;
-            color: #ddd;
+            color: var(--xdh-color-text-primary);
             opacity: 0.85;
             padding: 18px 8px;
             line-height: 1.5;
         }
         .xlora-row {
-            border: 1px solid var(--borderColor, #555);
-            border-radius: 8px;
-            background: #1d1d1d;
+            border: 1px solid var(--xdh-clr-hairline);
+            border-radius: var(--xdh-radius-sm);
+            background: var(--xdh-clr-surface-strong);
             padding: 8px;
             box-sizing: border-box;
             display: flex;
@@ -871,23 +871,23 @@ function ensureStyles() {
             opacity: 0.5;
         }
         .xlora-row.drag-target {
-            border-color: #EA005E;
-            box-shadow: 0 0 0 1px #EA005E;
+            border-color: var(--xdh-brand-pink);
+            box-shadow: 0 0 0 1px var(--xdh-brand-pink);
         }
         .xlora-handle {
             width: 20px;
             min-width: 20px;
             height: 20px;
-            border-radius: 5px;
-            border: 1px solid var(--borderColor, #555);
+            border-radius: var(--xdh-radius-xs);
+            border: 1px solid var(--xdh-clr-hairline);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
-            color: #ddd;
+            font: var(--xdh-font-micro-label);
+            color: var(--xdh-color-text-primary);
             cursor: grab;
             user-select: none;
-            background: #2b2b2b;
+            background: var(--xdh-clr-surface-strong);
         }
         .xlora-active {
             display: inline-flex;
@@ -908,8 +908,8 @@ function ensureStyles() {
         .xlora-name {
             flex: 1 1 auto;
             min-width: 0;
-            font-size: 12px;
-            color: #f2f2f2;
+            font: var(--xdh-font-micro-label);
+            color: var(--xdh-color-text-primary);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -949,10 +949,10 @@ function ensureStyles() {
             display: inline-flex;
             align-items: center;
             justify-content: flex-start;
-            border: 1px solid rgba(234, 0, 94, 0.42);
-            background: rgba(234, 0, 94, 0.16);
-            color: #f6d7e4;
-            border-radius: 999px;
+            border: 1px solid var(--xdh-color-primary);
+            background: var(--xdh-color-primary-muted);
+            color: var(--xdh-color-text-primary);
+            border-radius: var(--xdh-radius-full);
             padding: 0 10px;
             box-sizing: border-box;
             font-size: 11px;
@@ -966,10 +966,10 @@ function ensureStyles() {
         .xlora-trigger-more {
             height: 24px;
             min-width: 54px;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            background: rgba(255, 255, 255, 0.08);
-            color: #ececec;
+            border-radius: var(--xdh-radius-full);
+            border: 1px solid var(--xdh-color-border);
+            background: var(--xdh-color-surface-2);
+            color: var(--xdh-color-text-primary);
             font-size: 11px;
             line-height: 1.3;
             padding: 0 10px;
@@ -977,9 +977,9 @@ function ensureStyles() {
             flex: 0 0 auto;
         }
         .xlora-trigger-panel {
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            background: rgba(0, 0, 0, 0.24);
-            border-radius: 8px;
+            border: 1px solid var(--xdh-color-border);
+            background: var(--xdh-color-surface-2);
+            border-radius: var(--xdh-radius-sm);
             padding: 8px;
             display: flex;
             flex-direction: column;
@@ -995,10 +995,10 @@ function ensureStyles() {
             flex: 1 1 auto;
             min-width: 0;
             height: 24px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.06);
-            color: #f2f2f2;
+            border-radius: var(--xdh-radius-xs);
+            border: 1px solid var(--xdh-color-border);
+            background: var(--xdh-color-surface-2);
+            color: var(--xdh-color-text-primary);
             padding: 0 8px;
             box-sizing: border-box;
             font-size: 11px;
@@ -1011,10 +1011,10 @@ function ensureStyles() {
         }
         .xlora-trigger-action {
             height: 24px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            background: rgba(255, 255, 255, 0.08);
-            color: #ececec;
+            border-radius: var(--xdh-radius-xs);
+            border: 1px solid var(--xdh-color-border);
+            background: var(--xdh-color-surface-2);
+            color: var(--xdh-color-text-primary);
             font-size: 11px;
             line-height: 1;
             padding: 0 8px;
@@ -1031,31 +1031,31 @@ function ensureStyles() {
         }
         .xlora-trigger-panel-empty {
             font-size: 11px;
-            color: #c9c9c9;
+            color: var(--xdh-color-text-primary);
             opacity: 0.9;
             padding: 4px 2px;
         }
         .xlora-trigger-chip.is-disabled {
             opacity: 0.45;
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.14);
-            color: #c8c8c8;
+            background: var(--xdh-color-surface-2);
+            border-color: var(--xdh-color-border);
+            color: var(--xdh-color-text-primary);
         }
         .xlora-trigger-chip.is-placeholder {
             cursor: default;
             border-style: dashed;
-            background: rgba(255, 255, 255, 0.04);
-            border-color: rgba(255, 255, 255, 0.14);
-            color: #c8c8c8;
+            background: var(--xdh-color-surface-2);
+            border-color: var(--xdh-color-border);
+            color: var(--xdh-color-text-primary);
         }
         .xlora-trigger-refresh {
             width: 22px;
             min-width: 22px;
             height: 22px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            background: rgba(255, 255, 255, 0.08);
-            color: #ececec;
+            border-radius: var(--xdh-radius-xs);
+            border: 1px solid var(--xdh-color-border);
+            background: var(--xdh-color-surface-2);
+            color: var(--xdh-color-text-primary);
             font-size: 12px;
             line-height: 1;
             cursor: pointer;
@@ -1077,12 +1077,10 @@ function ensureStyles() {
         .xlora-label {
             font-size: 11px;
             opacity: 0.96;
-            color: #ddd;
+            color: var(--xdh-color-text-primary);
             font-weight: 700;
             letter-spacing: 0.02em;
-            text-shadow:
-                0 1px 2px rgba(0, 0, 0, 0.9),
-                0 0 1px rgba(255, 255, 255, 0.35);
+            text-shadow: none;
         }
         .xlora-label-model {
             color: #b56cff;
@@ -1093,10 +1091,10 @@ function ensureStyles() {
         .xlora-input {
             width: 68px;
             height: 24px;
-            border-radius: 6px;
-            border: 1px solid var(--borderColor, #555);
-            background: #161616;
-            color: #f3f3f3;
+            border-radius: var(--xdh-radius-xs);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-soft);
+            color: var(--xdh-color-text-primary);
             padding: 0 6px;
             box-sizing: border-box;
             font-size: 11px;
@@ -1105,10 +1103,10 @@ function ensureStyles() {
             width: 22px;
             min-width: 22px;
             height: 22px;
-            border-radius: 6px;
-            border: 1px solid var(--borderColor, #555);
-            background: #2b2b2b;
-            color: #efefef;
+            border-radius: var(--xdh-radius-xs);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
+            color: var(--xdh-color-text-primary);
             font-size: 12px;
             line-height: 1;
             cursor: pointer;
@@ -1118,17 +1116,17 @@ function ensureStyles() {
             padding: 0;
         }
         .xlora-lock-btn.active {
-            border-color: #EA005E;
-            color: #EA005E;
+            border-color: var(--xdh-clr-primary);
+            color: var(--xdh-clr-primary);
         }
         .xlora-remove {
             width: 22px;
             min-width: 22px;
             height: 22px;
-            border-radius: 6px;
-            border: 1px solid var(--borderColor, #555);
-            background: #2b2b2b;
-            color: #efefef;
+            border-radius: var(--xdh-radius-xs);
+            border: 1px solid var(--xdh-clr-hairline);
+            background: var(--xdh-clr-surface-strong);
+            color: var(--xdh-color-text-primary);
             font-size: 12px;
             line-height: 1;
             cursor: pointer;
@@ -1141,15 +1139,15 @@ function ensureStyles() {
             position: fixed;
             z-index: 99999;
             pointer-events: none;
-            background: rgba(16, 16, 16, 0.97);
-            border: 1px solid #666;
-            border-radius: 8px;
+            background: var(--xdh-color-surface-3);
+            border: 1px solid var(--xdh-clr-hairline);
+            border-radius: var(--xdh-radius-sm);
             padding: 8px;
             width: 212px;
             max-width: 212px;
             box-sizing: border-box;
-            color: #f2f2f2;
-            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55);
+            color: var(--xdh-color-text-primary);
+            box-shadow: var(--xdh-shadow-popup);
             display: none;
         }
         .xlora-tooltip img {
@@ -1158,11 +1156,11 @@ function ensureStyles() {
             display: block;
             object-fit: contain;
             background: #000;
-            border-radius: 6px;
+            border-radius: var(--xdh-radius-xs);
             margin: 0 auto;
         }
         .xlora-tooltip-name {
-            font-size: 12px;
+            font: var(--xdh-font-micro-label);
             line-height: 1.35;
             white-space: normal;
             word-break: keep-all;
@@ -1171,18 +1169,18 @@ function ensureStyles() {
         .xlora-tooltip.has-thumb .xlora-tooltip-name {
             margin-top: 8px;
             padding-top: 8px;
-            border-top: 1px solid rgba(255, 255, 255, 0.22);
+            border-top: 1px solid var(--xdh-color-border);
         }
         .xlora-tooltip-divider {
             margin-top: 6px;
             padding-top: 6px;
-            border-top: 1px solid rgba(255, 255, 255, 0.22);
+            border-top: 1px solid var(--xdh-color-border);
             display: none;
         }
         .xlora-tooltip-note {
             font-size: 11px;
             line-height: 1.35;
-            color: #d5d5d5;
+            color: var(--xdh-color-text-primary);
             white-space: normal;
             overflow-wrap: break-word;
             word-break: break-word;

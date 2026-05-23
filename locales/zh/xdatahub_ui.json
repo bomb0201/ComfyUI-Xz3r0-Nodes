@@ -112,5 +112,19 @@
   "xdatahub.ui.shell.tab.image": "图片",
   "xdatahub.ui.shell.tab.video": "视频",
   "xdatahub.ui.shell.tab.audio": "音频",
-  "xdatahub.ui.shell.tab.lora": "Lora"
+  "xdatahub.ui.shell.tab.lora": "Lora",
+  "xdatahub.ui.node.ximagecompare.mode_slide": "滑动对比",
+  "xdatahub.ui.node.ximagecompare.mode_spotlight": "聚光对比",
+  "xdatahub.ui.node.ximagecompare.mode_blend": "混合对比",
+  "xdatahub.ui.node.ximagecompare.mode_pingpong": "乒乓混合",
+  "xdatahub.ui.node.ximagecompare.label_split": "分割",
+  "xdatahub.ui.node.ximagecompare.label_radius": "半径",
+  "xdatahub.ui.node.ximagecompare.label_opacity": "透明度",
+  "xdatahub.ui.node.ximagecompare.label_speed": "速度",
+  "xdatahub.ui.node.ximagecompare.placeholder": "执行节点以加载图片...",
+  "xdatahub.ui.node.ximagecompare.load_failed": "图片加载失败",
+  "xdatahub.ui.node.ximagecompare.res_a": "A:",
+  "xdatahub.ui.node.ximagecompare.res_b": "B:",
+  "xdatahub.ui.node.ximagecompare.match_ok": "分辨率一致",
+  "xdatahub.ui.node.ximagecompare.match_diff": "分辨率不一致"
 }

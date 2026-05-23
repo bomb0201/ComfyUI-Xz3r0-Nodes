@@ -1,0 +1,1567 @@
+/**
+ * XImageCompare 前端扩展
+ *
+ * 为 XImageCompare 节点提供 Canvas 画布渲染，支持 4 种对比模式：
+ * 1. 滑动横向过渡对比
+ * 2. 鼠标聚光局部对比
+ * 3. 透明度渐变对比
+ * 4. 自动乒乓式透明度循环对比
+ *
+ * 图片始终最大化 fit 画布、居中显示，跟随节点窗口尺寸自适应。
+ * 状态通过 hidden widget 持久化。
+ */
+
+import { app } from "../../scripts/app.js";
+
+// =========================================================================
+// 本地化 Key 常量（参照 XImageGet2 模式）
+// =========================================================================
+
+var LOCALE_PREFIX = "xdatahub.ui.node.ximagecompare";
+var COMFY_LOCALE_KEY_I18N = "Comfy.Locale";
+var LOCALE_SYNC_INTERVAL = 1000;
+
+// 模式按钮
+var MODE_SLIDE_KEY = LOCALE_PREFIX + ".mode_slide";
+var MODE_SLIDE_FB = "Slide";
+var MODE_SPOTLIGHT_KEY = LOCALE_PREFIX + ".mode_spotlight";
+var MODE_SPOTLIGHT_FB = "Spotlight";
+var MODE_BLEND_KEY = LOCALE_PREFIX + ".mode_blend";
+var MODE_BLEND_FB = "Blend";
+var MODE_PINGPONG_KEY = LOCALE_PREFIX + ".mode_pingpong";
+var MODE_PINGPONG_FB = "Ping-Pong Blend";
+var MODE_KEYS = [
+    { key: MODE_SLIDE_KEY, fb: MODE_SLIDE_FB },
+    { key: MODE_SPOTLIGHT_KEY, fb: MODE_SPOTLIGHT_FB },
+    { key: MODE_BLEND_KEY, fb: MODE_BLEND_FB },
+    { key: MODE_PINGPONG_KEY, fb: MODE_PINGPONG_FB },
+];
+
+// 滑块控制标签
+var LABEL_SPLIT_KEY = LOCALE_PREFIX + ".label_split";
+var LABEL_SPLIT_FB = "Split";
+var LABEL_RADIUS_KEY = LOCALE_PREFIX + ".label_radius";
+var LABEL_RADIUS_FB = "Radius";
+var LABEL_OPACITY_KEY = LOCALE_PREFIX + ".label_opacity";
+var LABEL_OPACITY_FB = "Opacity";
+var LABEL_SPEED_KEY = LOCALE_PREFIX + ".label_speed";
+var LABEL_SPEED_FB = "Speed";
+
+// 占位文字
+var PLACEHOLDER_KEY = LOCALE_PREFIX + ".placeholder";
+var PLACEHOLDER_FB = "Execute to load images...";
+var LOAD_FAILED_KEY = LOCALE_PREFIX + ".load_failed";
+var LOAD_FAILED_FB = "Image load failed";
+
+// 分辨率标签前缀
+var RES_A_KEY = LOCALE_PREFIX + ".res_a";
+var RES_A_FB = "A:";
+var RES_B_KEY = LOCALE_PREFIX + ".res_b";
+var RES_B_FB = "B:";
+
+// 匹配提示
+var MATCH_OK_KEY = LOCALE_PREFIX + ".match_ok";
+var MATCH_OK_FB = "Resolutions match";
+var MATCH_DIFF_KEY = LOCALE_PREFIX + ".match_diff";
+var MATCH_DIFF_FB = "Resolutions differ";
+
+// =========================================================================
+// 常量
+// =========================================================================
+
+var EXT_NAME = "ComfyUI.Xz3r0.XImageCompare";
+var NODE_CLASS = "XImageCompare";
+var WIDGET_NAME = "xcompare_preview";
+
+// 模式枚举
+var MODE = {
+    SLIDE: 0,
+    SPOTLIGHT: 1,
+    BLEND: 2,
+    PINGPONG: 3,
+};
+var MODE_COUNT = 4;
+
+// 默认画布尺寸
+var DEFAULT_CW = 640;
+var DEFAULT_CH = 480;
+
+// 工具栏高度（3行：按钮行 + 标签行 + 滑块行）
+var TOOLBAR_H = 70;
+
+// 不设独立的 canvas min-height——canvas 跟随节点窗口，
+// 由 node.min_size 保证最小可用空间。
+// DEFAULT_CH 仅用于占位状态下的 imgW/imgH 初始值。
+
+// 最小节点尺寸（1.0 视图兼容）
+// 节点内部：header(~30px) + toolbar(34px) + canvas + padding(~16px)
+var MIN_NODE_W = DEFAULT_CW + 44;
+var MIN_NODE_H = DEFAULT_CH + TOOLBAR_H + 48;
+
+// 默认参数
+var DEFAULT_SLIDE_POS = 50;
+var DEFAULT_SPOT_RADIUS = 80;
+var DEFAULT_BLEND_OPACITY = 50;
+var DEFAULT_PINGPONG_SPEED = 50;
+
+// 跟踪所有对比节点
+var compareStates = {};
+
+// =========================================================================
+// 本地化（参照 XImageGet2 完整模式）
+// =========================================================================
+
+var uiLocalePrimary = null;
+var uiLocaleFallback = null;
+var currentUiLocale = null;
+var i18nCache = {};
+var localeSyncInstalled = false;
+
+function t(key, fallback) {
+    if (uiLocalePrimary && uiLocalePrimary[key] !== undefined
+        && String(uiLocalePrimary[key]).length > 0) {
+        return uiLocalePrimary[key];
+    }
+    if (uiLocaleFallback && uiLocaleFallback[key] !== undefined
+        && String(uiLocaleFallback[key]).length > 0) {
+        return uiLocaleFallback[key];
+    }
+    return fallback || key;
+}
+
+function fetchI18n(locale) {
+    if (i18nCache[locale]) return Promise.resolve(i18nCache[locale]);
+    return fetch("/xz3r0/xdatahub/i18n/ui?locale=" + encodeURIComponent(locale))
+        .then(function (r) { return r.ok ? r.json() : {}; })
+        .then(function (data) {
+            i18nCache[locale] = (data && data.dict) ? data.dict : {};
+            return i18nCache[locale];
+        })
+        .catch(function () { return {}; });
+}
+
+function loadLocaleBundle(locale) {
+    var normalized = (locale === "zh" || locale === "zh-CN" || locale === "zh-TW") ? "zh" : "en";
+    return Promise.all([fetchI18n("en"), fetchI18n(normalized)]).then(function (results) {
+        uiLocaleFallback = results[0];
+        uiLocalePrimary = normalized === "en" ? results[0] : results[1];
+        return normalized;
+    });
+}
+
+function applyUiLocale(localeOverride) {
+    var loc = localeOverride || resolveComfyLocale();
+    return loadLocaleBundle(loc).then(function () {
+        currentUiLocale = loc;
+        refreshAllPanelLocales();
+    });
+}
+
+function resolveComfyLocale() {
+    try {
+        var val = app.extensionManager
+            && app.extensionManager.setting
+            && app.extensionManager.setting.get
+            && app.extensionManager.setting.get(COMFY_LOCALE_KEY_I18N);
+        if (val) return val;
+    } catch (e) { /* fall through */ }
+    try {
+        var ls = localStorage.getItem(COMFY_LOCALE_KEY_I18N);
+        if (ls) return ls;
+    } catch (e) { /* fall through */ }
+    if (document.documentElement && document.documentElement.lang) {
+        return document.documentElement.lang;
+    }
+    return navigator.language || "en";
+}
+
+function refreshAllPanelLocales() {
+    for (var nodeId in compareStates) {
+        if (compareStates.hasOwnProperty(nodeId)) {
+            applyNodeLocale(compareStates[nodeId]);
+        }
+    }
+}
+
+function applyNodeLocale(state) {
+    if (!state || !state.modeButtons) return;
+
+    // 模式按钮文字
+    var modeNames = [
+        t(MODE_SLIDE_KEY, MODE_SLIDE_FB),
+        t(MODE_SPOTLIGHT_KEY, MODE_SPOTLIGHT_FB),
+        t(MODE_BLEND_KEY, MODE_BLEND_FB),
+        t(MODE_PINGPONG_KEY, MODE_PINGPONG_FB),
+    ];
+    for (var i = 0; i < state.modeButtons.length; i++) {
+        state.modeButtons[i].textContent = modeNames[i];
+    }
+
+    // 控制标签
+    updateCtrlLabel(state);
+
+    // 占位文字
+    if (state.placeholder && !state.loaded) {
+        state.placeholder.textContent = t(PLACEHOLDER_KEY, PLACEHOLDER_FB);
+    }
+
+    // 分辨率标签 — 更新格式前缀
+    if (state.loaded && state.resALabel) {
+        state.resALabel.textContent = state._rawResA
+            ? t(RES_A_KEY, RES_A_FB) + " [" + state._rawResA + "]"
+            : t(RES_A_KEY, RES_A_FB) + " [--]";
+    }
+    if (state.loaded && state.resBLabel) {
+        state.resBLabel.textContent = state._rawResB
+            ? t(RES_B_KEY, RES_B_FB) + " [" + state._rawResB + "]"
+            : t(RES_B_KEY, RES_B_FB) + " [--]";
+    }
+}
+
+function installLocaleSync() {
+    if (localeSyncInstalled) return;
+    localeSyncInstalled = true;
+
+    var refreshLocale = function () {
+        applyUiLocale().catch(function () {});
+    };
+
+    // 监听 ComfyUI 设置变更
+    try {
+        var setting = app.extensionManager && app.extensionManager.setting;
+        if (setting && typeof setting.set === "function"
+            && !setting.__xcompareLocaleHookInstalled) {
+            var origSet = setting.set.bind(setting);
+            setting.set = function () {
+                var result = origSet.apply(this, arguments);
+                if (String(arguments[0] || "") === COMFY_LOCALE_KEY_I18N) {
+                    Promise.resolve(result).finally(refreshLocale);
+                }
+                return result;
+            };
+            setting.__xcompareLocaleHookInstalled = true;
+        }
+    } catch (e) { /* ignore */ }
+
+    // 轮询兜底
+    window.setInterval(function () {
+        if (document.hidden) return;
+        var nextLocale = resolveComfyLocale();
+        if (nextLocale !== currentUiLocale) {
+            refreshLocale();
+        }
+    }, LOCALE_SYNC_INTERVAL);
+}
+
+// =========================================================================
+// 清除标准 ComfyUI 图片预览
+// =========================================================================
+
+function clearStandardPreview(node) {
+    if (!node) return;
+    delete node.images;
+    delete node.imgs;
+    node.imageIndex = null;
+
+    if (Array.isArray(node.widgets)) {
+        for (var i = node.widgets.length - 1; i >= 0; i--) {
+            var w = node.widgets[i];
+            if (w && w.name === "$$canvas-image-preview") {
+                if (typeof w.onRemove === "function") {
+                    w.onRemove();
+                }
+                node.widgets.splice(i, 1);
+            }
+        }
+    }
+
+    if (node.graph && typeof node.graph.setDirtyCanvas === "function") {
+        node.graph.setDirtyCanvas(true, true);
+    }
+}
+
+// =========================================================================
+// URL 构建
+// =========================================================================
+
+function buildViewUrl(imgInfo) {
+    var params = new URLSearchParams({
+        filename: imgInfo.filename,
+        type: imgInfo.type || "output",
+    });
+    if (imgInfo.subfolder) {
+        params.set("subfolder", imgInfo.subfolder);
+    }
+    return "/api/view?" + params.toString();
+}
+
+// =========================================================================
+// 隐藏 widget（参照 XImageGet2 ensureHiddenWidget + removeStorageInputSlot）
+// =========================================================================
+
+var HIDDEN_WIDGET_NAMES = [
+    "__compare_mode", "__compare_slider",
+    "__img_a_info", "__img_b_info",
+];
+
+function findWidget(node, name) {
+    if (!node || !Array.isArray(node.widgets)) return null;
+    for (var i = 0; i < node.widgets.length; i++) {
+        if (node.widgets[i] && node.widgets[i].name === name) {
+            return node.widgets[i];
+        }
+    }
+    return null;
+}
+
+function ensureHiddenWidget(node, name, defaultValue) {
+    if (!node || !Array.isArray(node.widgets)) return null;
+    var widget = null;
+    for (var i = 0; i < node.widgets.length; i++) {
+        if (node.widgets[i] && node.widgets[i].name === name) {
+            widget = node.widgets[i];
+            break;
+        }
+    }
+    if (!widget && typeof node.addWidget === "function") {
+        widget = node.addWidget("text", name, String(defaultValue), function () {});
+    }
+    if (widget) {
+        widget.hidden = true;
+        widget.serializeValue = function () {
+            return this.value;
+        };
+    }
+    return widget || null;
+}
+
+function removeHiddenInputSlots(node) {
+    if (!node || !Array.isArray(node.inputs)) return;
+    var nameSet = {};
+    for (var i = 0; i < HIDDEN_WIDGET_NAMES.length; i++) {
+        nameSet[HIDDEN_WIDGET_NAMES[i]] = true;
+    }
+    var filtered = [];
+    for (var j = 0; j < node.inputs.length; j++) {
+        var inp = node.inputs[j];
+        if (!inp || !nameSet[String(inp.name || "")]) {
+            filtered.push(inp);
+        }
+    }
+    if (filtered.length !== node.inputs.length) {
+        node.inputs = filtered;
+        if (node.graph && typeof node.graph.setDirtyCanvas === "function") {
+            node.graph.setDirtyCanvas(true, true);
+        }
+    }
+}
+
+// =========================================================================
+// CSS 注入
+// =========================================================================
+
+function injectStyles() {
+    if (document.getElementById("xcompare-styles")) return;
+
+    var style = document.createElement("style");
+    style.id = "xcompare-styles";
+    style.textContent = [
+        ".xcompare-wrap {",
+        "  position: absolute;",
+        "  top: 0; left: 0; right: 0; bottom: 0;",
+        "  display: flex; flex-direction: column;",
+        "  box-sizing: border-box;",
+        "  border: 1px solid var(--xdh-clr-hairline, #333);",
+        "  overflow: hidden;",
+        "}",
+        ".xcompare-toolbar {",
+        "  display: flex; flex-direction: column; gap: 2px;",
+        "  padding: 4px 0 2px 0;",
+        "  background: var(--xdh-clr-surface-strong, #1e1e1e);",
+        "  border-bottom: 1px solid var(--xdh-clr-hairline, #333);",
+        "  flex-shrink: 0; box-sizing: border-box;",
+        "}",
+        ".xcompare-toolbar-row {",
+        "  display: flex; align-items: center; gap: 4px;",
+        "  padding: 0 6px;",
+        "}",
+        ".xcompare-toolbar-row.xcompare-label-row {",
+        "  margin-bottom: 3px; position: relative;",
+        "}",
+        ".xcompare-toolbar-row.xcompare-buttons-row {",
+        "  justify-content: center;",
+        "}",
+        ".xcompare-toolbar-row.xcompare-slider-row {",
+        "  padding: 4px 0;",
+        "}",
+        ".xcompare-toolbar button {",
+        "  padding: 3px 8px;",
+        "  border: 1px solid var(--xdh-clr-hairline, #555);",
+        "  border-radius: var(--xdh-radius-sm, 3px); cursor: pointer;",
+        "  background: var(--xdh-clr-surface-strong, #2a2a2a);",
+        "  color: var(--xdh-color-text-primary, #ccc);",
+        "  font: var(--xdh-font-micro-label, 11px sans-serif);",
+        "  white-space: nowrap;",
+        "  transition: border-color 120ms ease, background-color 120ms ease;",
+        "  flex: 0 0 auto;",
+        "}",
+        ".xcompare-toolbar button:hover {",
+        "  border-color: var(--xdh-clr-primary, #ff385c);",
+        "}",
+        ".xcompare-toolbar button.active {",
+        "  background: var(--xdh-clr-primary, #ff385c);",
+        "  color: #fff;",
+        "  border-color: var(--xdh-clr-primary, #ff385c);",
+        "}",
+        ".xcompare-toolbar input[type=\"range\"] {",
+        "  flex: 1; min-width: 60px; height: 4px; cursor: pointer;",
+        "  margin: 0; -webkit-appearance: none; appearance: none;",
+        "  background: transparent; outline: none;",
+        "}",
+        ".xcompare-toolbar input[type=\"range\"]::-webkit-slider-runnable-track {",
+        "  height: 2px; border-radius: 1px;",
+        "  background: var(--xdh-clr-hairline, #555);",
+        "}",
+        ".xcompare-toolbar input[type=\"range\"]::-moz-range-track {",
+        "  height: 2px; border-radius: 1px;",
+        "  background: var(--xdh-clr-hairline, #555); border: none;",
+        "}",
+        ".xcompare-toolbar input[type=\"range\"]::-webkit-slider-thumb {",
+        "  -webkit-appearance: none; appearance: none;",
+        "  width: 12px; height: 12px; border-radius: 50%;",
+        "  margin-top: -5px;",
+        "  background: var(--xdh-clr-primary, #ff385c);",
+        "  border: 2px solid var(--xdh-clr-surface-strong, #1e1e1e);",
+        "  cursor: pointer;",
+        "}",
+        ".xcompare-toolbar input[type=\"range\"]::-moz-range-thumb {",
+        "  width: 12px; height: 12px; border-radius: 50%;",
+        "  background: var(--xdh-clr-primary, #ff385c);",
+        "  border: 2px solid var(--xdh-clr-surface-strong, #1e1e1e);",
+        "  cursor: pointer;",
+        "}",
+        ".xcompare-toolbar-label {",
+        "  font: var(--xdh-font-caption-sm, 10px sans-serif);",
+        "  color: var(--xdh-color-text-secondary, #999);",
+        "  white-space: nowrap; text-align: center;",
+        "  position: absolute; left: 50%; transform: translateX(-50%);",
+        "}",
+        ".xcompare-toolbar-res-a {",
+        "  font: var(--xdh-font-caption-sm, 10px sans-serif);",
+        "  color: var(--xdh-color-text-secondary, #777);",
+        "  white-space: nowrap;",
+        "}",
+        ".xcompare-toolbar-res-b {",
+        "  font: var(--xdh-font-caption-sm, 10px sans-serif);",
+        "  color: var(--xdh-color-text-secondary, #777);",
+        "  white-space: nowrap;",
+        "}",
+        ".xcompare-res-group {",
+        "  display: flex; align-items: center; gap: 4px;",
+        "}",
+        ".xcompare-match-dot {",
+        "  width: 7px; height: 7px; border-radius: 50%;",
+        "  flex-shrink: 0;",
+        "}",
+        ".xcompare-canvas-wrap {",
+        "  position: relative; overflow: hidden;",
+        "  background: var(--xdh-clr-surface-card, #1a1a1a);",
+        "  cursor: crosshair;",
+        "  flex: 1 1 0;",
+        "  box-sizing: border-box;",
+        "}",
+        ".xcompare-canvas-wrap canvas {",
+        "  display: block;",
+        "  position: absolute; top: 0; left: 0;",
+        "  width: 100%; height: 100%;",
+        "  box-sizing: border-box;",
+        "}",
+        ".xcompare-placeholder {",
+        "  position: absolute; inset: 0;",
+        "  display: flex; align-items: center; justify-content: center;",
+        "  font: var(--xdh-font-caption-sm, 13px sans-serif);",
+        "  color: var(--xdh-color-text-secondary, #666);",
+        "  pointer-events: none; z-index: 1;",
+        "}",
+    ].join("\n");
+    document.head.appendChild(style);
+}
+
+// =========================================================================
+// CompareState — 每个节点实例的状态
+// =========================================================================
+
+function createCompareState(node) {
+    return {
+        node: node,
+        canvas: null,
+        ctx: null,
+        wrap: null,
+        mode: MODE.SLIDE,
+        imageA: null,
+        imageB: null,
+        imgW: DEFAULT_CW,
+        imgH: DEFAULT_CH,
+        slidePos: DEFAULT_SLIDE_POS,
+        spotRadius: DEFAULT_SPOT_RADIUS,
+        blendOpacity: DEFAULT_BLEND_OPACITY,
+        pingPongSpeed: DEFAULT_PINGPONG_SPEED,
+        dragging: false,
+        dragStartX: 0,
+        _spotBufPt: null,
+        animFrameId: null,
+        animStart: 0,
+        loaded: false,
+        loadToken: 0,
+    };
+}
+
+// =========================================================================
+// 居中 — 图片始终 fit 画布最大化显示
+// 使用 canvas.width/height（缓冲像素）统一所有计算，
+// 鼠标坐标通过 canvas.width / rect.width 缩放因子转换（参照 mask-editor）
+// =========================================================================
+
+/** 读取当前主题背景色 */
+function getCanvasBg(state) {
+    if (!state.wrap) return "#1a1a1a";
+    var cs = getComputedStyle(state.wrap);
+    var bg = cs.getPropertyValue("--xdh-clr-surface-card").trim();
+    return bg || "#1a1a1a";
+}
+
+/** 当前 fit 缩放比例（基于缓冲像素） */
+function currentScale(state) {
+    if (!state.imgW || !state.imgH) return 1;
+    if (!state.canvas) return 1;
+    var bw = state.canvas.width;
+    var bh = state.canvas.height;
+    if (bw <= 0 || bh <= 0) return 1;
+    return Math.min(bw / state.imgW, bh / state.imgH);
+}
+
+/** 居中偏移量（缓冲像素） */
+function getCenteredOffset(state) {
+    if (!state.canvas) return { x: 0, y: 0 };
+    var s = currentScale(state);
+    var bw = state.canvas.width;
+    var bh = state.canvas.height;
+    return {
+        x: (bw - state.imgW * s) / 2,
+        y: (bh - state.imgH * s) / 2,
+    };
+}
+
+/** CSS 坐标 → 缓冲像素坐标（参照 mask-editor getDisplayPoint） */
+function cssToBuffer(state, cssX, cssY) {
+    var rect = state.canvas.getBoundingClientRect();
+    var sx = state.canvas.width / Math.max(rect.width, 1);
+    var sy = state.canvas.height / Math.max(rect.height, 1);
+    return {
+        x: (cssX - rect.left) * sx,
+        y: (cssY - rect.top) * sy,
+    };
+}
+
+/** 缓冲像素坐标 → 图像坐标 */
+function bufferToImage(state, bx, by) {
+    var s = currentScale(state);
+    var off = getCenteredOffset(state);
+    return {
+        x: (bx - off.x) / s,
+        y: (by - off.y) / s,
+    };
+}
+
+/** 图像坐标 → 缓冲像素坐标 */
+function imageToBuffer(state, ix, iy) {
+    var s = currentScale(state);
+    var off = getCenteredOffset(state);
+    return {
+        x: ix * s + off.x,
+        y: iy * s + off.y,
+    };
+}
+
+// =========================================================================
+// Canvas 渲染 — 纯缓冲像素空间，无 DPR 变换
+// =========================================================================
+
+function render(state) {
+    var canvas = state.canvas;
+    if (!canvas) return;
+
+    var ctx = state.ctx;
+    if (!ctx) return;
+
+    // 取 CSS 尺寸，设为缓冲像素尺寸（无 DPR 放大，避免精度问题）
+    var rect = canvas.getBoundingClientRect();
+    var bw = Math.floor(rect.width);
+    var bh = Math.floor(rect.height);
+    if (bw <= 0 || bh <= 0) return;
+
+    if (canvas.width !== bw || canvas.height !== bh) {
+        canvas.width = bw;
+        canvas.height = bh;
+    }
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, bw, bh);
+
+    // 跟随主题的背景色
+    var bgColor = getCanvasBg(state);
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, bw, bh);
+
+    if (!state.imageA && !state.imageB) {
+        return;
+    }
+
+    var hasBoth = state.imageA && state.imageB;
+    var s = currentScale(state);
+    var off = getCenteredOffset(state);
+
+    ctx.save();
+    ctx.translate(off.x, off.y);
+    ctx.scale(s, s);
+
+    var iw = state.imgW;
+    var ih = state.imgH;
+
+    // 统一空间中填充与画布相同的背景色
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, iw, ih);
+
+    if (!hasBoth) {
+        // 仅显示单张图片
+        var singleImg = state.imageA || state.imageB;
+        var r = getContainRect(singleImg, iw, ih);
+        ctx.drawImage(singleImg, r.x, r.y, r.w, r.h);
+    } else {
+        switch (state.mode) {
+        case MODE.SLIDE:
+            renderSlide(state, ctx, iw, ih);
+            break;
+        case MODE.SPOTLIGHT:
+            renderSpotlight(state, ctx, iw, ih);
+            break;
+        case MODE.BLEND:
+        case MODE.PINGPONG:
+            renderBlend(state, ctx, iw, ih);
+            break;
+        }
+    }
+
+    ctx.restore();
+
+    if (hasBoth) {
+        renderOverlay(state, ctx, bw, bh, off);
+    }
+}
+
+/** 计算 contain 尺寸 + 居中偏移 */
+function getContainRect(img, maxW, maxH) {
+    var s = Math.min(maxW / img.naturalWidth, maxH / img.naturalHeight);
+    return {
+        w: Math.round(img.naturalWidth * s),
+        h: Math.round(img.naturalHeight * s),
+        x: Math.round((maxW - img.naturalWidth * s) / 2),
+        y: Math.round((maxH - img.naturalHeight * s) / 2),
+    };
+}
+
+function renderSlide(state, ctx, iw, ih) {
+    var imgs = getDisplayImages(state);
+    var rA = getContainRect(imgs[0], iw, ih);
+    var rB = getContainRect(imgs[1], iw, ih);
+    var splitX = (state.slidePos / 100) * iw;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0, 0, splitX, ih);
+    ctx.clip();
+    ctx.drawImage(imgs[0], rA.x, rA.y, rA.w, rA.h);
+    ctx.restore();
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(splitX, 0, iw - splitX, ih);
+    ctx.clip();
+    ctx.drawImage(imgs[1], rB.x, rB.y, rB.w, rB.h);
+    ctx.restore();
+}
+
+function renderSpotlight(state, ctx, iw, ih) {
+    var imgs = getDisplayImages(state);
+    var rA = getContainRect(imgs[0], iw, ih);
+    var rB = getContainRect(imgs[1], iw, ih);
+
+    ctx.drawImage(imgs[0], rA.x, rA.y, rA.w, rA.h);
+
+    var bp = state._spotBufPt;
+    if (!bp) return;
+
+    var imgPt = bufferToImage(state, bp.x, bp.y);
+    var cx = imgPt.x;
+    var cy = imgPt.y;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, state.spotRadius, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.drawImage(imgs[1], rB.x, rB.y, rB.w, rB.h);
+    ctx.restore();
+}
+
+function renderBlend(state, ctx, iw, ih) {
+    var imgs = getDisplayImages(state);
+    var rA = getContainRect(imgs[0], iw, ih);
+    var rB = getContainRect(imgs[1], iw, ih);
+
+    var opacity;
+    if (state.mode === MODE.PINGPONG) {
+        var elapsed = (performance.now() - state.animStart) / 1000;
+        var period = getPingPongPeriod(state.pingPongSpeed);
+        opacity = Math.abs(Math.sin(elapsed / period * Math.PI));
+    } else {
+        opacity = state.blendOpacity / 100;
+    }
+
+    ctx.drawImage(imgs[0], rA.x, rA.y, rA.w, rA.h);
+
+    ctx.save();
+    ctx.globalAlpha = opacity;
+    ctx.drawImage(imgs[1], rB.x, rB.y, rB.w, rB.h);
+    ctx.restore();
+}
+
+function renderOverlay(state, ctx, bw, bh, off) {
+    if (state.mode === MODE.SLIDE) {
+        var splitX = (state.slidePos / 100) * state.imgW;
+        var line = imageToBuffer(state, splitX, 0);
+
+        // 反色线：difference 混合模式，白色线在任何背景上都可见
+        ctx.save();
+        ctx.globalCompositeOperation = "difference";
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 1;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(line.x, 0);
+        ctx.lineTo(line.x, bh);
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    if (state.mode === MODE.SPOTLIGHT) {
+        var bp = state._spotBufPt;
+        if (!bp) return;
+        var r = state.spotRadius * currentScale(state);
+
+        // 细反色线 — difference 混合模式，不显示十字
+        ctx.save();
+        ctx.globalCompositeOperation = "difference";
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 1;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.arc(bp.x, bp.y, r, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+    }
+}
+
+// =========================================================================
+// 乒乓周期映射
+// =========================================================================
+
+function getPingPongPeriod(speed) {
+    return 8.0 - (speed / 100) * 7.5;
+}
+
+// =========================================================================
+// 动画循环
+// =========================================================================
+
+function startPingPong(state) {
+    if (state.animFrameId !== null) return;
+    state.animStart = performance.now();
+
+    function loop() {
+        if (state.mode !== MODE.PINGPONG) {
+            state.animFrameId = null;
+            return;
+        }
+        render(state);
+        state.animFrameId = requestAnimationFrame(loop);
+    }
+    state.animFrameId = requestAnimationFrame(loop);
+}
+
+function stopPingPong(state) {
+    if (state.animFrameId !== null) {
+        cancelAnimationFrame(state.animFrameId);
+        state.animFrameId = null;
+    }
+}
+
+// =========================================================================
+// 参数滑块配置
+// =========================================================================
+
+function getSliderConfig(mode, state) {
+    switch (mode) {
+    case MODE.SLIDE:
+        return { min: 0, max: 100 };
+    case MODE.SPOTLIGHT:
+        return getSpotlightRange(state);
+    case MODE.BLEND:
+        return { min: 0, max: 100 };
+    case MODE.PINGPONG:
+        return { min: 0, max: 100 };
+    default:
+        return { min: 0, max: 100 };
+    }
+}
+
+/** 聚光圈范围基于图像对角线自动缩放 */
+function getSpotlightRange(state) {
+    var diag = Math.sqrt(
+        state.imgW * state.imgW + state.imgH * state.imgH
+    ) || 500;
+    return {
+        min: Math.round(diag * 0.03),
+        max: Math.round(diag * 0.6),
+    };
+}
+
+function clampSpotRadius(state, val) {
+    var range = getSpotlightRange(state);
+    return Math.max(range.min, Math.min(range.max, val));
+}
+
+/** 返回当前 swap 状态下应显示的 [图A, 图B] */
+function getDisplayImages(state) {
+    if (!state.imageA && !state.imageB) return [null, null];
+    var swapW = findWidget(state.node, "swap_ab");
+    if (swapW && swapW.value) {
+        return [state.imageB, state.imageA];
+    }
+    return [state.imageA, state.imageB];
+}
+
+// =========================================================================
+// UI 构建
+// =========================================================================
+
+function createCompareUI(node) {
+    if (node.__xcompareState) return;
+
+    var state = createCompareState(node);
+    node.__xcompareState = state;
+    compareStates[String(node.id)] = state;
+
+    // 容器
+    var wrap = document.createElement("div");
+    wrap.className = "xcompare-wrap";
+    state.wrap = wrap;
+
+    // --- 工具栏（3行） ---
+    var toolbar = document.createElement("div");
+    toolbar.className = "xcompare-toolbar";
+
+    // 第1行：模式按钮（居中）
+    var row1 = document.createElement("div");
+    row1.className = "xcompare-toolbar-row xcompare-buttons-row";
+    var modeNames = [
+        t(MODE_SLIDE_KEY, MODE_SLIDE_FB),
+        t(MODE_SPOTLIGHT_KEY, MODE_SPOTLIGHT_FB),
+        t(MODE_BLEND_KEY, MODE_BLEND_FB),
+        t(MODE_PINGPONG_KEY, MODE_PINGPONG_FB),
+    ];
+    var modeButtons = [];
+    for (var m = 0; m < MODE_COUNT; m++) {
+        var btn = document.createElement("button");
+        btn.textContent = modeNames[m];
+        btn.setAttribute("data-mode", String(m));
+        btn.addEventListener("click", (function (mode) {
+            return function () { setMode(state, mode); };
+        })(m));
+        row1.appendChild(btn);
+        modeButtons.push(btn);
+    }
+    state.modeButtons = modeButtons;
+    toolbar.appendChild(row1);
+
+    // 第2行：A + ● + B 靠左，控制标签居中
+    var row2 = document.createElement("div");
+    row2.className = "xcompare-toolbar-row xcompare-label-row";
+    // 分辨率组（靠左）
+    var resGroup = document.createElement("span");
+    resGroup.className = "xcompare-res-group";
+    var resA = document.createElement("span");
+    resA.className = "xcompare-toolbar-res-a";
+    resA.textContent = t(RES_A_KEY, RES_A_FB) + " [--]";
+    state.resALabel = resA;
+    resGroup.appendChild(resA);
+    var matchDot = document.createElement("span");
+    matchDot.className = "xcompare-match-dot";
+    matchDot.style.display = "none";
+    state.matchDot = matchDot;
+    resGroup.appendChild(matchDot);
+    var resB = document.createElement("span");
+    resB.className = "xcompare-toolbar-res-b";
+    resB.textContent = t(RES_B_KEY, RES_B_FB) + " [--]";
+    state.resBLabel = resB;
+    resGroup.appendChild(resB);
+    row2.appendChild(resGroup);
+    // 控制标签（居中）
+    var ctrlLabel = document.createElement("span");
+    ctrlLabel.className = "xcompare-toolbar-label";
+    ctrlLabel.textContent = t(LABEL_SPLIT_KEY, LABEL_SPLIT_FB) + ": 50%";
+    state.ctrlLabel = ctrlLabel;
+    row2.appendChild(ctrlLabel);
+    toolbar.appendChild(row2);
+
+    // 第3行：参数滑块（padding=0 对齐画布宽度）
+    var row3 = document.createElement("div");
+    row3.className = "xcompare-toolbar-row xcompare-slider-row";
+    var slider = document.createElement("input");
+    slider.type = "range";
+    slider.min = "0";
+    slider.max = "100";
+    slider.value = "50";
+    slider.addEventListener("input", function () {
+        onSliderChange(state, Number(slider.value));
+    });
+    slider.addEventListener("wheel", function (e) {
+        onWheel(state, e);
+    }, { passive: false });
+    row3.appendChild(slider);
+    state.slider = slider;
+    toolbar.appendChild(row3);
+
+    wrap.appendChild(toolbar);
+
+    // --- Canvas 区域 ---
+    var canvasWrap = document.createElement("div");
+    canvasWrap.className = "xcompare-canvas-wrap";
+
+    var canvas = document.createElement("canvas");
+    canvas.style.display = "block";
+    canvas.style.position = "absolute";
+    canvas.style.top = "0";
+    canvas.style.left = "0";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+
+    var placeholder = document.createElement("div");
+    placeholder.className = "xcompare-placeholder";
+    placeholder.textContent = t(PLACEHOLDER_KEY, PLACEHOLDER_FB);
+    state.placeholder = placeholder;
+
+    canvasWrap.appendChild(placeholder);
+    canvasWrap.appendChild(canvas);
+
+    state.canvas = canvas;
+    state.ctx = canvas.getContext("2d");
+
+    wrap.appendChild(canvasWrap);
+
+    // --- 注册 DOM widget ---
+    if (typeof node.addDOMWidget === "function") {
+        node.addDOMWidget(WIDGET_NAME, "custom", wrap, {
+            serialize: false,
+        });
+    }
+
+    // --- 隐藏状态 widget（对标 XImageGet2 双向隐藏） ---
+    ensureHiddenWidget(node, "__compare_mode", MODE.SLIDE);
+    ensureHiddenWidget(node, "__compare_slider", "50");
+    ensureHiddenWidget(node, "__img_a_info", "");
+    ensureHiddenWidget(node, "__img_b_info", "");
+    removeHiddenInputSlots(node);
+
+    // swap_ab 开关监听 — 切换时重绘
+    var swapW = findWidget(node, "swap_ab");
+    if (swapW) {
+        var origSwapCb = swapW.callback;
+        swapW.callback = function (val) {
+            if (origSwapCb) origSwapCb.apply(this, arguments);
+            render(state);
+        };
+    }
+
+    // --- 尺寸/主题变化自动重绘（RAF 轮询） ---
+    state._lastSizeW = 0;
+    state._lastSizeH = 0;
+    state._lastBgColor = "";
+    function sizePollLoop() {
+        if (!state.node || !state.canvas) return;
+        var rect = state.canvas.getBoundingClientRect();
+        var w = Math.floor(rect.width);
+        var h = Math.floor(rect.height);
+        var bg = getCanvasBg(state);
+        if (w !== state._lastSizeW || h !== state._lastSizeH
+            || bg !== state._lastBgColor) {
+            state._lastSizeW = w;
+            state._lastSizeH = h;
+            state._lastBgColor = bg;
+            render(state);
+        }
+        state._sizePollRaf = requestAnimationFrame(sizePollLoop);
+    }
+    state._sizePollRaf = requestAnimationFrame(sizePollLoop);
+
+    // --- 事件绑定 ---
+    bindCanvasEvents(state);
+
+    // --- 初始状态 ---
+    updateModeButtons(state);
+    updateSlider(state);
+    render(state);
+}
+
+// =========================================================================
+// 模式切换
+// =========================================================================
+
+function setMode(state, newMode) {
+    if (state.mode === newMode) return;
+
+    if (state.mode === MODE.PINGPONG) {
+        stopPingPong(state);
+    }
+
+    state.mode = newMode;
+    updateModeButtons(state);
+    updateSlider(state);
+
+    // spotlight 模式隐藏鼠标指针，避免遮挡中心点
+    if (state.canvas) {
+        state.canvas.style.cursor = newMode === MODE.SPOTLIGHT ? "none" : "crosshair";
+    }
+
+    render(state);
+
+    if (newMode === MODE.PINGPONG && state.loaded) {
+        startPingPong(state);
+    }
+
+    saveState(state);
+}
+
+function updateModeButtons(state) {
+    for (var i = 0; i < state.modeButtons.length; i++) {
+        if (i === state.mode) {
+            state.modeButtons[i].classList.add("active");
+        } else {
+            state.modeButtons[i].classList.remove("active");
+        }
+    }
+}
+
+function updateSlider(state) {
+    var cfg = getSliderConfig(state.mode, state);
+    state.slider.min = String(cfg.min);
+    state.slider.max = String(cfg.max);
+
+    var val;
+    switch (state.mode) {
+    case MODE.SLIDE: val = state.slidePos; break;
+    case MODE.SPOTLIGHT: val = state.spotRadius; break;
+    case MODE.BLEND: val = state.blendOpacity; break;
+    case MODE.PINGPONG: val = state.pingPongSpeed; break;
+    default: val = 50;
+    }
+    state.slider.value = String(val);
+    updateCtrlLabel(state);
+}
+
+function updateCtrlLabel(state) {
+    if (!state.ctrlLabel) return;
+    var label, val;
+    switch (state.mode) {
+    case MODE.SLIDE:
+        label = t(LABEL_SPLIT_KEY, LABEL_SPLIT_FB);
+        val = Math.round(state.slidePos) + "%"; break;
+    case MODE.SPOTLIGHT:
+        label = t(LABEL_RADIUS_KEY, LABEL_RADIUS_FB);
+        val = Math.round(state.spotRadius) + "px"; break;
+    case MODE.BLEND:
+        label = t(LABEL_OPACITY_KEY, LABEL_OPACITY_FB);
+        val = Math.round(state.blendOpacity) + "%"; break;
+    case MODE.PINGPONG:
+        label = t(LABEL_SPEED_KEY, LABEL_SPEED_FB);
+        val = Math.round(state.pingPongSpeed) + "%"; break;
+    default:
+        label = ""; val = "";
+    }
+    state.ctrlLabel.textContent = label + ": " + val;
+}
+
+// =========================================================================
+// 滑块值变更
+// =========================================================================
+
+function onSliderChange(state, value) {
+    switch (state.mode) {
+    case MODE.SLIDE:
+        state.slidePos = value;
+        break;
+    case MODE.SPOTLIGHT:
+        state.spotRadius = clampSpotRadius(state, value);
+        break;
+    case MODE.BLEND:
+        state.blendOpacity = value;
+        break;
+    case MODE.PINGPONG:
+        state.pingPongSpeed = value;
+        break;
+    }
+    updateCtrlLabel(state);
+    render(state);
+    saveState(state);
+}
+
+// =========================================================================
+// Canvas 事件处理 — 无平移，仅分割线拖拽 + 聚光跟踪
+// =========================================================================
+
+function bindCanvasEvents(state) {
+    var canvas = state.canvas;
+    if (!canvas) return;
+
+    canvas.addEventListener("mousedown", function (e) {
+        onMouseDown(state, e);
+    });
+    canvas.addEventListener("mousemove", function (e) {
+        onMouseMove(state, e);
+    });
+    // 拖拽期间在 window 上跟踪鼠标，超出画布也能继续拖到底
+    window.addEventListener("mousemove", function (e) {
+        onWindowMouseMove(state, e);
+    });
+    window.addEventListener("mouseup", function () {
+        onMouseUp(state);
+    });
+    canvas.addEventListener("mouseleave", function () {
+        onMouseLeave(state);
+    });
+    canvas.addEventListener("contextmenu", function (e) {
+        e.preventDefault();
+    });
+    canvas.addEventListener("wheel", function (e) {
+        onWheel(state, e);
+    }, { passive: false });
+}
+
+function onMouseDown(state, e) {
+    if (!state.loaded) return;
+    if (e.button !== 0) return;
+
+    if (state.mode === MODE.SLIDE) {
+        // 任意位置左键单击立即移动分割线并进入拖拽模式
+        var bp = cssToBuffer(state, e.clientX, e.clientY);
+        var imgPt = bufferToImage(state, bp.x, bp.y);
+        state.slidePos = Math.max(0, Math.min(100, (imgPt.x / state.imgW) * 100));
+        state.slider.value = String(Math.round(state.slidePos));
+        updateCtrlLabel(state);
+        state.dragging = true;
+        render(state);
+        e.preventDefault();
+    }
+}
+
+function onMouseMove(state, e) {
+    var bp = cssToBuffer(state, e.clientX, e.clientY);
+    // 暂存 buffer 坐标用于 spotlight overlay 渲染
+    state._spotBufPt = bp;
+
+    if (state.dragging && state.mode === MODE.SLIDE) {
+        var imgPt = bufferToImage(state, bp.x, bp.y);
+        state.slidePos = Math.max(0, Math.min(100, (imgPt.x / state.imgW) * 100));
+        state.slider.value = String(Math.round(state.slidePos));
+        updateCtrlLabel(state);
+        render(state);
+        return;
+    }
+
+    if (state.mode === MODE.SPOTLIGHT) {
+        render(state);
+    }
+}
+
+function onMouseUp(state) {
+    if (state.dragging) {
+        state.dragging = false;
+        if (state.mode === MODE.SLIDE) {
+            saveState(state);
+        }
+    }
+}
+
+/** 拖拽时 window 级 mousemove — 鼠标超出画布仍能继续拖动 */
+function onWindowMouseMove(state, e) {
+    if (!state.dragging) return;
+    if (state.mode !== MODE.SLIDE) return;
+
+    var bp = cssToBuffer(state, e.clientX, e.clientY);
+    var imgPt = bufferToImage(state, bp.x, bp.y);
+    state.slidePos = Math.max(0, Math.min(100, (imgPt.x / state.imgW) * 100));
+    state.slider.value = String(Math.round(state.slidePos));
+    updateCtrlLabel(state);
+    render(state);
+}
+
+function onWheel(state, e) {
+    e.preventDefault();
+    var delta = e.deltaY > 0 ? -1 : 1;
+    var step, val;
+    switch (state.mode) {
+    case MODE.SLIDE:
+        step = 2; val = state.slidePos + delta * step;
+        val = Math.max(0, Math.min(100, val));
+        state.slidePos = val;
+        break;
+    case MODE.SPOTLIGHT:
+        step = Math.max(1, Math.round(
+            Math.sqrt(state.imgW * state.imgW + state.imgH * state.imgH) * 0.01
+        ));
+        state.spotRadius = clampSpotRadius(state, state.spotRadius + delta * step);
+        break;
+    case MODE.BLEND:
+        step = 2; val = state.blendOpacity + delta * step;
+        val = Math.max(0, Math.min(100, val));
+        state.blendOpacity = val;
+        break;
+    case MODE.PINGPONG:
+        step = 2; val = state.pingPongSpeed + delta * step;
+        val = Math.max(0, Math.min(100, val));
+        state.pingPongSpeed = val;
+        break;
+    }
+    updateSlider(state);
+    saveState(state);
+    render(state);
+}
+
+function onMouseLeave(state) {
+    state._spotBufPt = null;
+    if (state.mode === MODE.SPOTLIGHT) {
+        render(state);
+    }
+}
+
+// =========================================================================
+// 图像加载
+// =========================================================================
+
+function loadImages(state, urlA, urlB) {
+    var token = (state.loadToken || 0) + 1;
+    state.loadToken = token;
+
+    var expectCount = (urlA ? 1 : 0) + (urlB ? 1 : 0);
+    if (expectCount === 0) {
+        state.imageA = null;
+        state.imageB = null;
+        state.loaded = false;
+        if (state.placeholder) {
+            state.placeholder.textContent = t(PLACEHOLDER_KEY, PLACEHOLDER_FB);
+            state.placeholder.style.display = "";
+        }
+        return;
+    }
+
+    var imgA = urlA ? new Image() : null;
+    var imgB = urlB ? new Image() : null;
+    var loaded = 0;
+
+    function onLoad() {
+        loaded++;
+        if (loaded === expectCount) {
+            if (state.loadToken !== token) return;
+
+            state.imageA = imgA;
+            state.imageB = imgB;
+
+            var wA = imgA ? imgA.naturalWidth : (imgB ? imgB.naturalWidth : 640);
+            var hA = imgA ? imgA.naturalHeight : (imgB ? imgB.naturalHeight : 480);
+            var wB = imgB ? imgB.naturalWidth : wA;
+            var hB = imgB ? imgB.naturalHeight : hA;
+            state.imgW = Math.min(wA, wB);
+            state.imgH = Math.min(hA, hB);
+            state.loaded = true;
+
+            if (state.placeholder) {
+                state.placeholder.style.display = "none";
+            }
+
+            if (state.resALabel) {
+                state.resALabel.textContent = imgA
+                    ? t(RES_A_KEY, RES_A_FB) + " [" + imgA.naturalWidth + "×" + imgA.naturalHeight + "]"
+                    : t(RES_A_KEY, RES_A_FB) + " [--]";
+                state._rawResA = imgA ? imgA.naturalWidth + "×" + imgA.naturalHeight : null;
+            }
+            if (state.resBLabel) {
+                state.resBLabel.textContent = imgB
+                    ? t(RES_B_KEY, RES_B_FB) + " [" + imgB.naturalWidth + "×" + imgB.naturalHeight + "]"
+                    : t(RES_B_KEY, RES_B_FB) + " [--]";
+                state._rawResB = imgB ? imgB.naturalWidth + "×" + imgB.naturalHeight : null;
+            }
+            if (state.matchDot) {
+                if (imgA && imgB) {
+                    var same = imgA.naturalWidth === imgB.naturalWidth
+                        && imgA.naturalHeight === imgB.naturalHeight;
+                    state.matchDot.style.background = same ? "#4ade80" : "#f87171";
+                    state.matchDot.title = same
+                        ? t(MATCH_OK_KEY, MATCH_OK_FB)
+                        : t(MATCH_DIFF_KEY, MATCH_DIFF_FB);
+                    state.matchDot.style.display = "";
+                } else {
+                    state.matchDot.style.display = "none";
+                }
+            }
+
+            var newDiag = Math.sqrt(state.imgW * state.imgW + state.imgH * state.imgH);
+            if (state._spotDiag !== newDiag) {
+                state._spotDiag = newDiag;
+                state.spotRadius = clampSpotRadius(state, Math.round(newDiag * 0.15));
+            }
+            updateSlider(state);
+            updateCtrlLabel(state);
+
+            render(state);
+
+            if (state.node) {
+                clearStandardPreview(state.node);
+            }
+
+            if (state.mode === MODE.PINGPONG && imgA && imgB) {
+                startPingPong(state);
+            }
+        }
+    }
+
+    function onError() {
+        loaded++;
+        if (loaded === expectCount && state.loadToken === token) {
+            if (state.placeholder) {
+                state.placeholder.textContent = t(LOAD_FAILED_KEY, LOAD_FAILED_FB);
+                state.placeholder.style.display = "";
+            }
+        }
+    }
+
+    if (imgA) {
+        imgA.onload = onLoad;
+        imgA.onerror = onError;
+        imgA.src = urlA;
+    }
+    if (imgB) {
+        imgB.onload = onLoad;
+        imgB.onerror = onError;
+        imgB.src = urlB;
+    }
+}
+
+// =========================================================================
+// 执行事件处理
+// =========================================================================
+
+function handleNodeExecuted(node, output) {
+    var state = node.__xcompareState;
+    if (!state) return;
+
+    var images = (output && output.images) ? output.images : [];
+    // images[0]=A, images[1]=B（无 filename 表示空占位）
+    var imgA = (images.length >= 1 && images[0] && images[0].filename) ? images[0] : null;
+    var imgB = (images.length >= 2 && images[1] && images[1].filename) ? images[1] : null;
+
+    var infoA = ensureHiddenWidget(node, "__img_a_info", "");
+    var infoB = ensureHiddenWidget(node, "__img_b_info", "");
+    if (infoA) infoA.value = imgA ? JSON.stringify(imgA) : "";
+    if (infoB) infoB.value = imgB ? JSON.stringify(imgB) : "";
+
+    if (imgA || imgB) {
+        loadImages(state,
+            imgA ? buildViewUrl(imgA) : null,
+            imgB ? buildViewUrl(imgB) : null);
+    }
+}
+
+// =========================================================================
+// 状态持久化
+// =========================================================================
+
+function saveState(state) {
+    var node = state.node;
+    if (!node) return;
+
+    var modeW = ensureHiddenWidget(node, "__compare_mode", MODE.SLIDE);
+    if (modeW) modeW.value = state.mode;
+
+    var sliderVal;
+    switch (state.mode) {
+    case MODE.SLIDE: sliderVal = state.slidePos; break;
+    case MODE.SPOTLIGHT: sliderVal = state.spotRadius; break;
+    case MODE.BLEND: sliderVal = state.blendOpacity; break;
+    case MODE.PINGPONG: sliderVal = state.pingPongSpeed; break;
+    default: sliderVal = 50;
+    }
+
+    var sliderW = ensureHiddenWidget(node, "__compare_slider", "50");
+    if (sliderW) sliderW.value = sliderVal;
+}
+
+function restoreState(state) {
+    var node = state.node;
+    if (!node) return;
+
+    var modeW = ensureHiddenWidget(node, "__compare_mode", MODE.SLIDE);
+    if (modeW && modeW.value != null && modeW.value !== "") {
+        state.mode = Number(modeW.value) || MODE.SLIDE;
+    }
+
+    var sliderW = ensureHiddenWidget(node, "__compare_slider", "50");
+    if (sliderW && sliderW.value != null && sliderW.value !== "") {
+        var val = Number(sliderW.value) || 50;
+        switch (state.mode) {
+        case MODE.SLIDE: state.slidePos = val; break;
+        case MODE.SPOTLIGHT: state.spotRadius = clampSpotRadius(state, val); break;
+        case MODE.BLEND: state.blendOpacity = val; break;
+        case MODE.PINGPONG: state.pingPongSpeed = val; break;
+        }
+    }
+
+    // 恢复持久化的图片 — 刷新/重新加载工作流后自动显示
+    if (!state.loaded) {
+        var infoA = ensureHiddenWidget(node, "__img_a_info", "");
+        var infoB = ensureHiddenWidget(node, "__img_b_info", "");
+        try {
+            var imgA = infoA && infoA.value ? JSON.parse(infoA.value) : null;
+            var imgB = infoB && infoB.value ? JSON.parse(infoB.value) : null;
+            if (imgA || imgB) {
+                loadImages(state,
+                    imgA ? buildViewUrl(imgA) : null,
+                    imgB ? buildViewUrl(imgB) : null);
+            }
+        } catch (e) { /* ignore parse errors */ }
+    }
+
+    updateModeButtons(state);
+    updateSlider(state);
+    render(state);
+
+    if (state.mode === MODE.PINGPONG && state.loaded) {
+        startPingPong(state);
+    }
+}
+
+// =========================================================================
+// 节点尺寸 clamp（参照 XImageGet2 ensureNodeMinSize）
+// =========================================================================
+
+function clampNodeSize(node) {
+    if (!node) return;
+
+    node.min_size = [MIN_NODE_W, MIN_NODE_H];
+
+    // 强制当前尺寸不低于最小值
+    if (typeof node.setSize === "function") {
+        var w = Math.max((node.size && node.size[0]) || 0, MIN_NODE_W);
+        var h = Math.max((node.size && node.size[1]) || 0, MIN_NODE_H);
+        node.setSize([w, h]);
+    }
+
+    // 防止重复包装 onResize
+    if (node.__xcompare_resize_guard) return;
+    node.__xcompare_resize_guard = true;
+
+    var origOnResize = node.onResize;
+    node.onResize = function (size) {
+        // 动态更新 min_size
+        this.min_size = [MIN_NODE_W, MIN_NODE_H];
+
+        // 取实际尺寸并 clamp，直接设 this.size 避免 setSize 递归
+        var srcSize = Array.isArray(size) ? size : this.size;
+        var nw = Math.max((srcSize && srcSize[0]) || 0, MIN_NODE_W);
+        var nh = Math.max((srcSize && srcSize[1]) || 0, MIN_NODE_H);
+        this.size = [nw, nh];
+
+        this.setDirtyCanvas && this.setDirtyCanvas(true, true);
+
+        // 调用原始 onResize
+        if (typeof origOnResize === "function") {
+            origOnResize.apply(this, arguments);
+        }
+
+        // 重绘画布
+        var st = this.__xcompareState;
+        if (st) {
+            render(st);
+        }
+    };
+}
+
+// =========================================================================
+// 扩展注册
+// =========================================================================
+
+app.registerExtension({
+    name: EXT_NAME,
+
+    async beforeRegisterNodeDef(nodeType, nodeData) {
+        if (String(nodeData.name) !== NODE_CLASS) return;
+
+        var origOnCreated = nodeType.prototype.onNodeCreated;
+        var origOnConfigure = nodeType.prototype.onConfigure;
+        var origOnExecuted = nodeType.prototype.onExecuted;
+
+        nodeType.prototype.onNodeCreated = function () {
+            origOnCreated && origOnCreated.apply(this, arguments);
+            createCompareUI(this);
+            restoreState(this.__xcompareState);
+            clampNodeSize(this);
+        };
+
+        nodeType.prototype.onConfigure = function () {
+            origOnConfigure && origOnConfigure.apply(this, arguments);
+            createCompareUI(this);
+            restoreState(this.__xcompareState);
+            clampNodeSize(this);
+        };
+
+        nodeType.prototype.onExecuted = function (output) {
+            // 在调用原始 onExecuted 之前提取并删除 images，
+            // 阻止 ComfyUI 创建标准图片预览
+            var savedImages = null;
+            if (output && output.images && output.images.length >= 1) {
+                savedImages = output.images.slice();
+                delete output.images;
+            }
+
+            origOnExecuted && origOnExecuted.apply(this, arguments);
+
+            if (savedImages) {
+                handleNodeExecuted(this, { images: savedImages });
+            }
+
+            clearStandardPreview(this);
+        };
+    },
+
+    async loadedGraphNode(node) {
+        if (String(node.comfyClass || node.type || "") !== NODE_CLASS) return;
+        // 图形加载后重新应用 min-size（参照 XImageGet2）
+        createCompareUI(node);
+        restoreState(node.__xcompareState);
+        clampNodeSize(node);
+    },
+
+    async setup() {
+        injectStyles();
+        await applyUiLocale();
+        installLocaleSync();
+    },
+});

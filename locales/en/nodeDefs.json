@@ -187,6 +187,38 @@
       }
     }
   },
+  "XImageCompare": {
+    "display_name": "XImageCompare",
+    "description": "Interactive A/B image comparison with slide, spotlight, blend, and auto ping-pong modes.",
+    "inputs": {
+      "image_a": {
+        "name": "Image/Mask A",
+        "tooltip": "First image or mask for comparison (optional)"
+      },
+      "image_b": {
+        "name": "Image/Mask B",
+        "tooltip": "Second image or mask for comparison (optional)"
+      },
+      "save_to_output": {
+        "name": "Save to Output",
+        "tooltip": "Enable: save to output (persistent). Disabled: temp cache"
+      },
+      "swap_ab": {
+        "name": "Swap A/B",
+        "tooltip": "Swap both display and output order of Image/Mask A and B"
+      }
+    },
+    "outputs": {
+      "0": {
+        "name": "A",
+        "tooltip": "Passthrough of A"
+      },
+      "1": {
+        "name": "B",
+        "tooltip": "Passthrough of B"
+      }
+    }
+  },
   "XKleinRefConditioning": {
     "display_name": "XKleinRefConditioning",
     "description": "Automatically encodes connected reference images and appends reference latents to both positive and negative conditioning chains.",

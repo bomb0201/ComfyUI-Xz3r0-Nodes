@@ -19,6 +19,10 @@ const MEDIA_CATEGORIES = new Set(["image", "video", "audio"]);
 const TREE_PAGE_SIZE = 200;
 const TREE_EXPANDED_STATE_STORAGE_KEY = "XDataHub.V2.TreeExpandedState.v2";
 const TREE_STATE_CATEGORIES = ["image", "video", "audio", "lora"];
+const TREE_WIDTH_STORAGE_KEY = "XDataHub.V2.TreeWidth";
+const TREE_MIN_WIDTH = 140;
+const TREE_MAX_WIDTH = 600;
+const TREE_DEFAULT_WIDTH = 220;
 
 function createCacheEntry() {
     return {
@@ -137,10 +141,16 @@ export class XdhFolderTree extends BaseElement {
         this._syncToken = 0;
         this._treeScrollTop = 0;
         this._treeScrollLeft = 0;
+        this._treeWidth = TREE_DEFAULT_WIDTH;
+        this._isResizing = false;
+        this._resizeStartX = 0;
+        this._resizeStartWidth = TREE_DEFAULT_WIDTH;
     }
 
     connectedCallback() {
         super.connectedCallback();
+        this._loadSavedWidth();
+        this._applyTreeWidth();
         this._syncHostState();
         void this._syncTreeState();
     }
@@ -538,6 +548,107 @@ export class XdhFolderTree extends BaseElement {
                 this._toggleExpanded(button.dataset.path || "");
             });
         });
+
+        this.$(".tree-resize-handle")?.addEventListener(
+            "pointerdown",
+            (event) => this._resizePointerDown(event)
+        );
+    }
+
+    _loadSavedWidth() {
+        try {
+            const saved = localStorage.getItem(TREE_WIDTH_STORAGE_KEY);
+            const width = parseInt(saved, 10);
+            if (width >= TREE_MIN_WIDTH && width <= TREE_MAX_WIDTH) {
+                this._treeWidth = width;
+            }
+        } catch {
+            /* ignore */
+        }
+    }
+
+    _saveTreeWidth() {
+        try {
+            localStorage.setItem(
+                TREE_WIDTH_STORAGE_KEY,
+                String(Math.round(this._treeWidth))
+            );
+        } catch {
+            /* ignore */
+        }
+    }
+
+    _applyTreeWidth() {
+        this.style.setProperty(
+            "--tree-width",
+            `${Math.round(this._treeWidth)}px`
+        );
+    }
+
+    _resizePointerDown(event) {
+        if (event.button !== 0) return;
+        event.preventDefault();
+        this._isResizing = true;
+        this._resizeStartX = event.clientX;
+        this._resizeStartWidth = this._treeWidth;
+
+        this.$(".tree-resize-handle")?.classList.add("is-dragging");
+        this.style.setProperty("transition", "none");
+
+        // Temporarily disable tree-shell transition during drag
+        const shell = this.$(".tree-shell");
+        if (shell instanceof HTMLElement) {
+            shell.style.transition = "none";
+        }
+
+        document.addEventListener("pointermove", this._resizeBoundMove);
+        document.addEventListener("pointerup", this._resizeBoundUp);
+    }
+
+    _resizePointerMove(clientX) {
+        if (!this._isResizing) return;
+        const delta = clientX - this._resizeStartX;
+        const newWidth = Math.min(
+            TREE_MAX_WIDTH,
+            Math.max(TREE_MIN_WIDTH, this._resizeStartWidth + delta)
+        );
+        if (newWidth !== this._treeWidth) {
+            this._treeWidth = newWidth;
+            this._applyTreeWidth();
+        }
+    }
+
+    _resizePointerUp() {
+        if (!this._isResizing) return;
+        this._isResizing = false;
+
+        this.$(".tree-resize-handle")?.classList.remove("is-dragging");
+        this.style.transition = "";
+
+        const shell = this.$(".tree-shell");
+        if (shell instanceof HTMLElement) {
+            shell.style.transition = "";
+        }
+
+        document.removeEventListener("pointermove", this._resizeBoundMove);
+        document.removeEventListener("pointerup", this._resizeBoundUp);
+
+        this._saveTreeWidth();
+    }
+
+    get _resizeBoundMove() {
+        if (!this.__resizeMove) {
+            this.__resizeMove = (event) =>
+                this._resizePointerMove(event.clientX);
+        }
+        return this.__resizeMove;
+    }
+
+    get _resizeBoundUp() {
+        if (!this.__resizeUp) {
+            this.__resizeUp = () => this._resizePointerUp();
+        }
+        return this.__resizeUp;
     }
 
     render() {
@@ -545,7 +656,6 @@ export class XdhFolderTree extends BaseElement {
         const visible = !!store.state.folderTreeVisible
             && this._isSupportedCategory(category);
         const activePath = normalizePath(store.state.activeFolder || "");
-        const categoryLabel = visible ? t(`nav.cat.${category}`) : "";
         const rootCache = this._getCategoryCache(category).get("")
             || createCacheEntry();
         let treeBody = "";
@@ -580,26 +690,60 @@ export class XdhFolderTree extends BaseElement {
                     min-width: 0;
                     flex-shrink: 0;
                     overflow: hidden;
+                    position: relative;
                 }
 
                 :host([data-visible="true"]) {
-                    width: 220px;
+                    width: var(--tree-width, 220px);
                 }
 
                 .tree-shell {
-                    width: 220px;
+                    width: 100%;
                     height: 100%;
                     display: flex;
                     flex-direction: column;
-                    background: var(--xdh-color-surface-1, #1a1a1a);
-                    border-right: 1px solid var(--xdh-color-border, #2e2e2e);
-                    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+                    position: relative;
+                    background: var(--xdh-color-surface-1);
+                    border-right: 1px solid var(--xdh-color-border);
+                    box-shadow: var(--xdh-shadow-window);
                     opacity: 0;
                     transform: translateX(-18px);
                     transition:
                         transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
                         opacity 0.18s ease;
                     will-change: transform, opacity;
+                }
+
+                .tree-resize-handle {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    width: 7px;
+                    cursor: col-resize;
+                    z-index: 10;
+                    background: transparent;
+                    touch-action: none;
+                }
+
+                .tree-resize-handle::after {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    width: 2px;
+                    background: transparent;
+                    transition: background 0.15s ease;
+                }
+
+                .tree-resize-handle:hover::after,
+                .tree-resize-handle.is-dragging::after {
+                    background: color-mix(
+                        in srgb,
+                        var(--xdh-color-primary) 30%,
+                        transparent
+                    );
                 }
 
                 :host([data-visible="true"]) .tree-shell {
@@ -611,30 +755,23 @@ export class XdhFolderTree extends BaseElement {
                     height: 40px;
                     display: flex;
                     align-items: center;
-                    gap: 8px;
-                    padding: 0 10px;
-                    border-bottom: 1px solid var(--xdh-color-border, #2e2e2e);
-                    color: var(--xdh-color-text-secondary, #999);
+                    gap: var(--xdh-space-sm);
+                    padding: 0 var(--xdh-space-sm);
+                    border-bottom: 1px solid var(--xdh-color-border);
+                    color: var(--xdh-color-text-secondary);
                 }
 
                 .tree-head-title {
-                    font-size: 12px;
-                    font-weight: 700;
-                    color: var(--xdh-color-text-primary, #eee);
-                }
-
-                .tree-head-category {
-                    margin-left: auto;
-                    font-size: 11px;
-                    color: var(--xdh-color-text-secondary, #999);
-                    min-width: 0;
+                    font: var(--xdh-font-micro-label);
+                    color: var(--xdh-color-text-primary);
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
+                    min-width: 0;
                 }
 
                 .tree-head .tree-collapse-all-btn {
-                    margin-left: 8px;
+                    margin-left: auto;
                     align-self: center;
                 }
 
@@ -649,7 +786,7 @@ export class XdhFolderTree extends BaseElement {
                     height: 100%;
                     overflow-y: scroll;
                     overflow-x: scroll;
-                    padding: 5px;
+                    padding: var(--xdh-space-xs);
                     scrollbar-gutter: stable;
                 }
 
@@ -669,11 +806,11 @@ export class XdhFolderTree extends BaseElement {
                     min-height: 30px;
                     display: flex;
                     align-items: center;
-                    gap: 6px;
+                    gap: var(--xdh-space-sm);
                     border: 1px solid transparent;
-                    border-radius: 6px;
+                    border-radius: var(--xdh-radius-sm);
                     background: transparent;
-                    color: var(--xdh-color-text-secondary, #999);
+                    color: var(--xdh-color-text-secondary);
                     cursor: pointer;
                     transition:
                         background 0.15s ease,
@@ -682,8 +819,8 @@ export class XdhFolderTree extends BaseElement {
                 }
 
                 .tree-root-row {
-                    padding: 0 10px;
-                    margin-bottom: 4px;
+                    padding: 0 var(--xdh-space-sm);
+                    margin-bottom: var(--xdh-space-xs);
                     font-weight: 600;
                     position: relative;
                 }
@@ -694,15 +831,15 @@ export class XdhFolderTree extends BaseElement {
 
                 .tree-row:hover,
                 .tree-root-row:hover {
-                    background: var(--xdh-color-hover, #2a2a2a);
-                    color: var(--xdh-color-text-primary, #eee);
+                    background: var(--xdh-color-hover);
+                    color: var(--xdh-color-text-primary);
                 }
 
                 .tree-row.is-active,
                 .tree-root-row.is-active {
-                    background: var(--xdh-color-primary-muted, #1a3050);
-                    color: var(--xdh-color-primary, #4499ff);
-                    border-color: var(--xdh-color-primary, #4499ff);
+                    background: var(--xdh-color-primary-muted);
+                    color: var(--xdh-color-primary);
+                    border-color: var(--xdh-color-primary);
                 }
 
                 .tree-branch-toggle {
@@ -710,14 +847,14 @@ export class XdhFolderTree extends BaseElement {
                     height: 18px;
                     padding: 0;
                     border: 0;
-                    border-radius: 4px;
+                    border-radius: var(--xdh-radius-xs);
                     color: inherit;
                     background: transparent;
                     flex-shrink: 0;
                 }
 
                 .tree-branch-toggle:hover {
-                    background: var(--xdh-color-hover, #2a2a2a);
+                    background: var(--xdh-color-hover);
                 }
 
                 .tree-collapse-all-btn {
@@ -729,8 +866,8 @@ export class XdhFolderTree extends BaseElement {
                     justify-content: center;
                     line-height: 1;
                     border: 1px solid transparent;
-                    border-radius: 6px;
-                    color: var(--xdh-color-text-secondary, #999);
+                    border-radius: var(--xdh-radius-sm);
+                    color: var(--xdh-color-text-secondary);
                     background: transparent;
                     flex-shrink: 0;
                     transform: translateY(0);
@@ -741,12 +878,12 @@ export class XdhFolderTree extends BaseElement {
                 }
 
                 .tree-collapse-all-btn:hover {
-                    background: var(--xdh-color-hover, #2a2a2a);
-                    color: var(--xdh-color-text-primary, #eee);
+                    background: var(--xdh-color-hover);
+                    color: var(--xdh-color-text-primary);
                 }
 
                 .tree-root-row.is-active .tree-collapse-all-btn {
-                    color: var(--xdh-color-text-secondary, #999);
+                    color: var(--xdh-color-text-secondary);
                     background: transparent;
                 }
 
@@ -759,8 +896,8 @@ export class XdhFolderTree extends BaseElement {
                 .tree-folder {
                     color: color-mix(
                         in srgb,
-                        var(--xdh-color-primary, #4499ff) 64%,
-                        var(--xdh-color-text-secondary, #999)
+                        var(--xdh-color-primary) 64%,
+                        var(--xdh-color-text-secondary)
                     );
                     flex-shrink: 0;
                 }
@@ -776,16 +913,16 @@ export class XdhFolderTree extends BaseElement {
                     min-height: 26px;
                     display: flex;
                     align-items: center;
-                    font-size: 11px;
-                    color: var(--xdh-color-text-secondary, #999);
-                    padding-right: 10px;
+                    font: var(--xdh-font-badge);
+                    color: var(--xdh-color-text-secondary);
+                    padding-right: var(--xdh-space-sm);
                 }
 
                 .tree-status.is-danger {
                     color: color-mix(
                         in srgb,
-                        var(--db-palette-09, #d90429) 76%,
-                        var(--xdh-color-text-secondary, #999)
+                        var(--db-palette-09) 76%,
+                        var(--xdh-color-text-secondary)
                     );
                 }
             </style>
@@ -794,7 +931,6 @@ export class XdhFolderTree extends BaseElement {
                 <div class="tree-head">
                     ${icon("folder", 14)}
                     <span class="tree-head-title">${t("nav.tree.title")}</span>
-                    <span class="tree-head-category">${escapeHtml(categoryLabel)}</span>
                     <button class="tree-collapse-all-btn xdh-tooltip xdh-tooltip-left"
                             data-tooltip="${t("nav.tree.collapse_all")}">
                         ${icon("list-collapse", 12)}
@@ -812,6 +948,7 @@ export class XdhFolderTree extends BaseElement {
                         </div>
                     </div>
                 </div>
+                <div class="tree-resize-handle"></div>
             </div>`;
     }
 }

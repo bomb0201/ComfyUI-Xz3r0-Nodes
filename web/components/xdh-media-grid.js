@@ -415,6 +415,7 @@ function thumbFor(item, previewState = null) {
                 <div class="thumb-container audio-thumb">
                     ${statusBadgeHtml}
                     <span class="audio-icon">${icon("audio-lines", 40)}</span>
+                    ${metaHtml}
                 </div>`;
         case "video": {
             const thumbContent = item.isVideoNativeThumb
@@ -459,7 +460,8 @@ function formatDate(mtime) {
     const d = new Date(mtime * 1000);
     return `${d.getMonth() + 1}/${d.getDate()} `
         + `${String(d.getHours()).padStart(2, "0")}`
-        + `:${String(d.getMinutes()).padStart(2, "0")}`;
+        + `:${String(d.getMinutes()).padStart(2, "0")}`
+        + `:${String(d.getSeconds()).padStart(2, "0")}`;
 }
 
 function formatDateFull(mtime) {
@@ -904,17 +906,17 @@ export class XdhMediaGrid extends BaseElement {
                 .grid {
                     display: grid;
                     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                    gap: 16px;
-                    padding: 16px 17px 16px 16px;
+                    gap: var(--xdh-space-base);
+                    padding: var(--xdh-space-base) 17px var(--xdh-space-base) var(--xdh-space-base);
                 }
-                .grid[data-size="small"]  { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 16px; padding: 16px 17px 16px 16px; }
-                .grid[data-size="medium"] { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; padding: 16px 17px 16px 16px; }
-                .grid[data-size="large"]  { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; padding: 16px 17px 16px 16px; }
+                .grid[data-size="small"]  { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: var(--xdh-space-base); padding: var(--xdh-space-base) 17px var(--xdh-space-base) var(--xdh-space-base); }
+                .grid[data-size="medium"] { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--xdh-space-base); padding: var(--xdh-space-base) 17px var(--xdh-space-base) var(--xdh-space-base); }
+                .grid[data-size="large"]  { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--xdh-space-base); padding: var(--xdh-space-base) 17px var(--xdh-space-base) var(--xdh-space-base); }
 
                 .media-card {
-                    background: var(--xdh-color-surface-1, #1e1e1e);
-                    border: 1px solid var(--xdh-color-border, #333);
-                    border-radius: 8px;
+                    background: var(--xdh-color-surface-1);
+                    border: 1px solid var(--xdh-color-border);
+                    border-radius: var(--xdh-radius-sm);
                     cursor: grab;
                     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
                     position: relative;
@@ -929,11 +931,11 @@ export class XdhMediaGrid extends BaseElement {
                 .media-card:hover {
                     transform: translateY(-2px);
                     box-shadow: 0 6px 16px rgba(0,0,0,0.4);
-                    border-color: var(--xdh-color-primary, #4499ff);
+                    border-color: var(--xdh-color-primary);
                 }
                 .media-card.selected {
-                    border-color: var(--xdh-color-success, #4caf50);
-                    box-shadow: 0 0 0 2px var(--xdh-color-success, #4caf50);
+                    border-color: var(--xdh-color-success);
+                    box-shadow: 0 0 0 2px var(--xdh-color-success);
                 }
                 .media-card[hidden] { display: none; }
 
@@ -950,7 +952,7 @@ export class XdhMediaGrid extends BaseElement {
                     opacity: 0;
                     pointer-events: none;
                     transition: opacity 0.18s ease;
-                    z-index: 2;
+                    z-index: 3;
                 }
                 .media-card:hover .card-actions {
                     opacity: 1;
@@ -961,9 +963,9 @@ export class XdhMediaGrid extends BaseElement {
                     width: 26px;
                     height: 26px;
                     border-radius: 8px;
-                    background: rgba(28,28,28,0.88);
-                    border: 1px solid rgba(255,255,255,0.14);
-                    color: #fff;
+                    background: var(--xdh-clr-surface-strong);
+                    border: 1px solid var(--xdh-clr-hairline);
+                    color: var(--xdh-clr-ink);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -973,7 +975,7 @@ export class XdhMediaGrid extends BaseElement {
                     padding: 0;
                 }
                 .preview-btn:hover, .edit-lora-btn:hover {
-                    background: rgba(52,52,52,0.96);
+                    background: var(--xdh-clr-surface-soft);
                     transform: scale(1.08);
                 }
 
@@ -985,7 +987,7 @@ export class XdhMediaGrid extends BaseElement {
                     overflow: hidden;
                     pointer-events: none;
                     flex-shrink: 0;
-                    background: var(--xdh-color-surface-2, #1a1a1a);
+                    background: var(--xdh-color-surface-2);
                 }
 
                 .thumb-img {
@@ -1007,6 +1009,10 @@ export class XdhMediaGrid extends BaseElement {
                     height: 48%;
                     object-fit: contain;
                     z-index: 1;
+                }
+                :host-context(body[data-theme="dark"]) .folder-thumb .thumb-img,
+                :host-context(body:not([data-theme])) .folder-thumb .thumb-img {
+                    filter: invert(1);
                 }
 
                 /* Video thumbnail */
@@ -1032,20 +1038,15 @@ export class XdhMediaGrid extends BaseElement {
                     background: rgba(0,0,0,0.38);
                 }
 
-                /* Audio card: gradient art */
+                /* Audio card: placeholder */
                 .audio-thumb {
-                    background: linear-gradient(
-                        135deg,
-                        #171b2b 0%,
-                        #221d3c 45%,
-                        #172a2a 100%
-                    );
+                    background: var(--xdh-clr-surface-card);
                     display: flex;
                     align-items: center;
                     justify-content: center;
                 }
                 .audio-icon {
-                    color: rgba(150, 175, 220, 0.42);
+                    color: var(--xdh-clr-muted);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -1078,14 +1079,14 @@ export class XdhMediaGrid extends BaseElement {
                 .lora-meta-overlay {
                     justify-content: flex-start;
                     align-items: center;
-                    gap: 6px;
+                    gap: var(--xdh-space-sm);
                     flex-wrap: wrap;
-                    padding: 0 8px 8px;
+                    padding: 0 var(--xdh-space-sm) var(--xdh-space-sm);
                     background: linear-gradient(
                         transparent,
                         color-mix(
                             in srgb,
-                            var(--xdh-color-surface-1, #1e1e1e) 92%,
+                            var(--xdh-color-surface-1) 92%,
                             transparent
                         )
                     );
@@ -1093,24 +1094,23 @@ export class XdhMediaGrid extends BaseElement {
                 .lora-badge {
                     display: inline-flex;
                     align-items: center;
-                    gap: 4px;
+                    gap: var(--xdh-space-xs);
                     min-height: 22px;
                     padding: 0 7px;
-                    border-radius: 999px;
-                    border: 1px solid var(--xdh-color-border, #333);
-                    background: var(--xdh-color-surface-2, #2a2a2a);
-                    color: var(--xdh-color-text-secondary, #aaa);
-                    font-size: 10px;
-                    font-weight: 600;
+                    border-radius: var(--xdh-radius-full);
+                    border: 1px solid var(--xdh-color-border);
+                    background: var(--xdh-color-surface-2);
+                    color: var(--xdh-color-text-secondary);
+                    font: 600 var(--xdh-font-uppercase-tag);
                     letter-spacing: 0.02em;
                 }
                 .lora-badge.is-active {
-                    border-color: var(--xdh-brand-pink, #EA005E);
-                    color: var(--xdh-color-text-primary, #f0f0f0);
+                    border-color: var(--xdh-brand-pink);
+                    color: var(--xdh-color-text-primary);
                     background: color-mix(
                         in srgb,
-                        var(--xdh-color-surface-2, #2a2a2a) 78%,
-                        var(--xdh-color-primary, #EA005E) 22%
+                        var(--xdh-color-surface-2) 78%,
+                        var(--xdh-color-primary) 22%
                     );
                 }
 
@@ -1121,20 +1121,19 @@ export class XdhMediaGrid extends BaseElement {
                     z-index: 4;
                     display: inline-flex;
                     align-items: center;
-                    gap: 4px;
+                    gap: var(--xdh-space-xs);
                     max-width: calc(100% - 16px);
                     min-height: 22px;
                     padding: 0 7px;
-                    border-radius: 6px;
-                    border: 1px solid var(--xdh-color-border, #333);
+                    border-radius: var(--xdh-radius-sm);
+                    border: 1px solid var(--xdh-color-border);
                     background: color-mix(
                         in srgb,
-                        var(--xdh-color-surface-2, #2a2a2a) 84%,
+                        var(--xdh-color-surface-2) 84%,
                         transparent
                     );
-                    color: var(--xdh-color-text-primary, #f0f0f0);
-                    font-size: 10px;
-                    font-weight: 600;
+                    color: var(--xdh-color-text-primary);
+                    font: 600 var(--xdh-font-uppercase-tag);
                     letter-spacing: 0.02em;
                     pointer-events: none;
                 }
@@ -1144,14 +1143,14 @@ export class XdhMediaGrid extends BaseElement {
                     white-space: nowrap;
                 }
                 .card-status-badge.is-muted {
-                    color: var(--xdh-color-text-secondary, #aaa);
+                    color: var(--xdh-color-text-secondary);
                 }
                 .card-status-badge.is-warning {
-                    border-color: var(--xdh-brand-pink, #EA005E);
+                    border-color: var(--xdh-brand-pink);
                     background: color-mix(
                         in srgb,
-                        var(--xdh-color-surface-2, #2a2a2a) 78%,
-                        var(--xdh-brand-pink, #EA005E) 22%
+                        var(--xdh-color-surface-2) 78%,
+                        var(--xdh-brand-pink) 22%
                     );
                 }
 
@@ -1180,12 +1179,12 @@ export class XdhMediaGrid extends BaseElement {
                 .card-text {
                     display: flex;
                     flex-direction: column;
-                    gap: 2px;
-                    padding: 7px 8px 8px;
+                    gap: var(--xdh-space-xxs);
+                    padding: var(--xdh-space-xs) var(--xdh-space-sm) var(--xdh-space-sm);
                 }
                 .card-title {
-                    font-size: 12px;
-                    color: var(--xdh-color-text-secondary, #aaa);
+                    font: var(--xdh-font-micro-label);
+                    color: var(--xdh-color-text-secondary);
                     text-overflow: ellipsis;
                     overflow: hidden;
                     white-space: nowrap;
@@ -1196,7 +1195,7 @@ export class XdhMediaGrid extends BaseElement {
                     font-size: 10px;
                     line-height: 1.4;
                     text-align: center;
-                    color: var(--xdh-color-text-secondary, #777);
+                    color: var(--xdh-color-text-secondary);
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
@@ -1206,15 +1205,15 @@ export class XdhMediaGrid extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 8px;
+                    gap: var(--xdh-space-sm);
                     padding: 48px 24px;
                     text-align: center;
-                    color: var(--xdh-color-text-secondary, #666);
+                    color: var(--xdh-color-text-secondary);
                     grid-column: 1 / -1;
-                    font-size: 14px;
+                    font: var(--xdh-font-body-sm);
                 }
                 .empty-state.is-error {
-                    color: var(--xdh-brand-pink, #EA005E);
+                    color: var(--xdh-brand-pink);
                 }
                 .empty-icon {
                     display: inline-flex;
@@ -1227,14 +1226,14 @@ export class XdhMediaGrid extends BaseElement {
                     position: fixed;
                     z-index: 9999;
                     max-width: 320px;
-                    padding: 5px 9px;
-                    background: var(--xdh-color-surface-3, #2a2a2a);
-                    color: var(--xdh-color-text-primary, #e8e8e8);
-                    font-size: 12px;
+                    padding: var(--xdh-space-xs) var(--xdh-space-sm);
+                    background: var(--xdh-color-surface-3);
+                    color: var(--xdh-color-text-primary);
+                    font: var(--xdh-font-micro-label);
                     line-height: 1.5;
-                    border-radius: 6px;
-                    border: 1px solid var(--xdh-color-border, #444);
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.45);
+                    border-radius: var(--xdh-radius-sm);
+                    border: 1px solid var(--xdh-color-border);
+                    box-shadow: var(--xdh-shadow-popup);
                     pointer-events: none;
                     word-break: break-all;
                     opacity: 0;
@@ -1242,13 +1241,13 @@ export class XdhMediaGrid extends BaseElement {
                 }
                 .filename-tooltip-title {
                     display: block;
-                    color: var(--xdh-color-text-primary, #e8e8e8);
+                    color: var(--xdh-color-text-primary);
                     word-break: break-all;
                 }
                 .filename-tooltip-meta {
                     display: block;
-                    margin-top: 4px;
-                    color: var(--xdh-color-text-secondary, #888);
+                    margin-top: var(--xdh-space-xs);
+                    color: var(--xdh-color-text-secondary);
                     font-size: 10px;
                 }
                 .filename-tooltip.visible { opacity: 1; }

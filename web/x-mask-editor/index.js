@@ -168,6 +168,19 @@ export async function openXMaskEditor(options = {}) {
             }
         });
     };
+    const bindRangeWheel = (rangeInput, wheelStep) => {
+        session.bind(rangeInput, "wheel", (event) => {
+            event.preventDefault();
+            const step = Number(wheelStep ?? rangeInput.step) || 1;
+            const delta = event.deltaY > 0 ? -step : step;
+            rangeInput.value = String(
+                Number(rangeInput.value || 0) + delta
+            );
+            rangeInput.dispatchEvent(
+                new Event("input", { bubbles: true })
+            );
+        }, { passive: false });
+    };
     const controller = new XMaskEditorController({
         canvas: ui.canvas,
         viewport: ui.viewport,
@@ -179,6 +192,8 @@ export async function openXMaskEditor(options = {}) {
             zoom,
             tool,
             brushSize,
+            brushSizeMax,
+            brushSizeMin,
             hardness,
             paintColor,
             paintOpacity,
@@ -192,6 +207,13 @@ export async function openXMaskEditor(options = {}) {
         }) => {
             ui.zoomInput.value = `${Math.round(zoom * 100)}%`;
             ui.imageSizeValue.textContent = `${imageSize.width}x${imageSize.height}`;
+            if (brushSizeMax != null) {
+                ui.brushRange.max = String(brushSizeMax);
+                ui.brushRange.step = String(Math.max(1, Math.round(brushSizeMax * 0.01)));
+            }
+            if (brushSizeMin != null) {
+                ui.brushRange.min = String(brushSizeMin);
+            }
             ui.brushRange.value = String(Math.round(brushSize));
             syncInputValue(ui.brushInput, `${Math.round(brushSize)}px`);
             ui.hardnessRange.value = String(Math.round(hardness));
@@ -246,6 +268,7 @@ export async function openXMaskEditor(options = {}) {
     session.bind(ui.paintOpacityRange, "input", () => {
         controller.setPaintOpacity(ui.paintOpacityRange.value);
     });
+    bindRangeWheel(ui.paintOpacityRange);
     bindCommitNumberInput(ui.paintOpacityInput, () => {
         controller.setPaintOpacity(parseUnitInput(ui.paintOpacityInput, "100"));
     });
@@ -261,6 +284,7 @@ export async function openXMaskEditor(options = {}) {
     session.bind(ui.maskOpacityRange, "input", () => {
         controller.setMaskOpacity(ui.maskOpacityRange.value);
     });
+    bindRangeWheel(ui.maskOpacityRange);
     bindCommitNumberInput(ui.maskOpacityInput, () => {
         controller.setMaskOpacity(parseUnitInput(ui.maskOpacityInput, "100"));
     });
@@ -270,12 +294,14 @@ export async function openXMaskEditor(options = {}) {
     session.bind(ui.brushRange, "input", () => {
         controller.setBrushSize(ui.brushRange.value);
     });
+    bindRangeWheel(ui.brushRange);
     bindCommitNumberInput(ui.brushInput, () => {
         controller.setBrushSize(parseUnitInput(ui.brushInput, "100"));
     });
     session.bind(ui.hardnessRange, "input", () => {
         controller.setHardness(ui.hardnessRange.value);
     });
+    bindRangeWheel(ui.hardnessRange);
     bindCommitNumberInput(ui.hardnessInput, () => {
         controller.setHardness(parseUnitInput(ui.hardnessInput, "100"));
     });

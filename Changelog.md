@@ -1,5 +1,101 @@
 # 更新日志 | Changelog
 
+## 🎉 v2.2.0
+
+<details>
+
+### 1. ⭐ 新增 `XImageCompare` 图像和遮罩 A/B 对比节点
+`♾️ Xz3r0/Workflow-Processing`
+- 支持输入图像和遮罩（可选输入端口）并透传输出
+    - 无输入时其对应的输出端口将输出空值 `None`
+- 4 种对比方式
+    - 滑动对比
+        - 控制滑块左右过渡对比
+    - 聚光对比
+        - 圆形区域对比，可调整圆形大小
+    - 混合对比
+        - 透明度对比
+    - 乒乓混合
+        - 自动循环的透明度对比，可调整速度
+- 显示 A/B 分辨率
+    - 如果进行对比的两个图像或遮罩分辨率不一致时会在中间显示红色圆点，一致时为绿色圆点
+- 保存输入的图片到 `output/XImageCompare` 切换开关
+    - 关闭时图像保存到 ComfyUI 默认的临时缓存文件夹，开启后文件保存到 `output/XImageCompare`
+        - 开启后，只要其文件不被删除，即使重启浏览器或 ComfyUI，也可以让对比预览的图片能重新显示在节点界面中而不丢失。
+    - 默认为：关闭
+- 交换 A/B
+    - 交换 A 和 B 在节点的显示和输出位置
+    - 默认为：关闭
+- 非 ComfyUI 原生的组件的颜色基于 XDataHub 所使用的主题颜色
+
+### 2. 🛠️ 增强和调整以及修复 `XDataHub` 数据中心
+`ComfyUI Web Interface Extension - ComfyUI.Xz3r0.XDataHub`
+- 明亮和暗黑双主题配色已改为贴近 Airbnb 网站风格
+    - 感谢 `VoltAgent/awesome-design-md` Github 项目提供的文件作为参考🙏
+- 所有和 XDataHub 配套的节点的界面组件也已经同步主题配色
+- 新增 目录树栏宽度拉伸功能
+- 新增 顶部刷新按钮的正在刷新时的图标旋转动画
+- 设置面板中的 贴边隐藏（滑出）功能设置从原先的持久化保存在浏览器里改为保存到 XDataHub 的配置文件中
+- 媒体卡片显示的文件日期精确到秒
+- 修复 XDataHub 的主题配色和语言切换不同步
+- 修复音频文件卡片缺少文件日期
+
+### 3. 🛠️ 增强 XMaskEditor 遮罩编辑器
+`♾️ Xz3r0/XDataHub - XImageGet`
+- 鼠标悬停在滑块拉条上时可以使用滚轮调整数值
+- 画笔和橡皮大小将按照图片尺寸自动设置数值范围
+- 画笔圆圈边缘线条从黑白改为反色，移除旋转动画
+- 画笔颜色、遮罩颜色、边缘硬度、颜色和遮罩透明度的值，现在会半持久化保存到浏览器中，直到浏览器关闭
+
+---
+
+### 1. ⭐ Added `XImageCompare` Image & Mask A/B Comparison Node
+`♾️ Xz3r0/Workflow-Processing`
+- Supports image and mask inputs (optional input ports) with passthrough output
+    - When no input is provided, the corresponding output port outputs `None`
+- 4 comparison modes
+    - Slide Comparison
+        - Control slider left/right transition comparison
+    - Spotlight Comparison
+        - Circular area comparison with adjustable circle size
+    - Blend Comparison
+        - Opacity comparison
+    - Ping-Pong Blend
+        - Auto-cycling opacity comparison with adjustable speed
+- Displays A/B resolution
+    - Red dot in the center if the two images or masks being compared have different resolutions, green dot if they match
+- Save input images to `output/XImageCompare` toggle switch
+    - When off, images are saved to ComfyUI's default temp cache folder; when on, files are saved to `output/XImageCompare`
+        - When enabled, as long as the files are not deleted, the comparison preview images will reappear in the node UI even after restarting the browser or ComfyUI
+    - Default: Off
+- Swap A/B
+    - Swaps the display and output positions of A and B in the node
+    - Default: Off
+- The color scheme for non-native ComfyUI components follows the XDataHub theme.
+
+### 2. 🛠️ Enhanced, Adjusted & Fixed `XDataHub` Data Center
+`ComfyUI Web Interface Extension - ComfyUI.Xz3r0.XDataHub`
+- Light and dark theme colors updated to closely match the Airbnb website style
+    - Thanks to the `VoltAgent/awesome-design-md` GitHub project for providing reference files 🙏
+- All companion node UI components synced with the theme colors
+- Added folder tree column width resizing
+- Added spinning icon animation for the top refresh button when refreshing
+- The Edge Hide (Slide Out) setting in the settings panel is now saved to XDataHub's configuration file instead of persisted in the browser
+- Media card file dates now display precise to the second
+- Fixed theme color and language switching not syncing in XDataHub
+- Fixed missing file date on audio file cards
+
+### 3. 🛠️ Enhanced XMaskEditor Mask Editor
+`♾️ Xz3r0/XDataHub - XImageGet`
+- Mouse scroll wheel can now adjust slider values when hovering over the slider track
+- Brush and eraser sizes now automatically set their value range based on image dimensions
+- Brush circle outline changed from black/white to inverted color, removed rotation animation
+- Brush color, mask color, edge hardness, color and mask opacity values are now semi-persisted in the browser until the browser is closed
+
+</details>
+
+---
+
 ## 🎉 v2.1.1
 
 <details>

@@ -65,7 +65,7 @@ export function ensureMaskEditorStyles() {
             );
             --ximageget-mask-editor-border: var(
                 --border-standard,
-                var(--borderColor, #4f4f4f)
+                var(--xdh-clr-hairline, #3d3d3d)
             );
             --ximageget-mask-editor-accent: var(
                 --xdh-brand-pink,

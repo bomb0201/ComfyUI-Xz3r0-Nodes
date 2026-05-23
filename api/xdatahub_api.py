@@ -3464,6 +3464,7 @@ def default_xdatahub_settings() -> dict[str, Any]:
         "hover_locate_enabled": False,
         "hover_locate_debounce_ms": 300,
         "enable_ffmpeg_thumb_cache": False,
+        "edge_peek": False,
     }
 
 
@@ -3609,6 +3610,8 @@ def _parse_media_chip_patch(value: Any) -> dict[str, Any]:
             locale = normalize_locale_code(raw_locale)
             if locale in UI_LOCALE_VALUES:
                 patch["ui_locale"] = locale
+    if "edge_peek" in value:
+        patch["edge_peek"] = parse_bool(value.get("edge_peek"))
     return patch
 
 

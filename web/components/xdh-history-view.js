@@ -417,9 +417,9 @@ export class XdhHistoryView extends BaseElement {
                     min-height: 100%;
                     display: flex;
                     flex-direction: column;
-                    background: var(--xdh-color-background, #121212);
-                    padding: 16px;
-                    gap: 16px;
+                    background: var(--xdh-color-background);
+                    padding: var(--xdh-space-base);
+                    gap: var(--xdh-space-base);
                 }
                 .history-list {
                     background: transparent;
@@ -427,23 +427,23 @@ export class XdhHistoryView extends BaseElement {
                 .history-head {
                     display: flex;
                     align-items: center;
-                    gap: 12px;
+                    gap: var(--xdh-space-md);
                     margin-bottom: 24px;
                 }
                 .history-title {
                     display: flex;
                     align-items: center;
-                    gap: 8px;
+                    gap: var(--xdh-space-sm);
                     font-size: 18px;
                     font-weight: 600;
-                    color: var(--xdh-color-text-primary, #ffffff);
+                    color: var(--xdh-color-text-primary);
                 }
                 .history-count {
-                    font-size: 12px;
-                    color: var(--xdh-color-text-secondary, #999999);
-                    background: var(--xdh-color-surface-2, #333333);
-                    padding: 2px 8px;
-                    border-radius: 999px;
+                    font: var(--xdh-font-micro-label);
+                    color: var(--xdh-color-text-secondary);
+                    background: var(--xdh-color-surface-2);
+                    padding: var(--xdh-space-xxs) var(--xdh-space-sm);
+                    border-radius: var(--xdh-radius-full);
                 }
                 .history-group + .history-group {
                     margin-top: 24px;
@@ -451,47 +451,46 @@ export class XdhHistoryView extends BaseElement {
                 .group-label {
                     display: flex;
                     align-items: center;
-                    gap: 8px;
-                    margin-bottom: 12px;
-                    font-size: 13px;
-                    font-weight: 500;
-                    color: var(--xdh-color-text-primary, #eeeeee);
+                    gap: var(--xdh-space-sm);
+                    margin-bottom: var(--xdh-space-md);
+                    color: var(--xdh-color-text-primary);
+                    font: var(--xdh-font-body-sm);
                 }
                 .history-rows {
                     display: grid;
                     grid-template-columns: repeat(
                         auto-fill, minmax(min(320px, 100%), 1fr)
                     );
-                    gap: 16px;
+                    gap: var(--xdh-space-base);
                 }
                 .history-row {
                     display: flex;
                     flex-direction: column;
-                    gap: 10px;
-                    padding: 14px;
-                    border-radius: 12px;
-                    background: var(--xdh-color-surface-1, #1e1e1e);
-                    border: 1px solid var(--xdh-color-border, #333333);
+                    gap: var(--xdh-space-sm);
+                    padding: var(--xdh-space-md);
+                    border-radius: var(--xdh-radius-md);
+                    background: var(--xdh-color-surface-1);
+                    border: 1px solid var(--xdh-color-border);
                     transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
                     cursor: grab;
                     user-select: none;
                 }
                 .history-row:hover {
                     transform: translateY(-2px);
-                    border-color: var(--xdh-color-primary, #4499ff);
+                    border-color: var(--xdh-color-primary);
                     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
                 }
                 .history-row[data-selected="true"] {
-                    border-color: var(--xdh-color-primary, #4499ff);
+                    border-color: var(--xdh-color-primary);
                     background: color-mix(
                         in srgb,
-                        var(--xdh-color-primary, #4499ff) 12%,
-                        var(--xdh-color-surface-1, #1e1e1e)
+                        var(--xdh-color-primary) 12%,
+                        var(--xdh-color-surface-1)
                     );
                     box-shadow: 0 0 0 2px
                         color-mix(
                             in srgb,
-                            var(--xdh-color-primary, #4499ff) 40%,
+                            var(--xdh-color-primary) 40%,
                             transparent
                         );
                 }
@@ -501,14 +500,14 @@ export class XdhHistoryView extends BaseElement {
                 .row-header {
                     display: flex;
                     align-items: flex-start;
-                    gap: 12px;
+                    gap: var(--xdh-space-md);
                 }
                 .row-title {
                     flex: 1 1 auto;
                     min-width: 0;
                     font-size: 14px;
                     font-weight: 600;
-                    color: var(--xdh-color-text-primary, #ffffff);
+                    color: var(--xdh-color-text-primary);
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
@@ -516,66 +515,86 @@ export class XdhHistoryView extends BaseElement {
                 .row-actions {
                     display: flex;
                     align-items: center;
-                    gap: 4px;
+                    gap: var(--xdh-space-xs);
                 }
                 .action-btn {
                     background: transparent;
                     border: none;
-                    color: var(--xdh-color-text-secondary, #666666);
+                    color: var(--xdh-color-text-secondary);
                     cursor: pointer;
-                    padding: 4px;
-                    border-radius: 4px;
+                    padding: var(--xdh-space-xs);
+                    border-radius: var(--xdh-radius-xs);
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     transition: background 0.15s, color 0.15s;
                 }
                 .action-btn:hover {
-                    background: var(--xdh-color-surface-2, #333333);
+                    background: var(--xdh-color-surface-2);
                     color: #f5c518;
                 }
                 .action-btn.active {
                     color: #f5c518;
                 }
+                .icon-bookmark {
+                    display: inline-block;
+                    width: 14px;
+                    height: 14px;
+                    flex-shrink: 0;
+                    vertical-align: middle;
+                    background-color: currentColor;
+                    -webkit-mask-repeat: no-repeat;
+                    -webkit-mask-position: center;
+                    -webkit-mask-size: contain;
+                    mask-repeat: no-repeat;
+                    mask-position: center;
+                    mask-size: contain;
+                    -webkit-mask-image: url(icons/bookmark.svg);
+                    mask-image: url(icons/bookmark.svg);
+                }
+                .favorite-btn.active .icon-bookmark,
+                .favorite-btn:hover .icon-bookmark {
+                    -webkit-mask-image: url(icons/bookmark-filled.svg);
+                    mask-image: url(icons/bookmark-filled.svg);
+                }
                 .row-footer {
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    gap: 8px;
+                    gap: var(--xdh-space-sm);
                 }
                 .row-meta {
                     display: flex;
                     flex-wrap: wrap;
-                    gap: 6px;
+                    gap: var(--xdh-space-sm);
                 }
                 .row-time {
                     flex: 0 1 auto;
                     min-width: 0;
-                    font-size: 12px;
-                    color: var(--xdh-color-text-secondary, #999999);
+                    font: var(--xdh-font-micro-label);
+                    color: var(--xdh-color-text-secondary);
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
                 .row-tag {
-                    font-size: 11px;
-                    padding: 2px 6px;
-                    border-radius: 4px;
-                    background: var(--xdh-color-surface-2, #333333);
-                    color: var(--xdh-color-text-secondary, #999999);
+                    font: var(--xdh-font-badge);
+                    padding: var(--xdh-space-xxs) 6px;
+                    border-radius: var(--xdh-radius-xs);
+                    background: var(--xdh-color-surface-2);
+                    color: var(--xdh-color-text-secondary);
                 }
                 .row-payload {
-                    margin-top: 2px;
-                    padding: 8px 10px;
-                    border-radius: 8px;
-                    background: var(--xdh-color-background, #121212);
-                    border: 1px solid var(--xdh-color-border, #2a2a2a);
+                    margin-top: var(--xdh-space-xxs);
+                    padding: var(--xdh-space-sm) var(--xdh-space-md);
+                    border-radius: var(--xdh-radius-sm);
+                    background: var(--xdh-color-background);
+                    border: 1px solid var(--xdh-color-border);
                     display: flex;
                     align-items: center;
-                    gap: 10px;
-                    font-size: 13px;
-                    line-height: 1.4;
-                    color: var(--xdh-color-text-primary, #dddddd);
+                    gap: var(--xdh-space-sm);
+                    color: var(--xdh-color-text-primary);
+                    font: var(--xdh-font-body-sm);
                     overflow: hidden;
                 }
                 .row-payload-text {
@@ -588,18 +607,18 @@ export class XdhHistoryView extends BaseElement {
                 .payload-preview-btn {
                     width: 26px;
                     height: 26px;
-                    border-radius: 8px;
+                    border-radius: var(--xdh-radius-sm);
                     border: 1px solid color-mix(
                         in srgb,
-                        var(--xdh-color-text-primary, #ffffff) 14%,
+                        var(--xdh-color-text-primary) 14%,
                         transparent
                     );
                     background: color-mix(
                         in srgb,
-                        var(--xdh-color-surface-2, #333333) 88%,
+                        var(--xdh-color-surface-2) 88%,
                         transparent
                     );
-                    color: var(--xdh-color-text-primary, #ffffff);
+                    color: var(--xdh-color-text-primary);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -611,8 +630,8 @@ export class XdhHistoryView extends BaseElement {
                 .payload-preview-btn:hover {
                     background: color-mix(
                         in srgb,
-                        var(--xdh-color-surface-2, #333333) 96%,
-                        var(--xdh-color-surface-1, #1e1e1e)
+                        var(--xdh-color-surface-2) 96%,
+                        var(--xdh-color-surface-1)
                     );
                     transform: scale(1.08);
                 }
@@ -621,14 +640,14 @@ export class XdhHistoryView extends BaseElement {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 8px;
+                    gap: var(--xdh-space-sm);
                     padding: 60px 20px;
                     text-align: center;
-                    color: var(--xdh-color-text-secondary, #666666);
-                    font-size: 14px;
+                    color: var(--xdh-color-text-secondary);
+                    font: var(--xdh-font-body-sm);
                 }
                 .empty-state.is-error {
-                    color: var(--xdh-brand-pink, #EA005E);
+                    color: var(--xdh-brand-pink);
                 }
             </style>
             <div class="history-shell">
@@ -665,7 +684,7 @@ export class XdhHistoryView extends BaseElement {
                                                     <div class="row-title xdh-tooltip xdh-tooltip-down" data-tooltip="${escapeHtml(title)}">${escapeHtml(title)}</div>
                                                     <div class="row-actions">
                                                         <button class="action-btn favorite-btn xdh-tooltip xdh-tooltip-down ${isFav ? 'active' : ''}" data-id="${item.id}" data-record-id="${recordId}" data-fav-id="${favId}" data-db-name="${escapeHtml(dbName)}" data-extra-header="${escapeHtml(item.raw?.extra?.extra_header || '')}" data-data-type="${escapeHtml(item.raw?.extra?.data_type || '')}" data-source="${escapeHtml(item.raw?.extra?.source || '')}" data-tooltip="${isFav ? t('history.btn.unfavorite') : t('history.btn.favorite')}">
-                                                            ${icon('bookmark', 14)}
+                                                            <span class="icon-bookmark"></span>
                                                         </button>
                                                     </div>
                                                 </div>

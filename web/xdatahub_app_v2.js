@@ -19,7 +19,7 @@ import "./core/node-bridge.js?v=20260426-1";
 import "./components/xdh-content-nav.js?v=20260406-24";
 import "./components/xdh-pagination.js?v=20260426-4";
 import "./components/xdh-lightbox.js?v=20260425-3";
-import "./components/xdh-history-view.js?v=20260425-3";
+import "./components/xdh-history-view.js?v=20260508-1";
 import "./components/xdh-banner.js?v=20260406-15";
 import "./components/xdh-lora-detail.js?v=20260406-15";
 import "./components/xdh-settings-dialog.js?v=20260426-3";
@@ -75,6 +75,20 @@ const URL_CATEGORY_PARAM = "tab";
 const LOCK_FALLBACK_POLL_INTERVAL_MS = 10000;
 const LOCK_EVENT_REFRESH_DEBOUNCE_MS = 80;
 const THEME_MODE_VALUES = new Set(["dark", "light"]);
+const THEME_STORAGE_KEY = "XDataHub.V2.Theme";
+
+// ── 初始主题检测：基于 prefers-color-scheme 设置 data-theme ──────────────
+(function initTheme() {
+    try {
+        const saved = localStorage.getItem(THEME_STORAGE_KEY);
+        if (saved === "light" || saved === "dark") {
+            document.body.dataset.theme = saved;
+            return;
+        }
+    } catch { /* ignore */ }
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.body.dataset.theme = prefersDark ? "dark" : "light";
+})();
 
 let lockRefreshTimer = 0;
 let lockRefreshInFlight = null;
@@ -455,6 +469,7 @@ window.addEventListener("message", (event) => {
     }
     if (payload.type === "xdatahub:ui-locale") {
         setLocale(payload.locale);
+        refreshGlobalUi();
         return;
     }
     if (
@@ -539,15 +554,30 @@ async function loadAppSettings() {
     }
 }
 
+function refreshGlobalUi() {
+    // 派发全局重绘事件，所有 BaseElement 子类收到后重新 renderRoot
+    document.dispatchEvent(new CustomEvent("xdh:refresh-ui"));
+    // 双层 rAF 强制浏览器完成布局与绘制
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            document.dispatchEvent(new CustomEvent("xdh:refresh-ui-flush"));
+        });
+    });
+}
+
 function applyThemeV2(mode, options = {}) {
     const normalized = normalizeThemeMode(mode);
     if (document.body.dataset.theme === normalized) {
         return;
     }
     document.body.dataset.theme = normalized;
+    try {
+        localStorage.setItem(THEME_STORAGE_KEY, normalized);
+    } catch { /* ignore localStorage write errors */ }
     if (options.notifyHost !== false) {
         postThemeModeToHost(normalized);
     }
+    refreshGlobalUi();
 }
 
 function categoryToMediaType(category) {
@@ -1267,10 +1297,10 @@ const _execOverlay = (() => {
     Object.assign(label.style, {
         color: "var(--xdh-color-text-primary, #f0f0f0)",
         fontSize: "15px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
+        fontFamily: "var(--xdh-font-family-base, system-ui, sans-serif)",
         fontWeight: "500",
         letterSpacing: "0.03em",
-        textShadow: "0 1px 4px rgba(0,0,0,0.6)",
+        textShadow: "0 1px 4px color-mix(in srgb, var(--xdh-clr-canvas, #000) 60%, transparent)",
         padding: "12px 24px",
         background: "color-mix(in srgb, var(--xdh-color-surface-2, #333) 95%, transparent)",
         border: "1px solid var(--xdh-color-border, #2e2e2e)",

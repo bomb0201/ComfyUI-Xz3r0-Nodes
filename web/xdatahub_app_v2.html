@@ -4,14 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XDataHub V2</title>
-    <link rel="stylesheet" href="xdatahub-color-tokens.css?v=20260406-6">
+    <!-- 初始主题检测：在 CSS 渲染前设置 data-theme，防止 FIoT -->
+    <script>
+    (function() {
+        var saved = localStorage.getItem('XDataHub.V2.Theme');
+        if (saved === 'light' || saved === 'dark') {
+            document.body.dataset.theme = saved;
+        }
+    })();
+    </script>
+    <link rel="stylesheet" href="xdatahub-color-tokens.css?v=20260508-1">
     <style>
         body {
             margin: 0;
             padding: 0;
             background: var(--xdh-color-background, #121212);
             color: var(--xdh-color-text-primary, #ffffff);
-            font-family: system-ui, -apple-system, sans-serif;
+            font-family: var(--xdh-font-family-base, system-ui, sans-serif);
             overflow: hidden;
             height: 100vh;
             display: flex;
@@ -102,6 +111,6 @@
     <xdh-settings-dialog></xdh-settings-dialog>
 
     <!-- ES Module Entry -->
-    <script type="module" src="xdatahub_app_v2.js?v=20260426-9"></script>
+    <script type="module" src="xdatahub_app_v2.js?v=20260508-1"></script>
 </body>
 </html>
