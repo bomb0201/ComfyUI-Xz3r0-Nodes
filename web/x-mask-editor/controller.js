@@ -6,8 +6,11 @@ import {
 
 const MIN_ZOOM = 0.01;
 const MAX_ZOOM = 200;
-const MAX_BRUSH_SIZE = 10000;
 const MAX_BRUSH_WHEEL_STEP = 200;
+const BRUSH_DEFAULT_FRACTION = 0.1;
+const BRUSH_MAX_FRACTION = 0.8;
+const BRUSH_MIN = 1;
+const SESSION_KEY = "xz3r0_xmaskeditor_settings";
 
 export class XMaskEditorController {
     constructor({
@@ -50,6 +53,7 @@ export class XMaskEditorController {
         this.baseImage = null;
         this.imageWidth = 1;
         this.imageHeight = 1;
+        this.imageDiagonal = 1;
         this.zoom = 1;
         this.fitZoom = 1;
         this.panX = 0;
@@ -57,12 +61,15 @@ export class XMaskEditorController {
         this.tool = "mask";
         this.activeLayer = "mask";
         this.brushSize = 100;
+        this._brushSizeInitialized = false;
         this.hardness = 100;
         this.paintColor = "#000000";
         this.paintOpacity = 1;
         this.maskBrushColor = "black";
         this.maskDisplayOpacity = 0.75;
         this.maskOpacity = 1;
+
+        this._loadSessionSettings();
         this.rotationQuarterTurns = 0;
         this.flipX = false;
         this.flipY = false;
@@ -77,8 +84,6 @@ export class XMaskEditorController {
         this.pointerId = null;
         this.history = [];
         this.historyIndex = -1;
-        this.cursorAnimationFrame = 0;
-
         this.applyTransformState(transformState);
 
         this.handlePointerDown = this.handlePointerDown.bind(this);
@@ -88,7 +93,6 @@ export class XMaskEditorController {
         this.handleContextMenu = this.handleContextMenu.bind(this);
         this.handleWheel = this.handleWheel.bind(this);
         this.handleResize = this.handleResize.bind(this);
-        this.animateCursor = this.animateCursor.bind(this);
     }
 
     async load() {
@@ -106,6 +110,12 @@ export class XMaskEditorController {
         );
         this.imageWidth = width;
         this.imageHeight = height;
+        this.imageDiagonal = Math.sqrt(width * width + height * height);
+        // 首次加载时根据图片尺寸自动设定画笔大小
+        if (!this._brushSizeInitialized) {
+            this.brushSize = this.getDefaultBrushSize();
+            this._brushSizeInitialized = true;
+        }
         this.maskCanvas.width = width;
         this.maskCanvas.height = height;
         this.paintCanvas.width = width;
@@ -192,13 +202,26 @@ export class XMaskEditorController {
         this.emitStateChange();
     }
 
+    getMaxBrushSize() {
+        return Math.max(BRUSH_MIN + 1, Math.round(
+            this.imageDiagonal * BRUSH_MAX_FRACTION
+        ));
+    }
+
+    getDefaultBrushSize() {
+        return Math.max(BRUSH_MIN, Math.round(
+            this.imageDiagonal * BRUSH_DEFAULT_FRACTION
+        ));
+    }
+
     setBrushSize(value) {
-        this.brushSize = clamp(value, 1, MAX_BRUSH_SIZE);
+        this.brushSize = clamp(value, BRUSH_MIN, this.getMaxBrushSize());
         this.emitStateChange();
     }
 
     setHardness(value) {
         this.hardness = clamp(value, 1, 100);
+        this._saveSessionSettings();
         this.emitStateChange();
     }
 
@@ -207,11 +230,13 @@ export class XMaskEditorController {
         this.paintColor = /^#[0-9a-fA-F]{6}$/.test(normalized)
             ? normalized
             : "#ffffff";
+        this._saveSessionSettings();
         this.emitStateChange();
     }
 
     setPaintOpacity(value) {
         this.paintOpacity = clamp(value, 0, 100) / 100;
+        this._saveSessionSettings();
         this.render();
         this.emitStateChange();
     }
@@ -229,11 +254,13 @@ export class XMaskEditorController {
 
     setMaskBrushColor(value) {
         this.maskBrushColor = value === "white" ? "white" : "black";
+        this._saveSessionSettings();
         this.emitStateChange();
     }
 
     setMaskOpacity(value) {
         this.maskOpacity = clamp(value, 0, 100) / 100;
+        this._saveSessionSettings();
         this.render();
         this.emitStateChange();
     }
@@ -738,6 +765,8 @@ export class XMaskEditorController {
             tool: this.getEffectiveTool(),
             selectedTool: this.tool,
             brushSize: this.brushSize,
+            brushSizeMax: this.getMaxBrushSize(),
+            brushSizeMin: BRUSH_MIN,
             hardness: this.hardness,
             paintColor: this.paintColor,
             paintOpacity: Math.round(this.paintOpacity * 100),
@@ -1006,11 +1035,29 @@ export class XMaskEditorController {
         ctx.restore();
     }
 
-    animateCursor() {
-        this.cursorAnimationFrame = 0;
-        if (this.cursorPoint && this.getEffectiveTool() !== "pan") {
-            this.render();
-        }
+    _loadSessionSettings() {
+        try {
+            var raw = sessionStorage.getItem(SESSION_KEY);
+            if (!raw) return;
+            var saved = JSON.parse(raw);
+            if (saved.paintColor) this.paintColor = saved.paintColor;
+            if (saved.maskBrushColor) this.maskBrushColor = saved.maskBrushColor;
+            if (typeof saved.hardness === "number") this.hardness = saved.hardness;
+            if (typeof saved.paintOpacity === "number") this.paintOpacity = saved.paintOpacity;
+            if (typeof saved.maskOpacity === "number") this.maskOpacity = saved.maskOpacity;
+        } catch (e) { /* ignore */ }
+    }
+
+    _saveSessionSettings() {
+        try {
+            sessionStorage.setItem(SESSION_KEY, JSON.stringify({
+                paintColor: this.paintColor,
+                maskBrushColor: this.maskBrushColor,
+                hardness: this.hardness,
+                paintOpacity: this.paintOpacity,
+                maskOpacity: this.maskOpacity,
+            }));
+        } catch (e) { /* ignore */ }
     }
 
     hasPaintData() {
@@ -1065,49 +1112,21 @@ export class XMaskEditorController {
             const cursorX = this.cursorPoint.x;
             const cursorY = this.cursorPoint.y;
             const cursorRadius = (this.brushSize * imageRect.scale) / 2;
-            const cursorCircumference = 2 * Math.PI * cursorRadius;
-            const dashCount = 16;
-            const dashLength = Math.max(
-                cursorCircumference / (dashCount * 2),
-                1.2
-            );
-            const dashOffset = (
-                performance.now() / 140
-            ) % (dashLength * 2);
             this.ctx.save();
-            this.ctx.lineWidth = 1;
-            this.ctx.setLineDash([dashLength, dashLength]);
-            this.ctx.beginPath();
-            this.ctx.arc(
-                cursorX,
-                cursorY,
-                cursorRadius,
-                0,
-                Math.PI * 2
-            );
-            this.ctx.strokeStyle = "#000000";
-            this.ctx.stroke();
-            this.ctx.lineDashOffset = dashOffset + dashLength;
-            this.ctx.beginPath();
-            this.ctx.arc(
-                cursorX,
-                cursorY,
-                cursorRadius,
-                0,
-                Math.PI * 2
-            );
+            this.ctx.globalCompositeOperation = "difference";
             this.ctx.strokeStyle = "#ffffff";
+            this.ctx.lineWidth = 1.5;
+            this.ctx.setLineDash([]);
+            this.ctx.beginPath();
+            this.ctx.arc(
+                cursorX,
+                cursorY,
+                cursorRadius,
+                0,
+                Math.PI * 2
+            );
             this.ctx.stroke();
             this.ctx.restore();
-
-            if (!this.cursorAnimationFrame) {
-                this.cursorAnimationFrame = requestAnimationFrame(
-                    this.animateCursor
-                );
-            }
-        } else if (this.cursorAnimationFrame) {
-            cancelAnimationFrame(this.cursorAnimationFrame);
-            this.cursorAnimationFrame = 0;
         }
     }
 }

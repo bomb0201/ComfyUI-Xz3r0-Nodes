@@ -192,6 +192,8 @@ export async function openXMaskEditor(options = {}) {
             zoom,
             tool,
             brushSize,
+            brushSizeMax,
+            brushSizeMin,
             hardness,
             paintColor,
             paintOpacity,
@@ -205,6 +207,13 @@ export async function openXMaskEditor(options = {}) {
         }) => {
             ui.zoomInput.value = `${Math.round(zoom * 100)}%`;
             ui.imageSizeValue.textContent = `${imageSize.width}x${imageSize.height}`;
+            if (brushSizeMax != null) {
+                ui.brushRange.max = String(brushSizeMax);
+                ui.brushRange.step = String(Math.max(1, Math.round(brushSizeMax * 0.01)));
+            }
+            if (brushSizeMin != null) {
+                ui.brushRange.min = String(brushSizeMin);
+            }
             ui.brushRange.value = String(Math.round(brushSize));
             syncInputValue(ui.brushInput, `${Math.round(brushSize)}px`);
             ui.hardnessRange.value = String(Math.round(hardness));
@@ -285,7 +294,7 @@ export async function openXMaskEditor(options = {}) {
     session.bind(ui.brushRange, "input", () => {
         controller.setBrushSize(ui.brushRange.value);
     });
-    bindRangeWheel(ui.brushRange, 50);
+    bindRangeWheel(ui.brushRange);
     bindCommitNumberInput(ui.brushInput, () => {
         controller.setBrushSize(parseUnitInput(ui.brushInput, "100"));
     });
