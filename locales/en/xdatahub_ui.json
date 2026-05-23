@@ -112,5 +112,19 @@
   "xdatahub.ui.shell.tab.image": "Image",
   "xdatahub.ui.shell.tab.video": "Video",
   "xdatahub.ui.shell.tab.audio": "Audio",
-  "xdatahub.ui.shell.tab.lora": "Lora"
+  "xdatahub.ui.shell.tab.lora": "Lora",
+  "xdatahub.ui.node.ximagecompare.mode_slide": "Slide",
+  "xdatahub.ui.node.ximagecompare.mode_spotlight": "Spotlight",
+  "xdatahub.ui.node.ximagecompare.mode_blend": "Blend",
+  "xdatahub.ui.node.ximagecompare.mode_pingpong": "Ping-Pong Blend",
+  "xdatahub.ui.node.ximagecompare.label_split": "Split",
+  "xdatahub.ui.node.ximagecompare.label_radius": "Radius",
+  "xdatahub.ui.node.ximagecompare.label_opacity": "Opacity",
+  "xdatahub.ui.node.ximagecompare.label_speed": "Speed",
+  "xdatahub.ui.node.ximagecompare.placeholder": "Execute to load images...",
+  "xdatahub.ui.node.ximagecompare.load_failed": "Image load failed",
+  "xdatahub.ui.node.ximagecompare.res_a": "A:",
+  "xdatahub.ui.node.ximagecompare.res_b": "B:",
+  "xdatahub.ui.node.ximagecompare.match_ok": "Resolutions match",
+  "xdatahub.ui.node.ximagecompare.match_diff": "Resolutions differ"
 }
