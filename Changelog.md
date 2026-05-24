@@ -1,5 +1,95 @@
 # 更新日志 | Changelog
 
+## 🎉 v2.3.0
+
+<details>
+
+### 1. 🛠️ 增强 `XImageCompare` 图像和遮罩 A/B 对比节点
+`♾️ Xz3r0/Workflow-Processing`
+- 滑动对比 新增 横向 与 竖向 的切换方向按钮
+- 乒乓混合 现在可以选择 4 种不同的循环曲线
+    - 正弦（平滑，默认使用）
+    - 缓出（两端保持时间略微加长，过程略微缩短）
+    - 保持（两端保持时间加长，过程缩短）
+    - 长保持（两端保持时间更长，过程更短）
+- 右上角添加 画布滚动 开关按钮
+    - 开启时，鼠标指针在图像区域可以直接使用鼠标滚轮控制上方的数值滑块
+    - 关闭时，鼠标滚轮正常缩放 ComfyUI 画布界面
+    - 默认为：关闭
+
+### 2. 🛠️ 增强 `XDataHub` 数据中心
+`ComfyUI Web Interface Extension - ComfyUI.Xz3r0.XDataHub`
+- 音频文件全屏预览里的超过 100% 的音量增强功能改为用 锁定按钮 来决定是否开启
+    - 默认为：关闭
+
+### 3. 🛠️ 增强 `XAudioGet` 与 XDataHub 配套的 音频数据接收节点
+`♾️ Xz3r0/XDataHub`
+- 将浏览器原生音频播放组件改为使用自定义播放组件
+    - 音频波形进度条
+    - 支持超过 100% 的音量增强功能（锁定按钮）
+        - 默认为：关闭
+- 新增 循环播放 开关按钮
+    - 默认为：关闭
+
+### 4. 🛠️ 增强 `XVideoGet` 与 XDataHub 配套的 视频数据接收节点
+`♾️ Xz3r0/XDataHub`
+- 将浏览器原生视频播放控制组件改为使用自定义播放控制组件
+    - 支持超过 100% 的音量增强功能（锁定按钮）
+        - 默认为：关闭
+- 新增 循环播放 开关按钮
+    - 默认为：关闭
+
+### 5. 🪛 调整 `X*Get` 所有 XDataHub 配套系列节点
+`♾️ Xz3r0/XDataHub`
+- 现在当节点界面中没有滚动条的情况下，鼠标悬停在节点界面中可以正常使用鼠标滚轮缩放 ComfyUI 画布界面
+    - `XStringGet` 和 `XLoraGet` 这两个节点界面中出现滚动条时仍然可以正常用鼠标滚轮来控制滚动条
+
+---
+
+### 1. 🛠️ Enhanced `XImageCompare` Image & Mask A/B Comparison Node
+`♾️ Xz3r0/Workflow-Processing`
+- Slide Comparison now has a direction toggle button (Horizontal / Vertical)
+- Ping-Pong Blend now supports 4 different cycle curves
+    - Sine (smooth, default)
+    - Eased (slightly longer hold at both ends, slightly shorter transition)
+    - Hold (longer hold at both ends, shorter transition)
+    - Long Hold (even longer hold at both ends, even shorter transition)
+- Added Canvas Scroll toggle button in the top-right corner
+    - When enabled, hovering over the image area lets you control the slider values above with the mouse wheel
+    - When disabled, the mouse wheel zooms the ComfyUI canvas normally
+    - Default: Off
+
+### 2. 🛠️ Enhanced `XDataHub` Data Center
+`ComfyUI Web Interface Extension - ComfyUI.Xz3r0.XDataHub`
+- The volume boost (>100%) feature in fullscreen audio preview now uses a lock button to enable/disable
+    - Default: Off
+
+### 3. 🛠️ Enhanced `XAudioGet` Audio Receiver Node for XDataHub
+`♾️ Xz3r0/XDataHub`
+- Replaced the browser's native audio player with a custom audio player component
+    - Audio waveform progress bar
+    - Supports volume boost beyond 100% (lock button)
+        - Default: Off
+- Added Loop Playback toggle button
+    - Default: Off
+
+### 4. 🛠️ Enhanced `XVideoGet` Video Receiver Node for XDataHub
+`♾️ Xz3r0/XDataHub`
+- Replaced the browser's native video player controls with custom video player controls
+    - Supports volume boost beyond 100% (lock button)
+        - Default: Off
+- Added Loop Playback toggle button
+    - Default: Off
+
+### 5. 🔧 Adjusted `X*Get` — All XDataHub Companion Series Nodes
+`♾️ Xz3r0/XDataHub`
+- When the node UI has no scrollbar, hovering over the node area now allows the mouse wheel to zoom the ComfyUI canvas normally
+    - `XStringGet` and `XLoraGet` — when scrollbars appear in these nodes, the mouse wheel still scrolls the scrollbar as expected
+
+</details>
+
+---
+
 ## 🎉 v2.2.0
 
 <details>
