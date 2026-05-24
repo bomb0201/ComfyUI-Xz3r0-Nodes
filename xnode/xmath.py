@@ -63,7 +63,11 @@ class XMath(io.ComfyNode):
         return io.Schema(
             node_id="XMath",
             display_name="XMath",
-            description="数学计算节点，支持多种运算方式和双输出格式",
+            description=(
+                "Mathematical operation node supporting addition, subtraction, "
+                "multiplication, division, power, and modulo operations "
+                "with dual output format."
+            ),
             category="♾️ Xz3r0/Workflow-Processing",
             inputs=[
                 # 可选输入 - 接收其他节点的输出
