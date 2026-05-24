@@ -43,7 +43,7 @@ var CURVE_LABEL_FB = "Curve";
 
 // 画布滚轮控制开关
 var WHEEL_CTRL_KEY = LOCALE_PREFIX + ".wheel_ctrl";
-var WHEEL_CTRL_FB = "Canvas Scroll";
+var WHEEL_CTRL_FB = "Image Area Scroll";
 var WHEEL_CTRL_TIP_KEY = LOCALE_PREFIX + ".wheel_ctrl_tip";
 var WHEEL_CTRL_TIP_FB = "When enabled, scrolling on the canvas adjusts the slider parameter for the current mode.";
 
@@ -75,6 +75,12 @@ var MATCH_OK_FB = "Resolutions match";
 var MATCH_DIFF_KEY = LOCALE_PREFIX + ".match_diff";
 var MATCH_DIFF_FB = "Resolutions differ";
 
+// 滑动方向按钮
+var SLIDE_DIR_TOGGLE_KEY = LOCALE_PREFIX + ".slide_dir_toggle";
+var SLIDE_DIR_TOGGLE_FB = "Direction (V/H)";
+var SLIDE_DIR_TOGGLE_TIP_KEY = LOCALE_PREFIX + ".slide_dir_toggle_tip";
+var SLIDE_DIR_TOGGLE_TIP_FB = "Toggle slide direction between horizontal and vertical split";
+
 // =========================================================================
 // 常量
 // =========================================================================
@@ -102,10 +108,30 @@ var CURVE_DEFAULT = CURVE_SINE;
 
 // 乒乓曲线定义
 var PINGPONG_CURVES = [
-    { name: "Sine", key: LOCALE_PREFIX + ".curve_sine" },
-    { name: "Ease", key: LOCALE_PREFIX + ".curve_eased" },
-    { name: "Hold", key: LOCALE_PREFIX + ".curve_hold" },
-    { name: "Long", key: LOCALE_PREFIX + ".curve_long" },
+    {
+        name: "Sine",
+        key: LOCALE_PREFIX + ".curve_sine",
+        tipKey: LOCALE_PREFIX + ".curve_sine_tip",
+        tipFB: "Smooth sine wave crossfade between A and B",
+    },
+    {
+        name: "Ease",
+        key: LOCALE_PREFIX + ".curve_eased",
+        tipKey: LOCALE_PREFIX + ".curve_eased_tip",
+        tipFB: "Eased transitions with smoother start and end",
+    },
+    {
+        name: "Hold",
+        key: LOCALE_PREFIX + ".curve_hold",
+        tipKey: LOCALE_PREFIX + ".curve_hold_tip",
+        tipFB: "Holds at A and B, with quick transitions between them",
+    },
+    {
+        name: "Long",
+        key: LOCALE_PREFIX + ".curve_long",
+        tipKey: LOCALE_PREFIX + ".curve_long_tip",
+        tipFB: "Extended holds at A and B with shorter transitions",
+    },
 ];
 
 // 默认画布尺寸
@@ -129,6 +155,11 @@ var DEFAULT_SLIDE_POS = 50;
 var DEFAULT_SPOT_RADIUS = 80;
 var DEFAULT_BLEND_OPACITY = 50;
 var DEFAULT_PINGPONG_SPEED = 50;
+
+// 滑动方向
+var SLIDE_DIR_H = 0;
+var SLIDE_DIR_V = 1;
+var DEFAULT_SLIDE_DIR = SLIDE_DIR_H;
 
 // 跟踪所有对比节点
 var compareStates = {};
@@ -240,8 +271,17 @@ function applyNodeLocale(state) {
                 PINGPONG_CURVES[ci].key,
                 PINGPONG_CURVES[ci].name
             );
-            state.curveButtons[ci].title = state.curveButtons[ci].textContent;
+            state.curveButtons[ci].title = t(
+                PINGPONG_CURVES[ci].tipKey,
+                PINGPONG_CURVES[ci].tipFB
+            );
         }
+    }
+
+    // 滑动方向按钮（固定文字，不随方向变化）
+    if (state.slideDirBtn) {
+        state.slideDirBtn.textContent = t(SLIDE_DIR_TOGGLE_KEY, SLIDE_DIR_TOGGLE_FB);
+        state.slideDirBtn.title = t(SLIDE_DIR_TOGGLE_TIP_KEY, SLIDE_DIR_TOGGLE_TIP_FB);
     }
 
     // 控制标签
@@ -351,6 +391,7 @@ var HIDDEN_WIDGET_NAMES = [
     "__img_a_info", "__img_b_info",
     "__compare_curve",
     "__compare_wheel_ctrl",
+    "__compare_slide_dir",
 ];
 
 function findWidget(node, name) {
@@ -584,6 +625,7 @@ function createCompareState(node) {
         imgW: DEFAULT_CW,
         imgH: DEFAULT_CH,
         slidePos: DEFAULT_SLIDE_POS,
+        slideDirection: DEFAULT_SLIDE_DIR,
         spotRadius: DEFAULT_SPOT_RADIUS,
         blendOpacity: DEFAULT_BLEND_OPACITY,
         pingPongSpeed: DEFAULT_PINGPONG_SPEED,
@@ -757,21 +799,39 @@ function renderSlide(state, ctx, iw, ih) {
     var imgs = getDisplayImages(state);
     var rA = getContainRect(imgs[0], iw, ih);
     var rB = getContainRect(imgs[1], iw, ih);
-    var splitX = (state.slidePos / 100) * iw;
+    var split = (state.slidePos / 100) * (state.slideDirection === SLIDE_DIR_H ? iw : ih);
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(0, 0, splitX, ih);
-    ctx.clip();
-    ctx.drawImage(imgs[0], rA.x, rA.y, rA.w, rA.h);
-    ctx.restore();
+    if (state.slideDirection === SLIDE_DIR_H) {
+        // 水平（横向）分割
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(0, 0, split, ih);
+        ctx.clip();
+        ctx.drawImage(imgs[0], rA.x, rA.y, rA.w, rA.h);
+        ctx.restore();
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.rect(splitX, 0, iw - splitX, ih);
-    ctx.clip();
-    ctx.drawImage(imgs[1], rB.x, rB.y, rB.w, rB.h);
-    ctx.restore();
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(split, 0, iw - split, ih);
+        ctx.clip();
+        ctx.drawImage(imgs[1], rB.x, rB.y, rB.w, rB.h);
+        ctx.restore();
+    } else {
+        // 垂直（纵向）分割
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(0, 0, iw, split);
+        ctx.clip();
+        ctx.drawImage(imgs[0], rA.x, rA.y, rA.w, rA.h);
+        ctx.restore();
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(0, split, iw, ih - split);
+        ctx.clip();
+        ctx.drawImage(imgs[1], rB.x, rB.y, rB.w, rB.h);
+        ctx.restore();
+    }
 }
 
 function renderSpotlight(state, ctx, iw, ih) {
@@ -818,20 +878,37 @@ function renderBlend(state, ctx, iw, ih) {
 
 function renderOverlay(state, ctx, bw, bh, off) {
     if (state.mode === MODE.SLIDE) {
-        var splitX = (state.slidePos / 100) * state.imgW;
-        var line = imageToBuffer(state, splitX, 0);
+        if (state.slideDirection === SLIDE_DIR_H) {
+            // 水平分割线（竖线）
+            var splitX = (state.slidePos / 100) * state.imgW;
+            var line = imageToBuffer(state, splitX, 0);
 
-        // 反色线：difference 混合模式，白色线在任何背景上都可见
-        ctx.save();
-        ctx.globalCompositeOperation = "difference";
-        ctx.strokeStyle = "#fff";
-        ctx.lineWidth = 1;
-        ctx.setLineDash([]);
-        ctx.beginPath();
-        ctx.moveTo(line.x, 0);
-        ctx.lineTo(line.x, bh);
-        ctx.stroke();
-        ctx.restore();
+            ctx.save();
+            ctx.globalCompositeOperation = "difference";
+            ctx.strokeStyle = "#fff";
+            ctx.lineWidth = 1;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.moveTo(line.x, 0);
+            ctx.lineTo(line.x, bh);
+            ctx.stroke();
+            ctx.restore();
+        } else {
+            // 垂直分割线（横线）
+            var splitY = (state.slidePos / 100) * state.imgH;
+            var line = imageToBuffer(state, 0, splitY);
+
+            ctx.save();
+            ctx.globalCompositeOperation = "difference";
+            ctx.strokeStyle = "#fff";
+            ctx.lineWidth = 1;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.moveTo(0, line.y);
+            ctx.lineTo(bw, line.y);
+            ctx.stroke();
+            ctx.restore();
+        }
     }
 
     if (state.mode === MODE.SPOTLIGHT) {
@@ -1054,7 +1131,7 @@ function createCompareUI(node) {
         var cBtn = document.createElement("button");
         cBtn.textContent = t(PINGPONG_CURVES[c].key, PINGPONG_CURVES[c].name);
         cBtn.className = "xcompare-curve-btn";
-        cBtn.title = cBtn.textContent;
+        cBtn.title = t(PINGPONG_CURVES[c].tipKey, PINGPONG_CURVES[c].tipFB);
         cBtn.addEventListener("click", (function (idx) {
             return function () { setCurve(state, idx); };
         })(c));
@@ -1094,7 +1171,18 @@ function createCompareUI(node) {
     ctrlLabel.textContent = t(LABEL_SPLIT_KEY, LABEL_SPLIT_FB) + ": 50%";
     state.ctrlLabel = ctrlLabel;
     row2.appendChild(ctrlLabel);
+    // 滑动方向切换按钮（靠右，仅 SLIDE 模式可见）
+    var slideDirBtn = document.createElement("button");
+    slideDirBtn.textContent = t(SLIDE_DIR_TOGGLE_KEY, SLIDE_DIR_TOGGLE_FB);
+    slideDirBtn.title = t(SLIDE_DIR_TOGGLE_TIP_KEY, SLIDE_DIR_TOGGLE_TIP_FB);
+    slideDirBtn.style.marginLeft = "auto";
+    slideDirBtn.addEventListener("click", function () {
+        toggleSlideDir(state);
+    });
+    state.slideDirBtn = slideDirBtn;
+
     // 曲线选择按钮组移到第2行靠右
+    row2.appendChild(slideDirBtn);
     row2.appendChild(curveGroup);
     toolbar.appendChild(row2);
 
@@ -1194,8 +1282,10 @@ function createCompareUI(node) {
 
     // --- 初始状态 ---
     updateModeButtons(state);
+    updateSlideDirBtn(state);
     updateSlider(state);
     render(state);
+
 }
 
 // =========================================================================
@@ -1227,6 +1317,11 @@ function setMode(state, newMode) {
     // 曲线按钮组仅 PINGPONG 模式可见
     if (state.curveGroup) {
         state.curveGroup.style.display = newMode === MODE.PINGPONG ? "" : "none";
+    }
+
+    // 滑动方向按钮仅 SLIDE 模式可见
+    if (state.slideDirBtn) {
+        state.slideDirBtn.style.display = newMode === MODE.SLIDE ? "" : "none";
     }
 
     saveState(state);
@@ -1285,6 +1380,20 @@ function updateCurveButtons(state) {
             state.curveButtons[i].classList.remove("active");
         }
     }
+}
+
+/** 切换滑动方向（横向/纵向） */
+function toggleSlideDir(state) {
+    if (state.mode !== MODE.SLIDE) return;
+    state.slideDirection = state.slideDirection === SLIDE_DIR_H ? SLIDE_DIR_V : SLIDE_DIR_H;
+    updateSlideDirBtn(state);
+    render(state);
+    saveState(state);
+}
+
+function updateSlideDirBtn(state) {
+    // 按钮文字固定，无需随方向变化
+    // 保留作为 hook 供后续状态相关更新使用
 }
 
 function updateSlider(state) {
@@ -1414,7 +1523,9 @@ function onMouseDown(state, e) {
         // 任意位置左键单击立即移动分割线并进入拖拽模式
         var bp = cssToBuffer(state, e.clientX, e.clientY);
         var imgPt = bufferToImage(state, bp.x, bp.y);
-        state.slidePos = Math.max(0, Math.min(100, (imgPt.x / state.imgW) * 100));
+        var maxDim = state.slideDirection === SLIDE_DIR_H ? state.imgW : state.imgH;
+        var pos = state.slideDirection === SLIDE_DIR_H ? imgPt.x : imgPt.y;
+        state.slidePos = Math.max(0, Math.min(100, (pos / maxDim) * 100));
         state.slider.value = String(Math.round(state.slidePos));
         updateCtrlLabel(state);
         state.dragging = true;
@@ -1430,7 +1541,9 @@ function onMouseMove(state, e) {
 
     if (state.dragging && state.mode === MODE.SLIDE) {
         var imgPt = bufferToImage(state, bp.x, bp.y);
-        state.slidePos = Math.max(0, Math.min(100, (imgPt.x / state.imgW) * 100));
+        var maxDim = state.slideDirection === SLIDE_DIR_H ? state.imgW : state.imgH;
+        var pos = state.slideDirection === SLIDE_DIR_H ? imgPt.x : imgPt.y;
+        state.slidePos = Math.max(0, Math.min(100, (pos / maxDim) * 100));
         state.slider.value = String(Math.round(state.slidePos));
         updateCtrlLabel(state);
         render(state);
@@ -1458,7 +1571,9 @@ function onWindowMouseMove(state, e) {
 
     var bp = cssToBuffer(state, e.clientX, e.clientY);
     var imgPt = bufferToImage(state, bp.x, bp.y);
-    state.slidePos = Math.max(0, Math.min(100, (imgPt.x / state.imgW) * 100));
+    var maxDim = state.slideDirection === SLIDE_DIR_H ? state.imgW : state.imgH;
+    var pos = state.slideDirection === SLIDE_DIR_H ? imgPt.x : imgPt.y;
+    state.slidePos = Math.max(0, Math.min(100, (pos / maxDim) * 100));
     state.slider.value = String(Math.round(state.slidePos));
     updateCtrlLabel(state);
     render(state);
@@ -1668,6 +1783,9 @@ function saveState(state) {
 
     var wheelW = ensureHiddenWidget(node, "__compare_wheel_ctrl", "0");
     if (wheelW) wheelW.value = state.wheelControlEnabled ? "1" : "0";
+
+    var dirW = ensureHiddenWidget(node, "__compare_slide_dir", DEFAULT_SLIDE_DIR);
+    if (dirW) dirW.value = state.slideDirection;
 }
 
 function restoreState(state) {
@@ -1705,6 +1823,13 @@ function restoreState(state) {
         } catch (e) { /* ignore parse errors */ }
     }
 
+    // 恢复滑动方向
+    var dirW = ensureHiddenWidget(node, "__compare_slide_dir", DEFAULT_SLIDE_DIR);
+    if (dirW && dirW.value != null && dirW.value !== "") {
+        var dir = Number(dirW.value);
+        if (dir === SLIDE_DIR_H || dir === SLIDE_DIR_V) state.slideDirection = dir;
+    }
+
     // 恢复曲线索引
     var curveW = ensureHiddenWidget(node, "__compare_curve", CURVE_DEFAULT);
     if (curveW && curveW.value != null && curveW.value !== "") {
@@ -1721,11 +1846,17 @@ function restoreState(state) {
     updateModeButtons(state);
     updateWheelToggle(state);
     updateCurveButtons(state);
+    updateSlideDirBtn(state);
     updateSlider(state);
 
     // 曲线按钮组显示状态
     if (state.curveGroup) {
         state.curveGroup.style.display = state.mode === MODE.PINGPONG ? "" : "none";
+    }
+
+    // 滑动方向按钮仅 SLIDE 模式可见
+    if (state.slideDirBtn) {
+        state.slideDirBtn.style.display = state.mode === MODE.SLIDE ? "" : "none";
     }
 
     if (state.canvas) {

@@ -769,10 +769,9 @@ export class XdhLightbox extends BaseElement {
         const playLabel = isPlaying
             ? t("lightbox.audio_pause")
             : t("lightbox.audio_play");
-        const maxOutputLevel = Math.max(
-            AUDIO_VOLUME_NORMAL_PERCENT,
-            Number(state.maxOutputLevel) || AUDIO_VOLUME_NORMAL_PERCENT
-        );
+        const maxOutputLevel = state._volumeUnlocked
+            ? Math.max(AUDIO_VOLUME_NORMAL_PERCENT, Number(state.maxOutputLevel) || AUDIO_VOLUME_NORMAL_PERCENT)
+            : AUDIO_VOLUME_NORMAL_PERCENT;
         const volumePercent = Math.round(clamp(
             Number(state.outputLevel),
             0,
@@ -861,10 +860,9 @@ export class XdhLightbox extends BaseElement {
         if (!state || state.disposed) {
             return;
         }
-        const maxOutputLevel = Math.max(
-            AUDIO_VOLUME_NORMAL_PERCENT,
-            Number(state.maxOutputLevel) || AUDIO_VOLUME_NORMAL_PERCENT
-        );
+        const maxOutputLevel = state._volumeUnlocked
+            ? Math.max(AUDIO_VOLUME_NORMAL_PERCENT, Number(state.maxOutputLevel) || AUDIO_VOLUME_NORMAL_PERCENT)
+            : AUDIO_VOLUME_NORMAL_PERCENT;
         const nextPercent = Math.round(clamp(
             Number(volumePercent) || 0,
             0,
@@ -948,7 +946,7 @@ export class XdhLightbox extends BaseElement {
         volumeRange.type = "range";
         volumeRange.className = "fs-audio-volume-range xdh-tooltip xdh-tooltip-up";
         volumeRange.min = "0";
-        volumeRange.max = String(AUDIO_VOLUME_MAX_PERCENT);
+        volumeRange.max = String(AUDIO_VOLUME_NORMAL_PERCENT);
         volumeRange.step = "1";
         volumeRange.value = previewSettings.audioMuted
             ? "0"
@@ -998,9 +996,17 @@ export class XdhLightbox extends BaseElement {
         timeline.appendChild(meta);
         transport.appendChild(playBtn);
         transport.appendChild(timeline);
+        // Volume boost lock toggle
+        const lockBtn = document.createElement("button");
+        lockBtn.type = "button";
+        lockBtn.className = "fs-audio-volume-lock";
+        lockBtn.textContent = "🔒";
+        lockBtn.setAttribute("aria-label", "Unlock volume boost");
+
         volumeGroup.appendChild(volumeBtn);
         volumeGroup.appendChild(volumeRange);
         volumeGroup.appendChild(volumeValue);
+        volumeGroup.appendChild(lockBtn);
         transport.appendChild(volumeGroup);
         panel.appendChild(transport);
         shell.appendChild(panel);
@@ -1041,14 +1047,15 @@ export class XdhLightbox extends BaseElement {
         const maxOutputLevel = audioGraph
             ? AUDIO_VOLUME_MAX_PERCENT
             : AUDIO_VOLUME_NORMAL_PERCENT;
-        volumeRange.max = String(maxOutputLevel);
+        volumeRange.max = String(AUDIO_VOLUME_NORMAL_PERCENT);
         volumeRange.value = previewSettings.audioMuted
             ? "0"
             : String(AUDIO_VOLUME_NORMAL_PERCENT);
         volumeRange.style.setProperty(
             "--fs-audio-volume-progress",
-            `${(Number(volumeRange.value) / maxOutputLevel) * 100}%`
+            "100%"
         );
+        lockBtn.style.display = audioGraph ? "" : "none";
 
         const state = {
             shell,
@@ -1069,6 +1076,7 @@ export class XdhLightbox extends BaseElement {
             rafId: 0,
             resizeObserver: null,
             maxOutputLevel,
+            _volumeUnlocked: false,
             outputLevel: previewSettings.audioMuted
                 ? 0
                 : AUDIO_VOLUME_NORMAL_PERCENT,
@@ -1098,10 +1106,13 @@ export class XdhLightbox extends BaseElement {
             this._syncAudioState(state);
         });
         volumeRange.addEventListener("input", () => {
+            const curMax = state._volumeUnlocked
+                ? Math.max(AUDIO_VOLUME_NORMAL_PERCENT, Number(state.maxOutputLevel) || AUDIO_VOLUME_NORMAL_PERCENT)
+                : AUDIO_VOLUME_NORMAL_PERCENT;
             const nextVolume = clamp(
                 Number(volumeRange.value),
                 0,
-                maxOutputLevel
+                curMax
             );
             this._applyAudioOutputLevel(state, nextVolume);
             if (nextVolume > 0) {
@@ -1111,6 +1122,23 @@ export class XdhLightbox extends BaseElement {
         });
         waveform.addEventListener("click", (event) => {
             this._seekAudioToClientPosition(state, event.clientX);
+        });
+        lockBtn.addEventListener("click", () => {
+            const unlock = !state._volumeUnlocked;
+            state._volumeUnlocked = unlock;
+            lockBtn.classList.toggle("is-active", unlock);
+            lockBtn.textContent = unlock ? "🔓" : "🔒";
+            lockBtn.setAttribute("aria-label", unlock ? "Lock volume boost" : "Unlock volume boost");
+            state.volumeRange.max = unlock
+                ? String(AUDIO_VOLUME_MAX_PERCENT)
+                : String(AUDIO_VOLUME_NORMAL_PERCENT);
+            if (!unlock) {
+                const cur = Number(state.outputLevel);
+                if (cur > AUDIO_VOLUME_NORMAL_PERCENT) {
+                    this._applyAudioOutputLevel(state, AUDIO_VOLUME_NORMAL_PERCENT);
+                }
+            }
+            this._syncAudioState(state);
         });
         waveform.addEventListener("keydown", (event) => {
             const durationValue = Number.isFinite(audio.duration)
@@ -2276,6 +2304,34 @@ export class XdhLightbox extends BaseElement {
                     text-align: right;
                     font-variant-numeric: tabular-nums;
                     font-family: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+                }
+                .fs-audio-volume-lock {
+                    width: 40px;
+                    height: 40px;
+                    flex: 0 0 40px;
+                    padding: 0;
+                    border: none;
+                    border-radius: 50%;
+                    background: transparent;
+                    color: var(--lb-text-tertiary);
+                    font-size: 16px;
+                    line-height: 1;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    opacity: 0.5;
+                    transition: background 0.12s ease, opacity 0.12s ease, transform 0.12s ease;
+                }
+                .fs-audio-volume-lock:hover {
+                    background: var(--lb-surface);
+                    opacity: 1;
+                    transform: scale(1.05);
+                }
+                .fs-audio-volume-lock.is-active {
+                    opacity: 1;
+                    background: var(--xdh-color-primary, var(--lb-focus));
+                    color: var(--lb-surface);
                 }
 
                 .fs-audio-timeline {
