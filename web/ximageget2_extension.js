@@ -1670,6 +1670,29 @@ function installNodeUi(node) {
         }
     });
 
+    // 中键拖拽平移画布 — 通过 LiteGraph Canvas API 直接转发真实事件
+    (function(panel) {
+        panel.addEventListener("pointerdown", function(e) {
+            if (e.button !== 1) return;
+            e.preventDefault();
+            var cvs = app.canvas;
+            if (!cvs || typeof cvs.processMouseDown !== "function") return;
+            cvs.processMouseDown(e);
+        });
+        panel.addEventListener("pointermove", function(e) {
+            if ((e.buttons & 4) !== 4) return;
+            var cvs = app.canvas;
+            if (!cvs || typeof cvs.processMouseMove !== "function") return;
+            cvs.processMouseMove(e);
+        });
+        panel.addEventListener("pointerup", function(e) {
+            if (e.button !== 1) return;
+            var cvs = app.canvas;
+            if (!cvs || typeof cvs.processMouseUp !== "function") return;
+            cvs.processMouseUp(e);
+        });
+    })(panelInfo.panel);
+
     const consumeDragEvent = (event) => {
         event.preventDefault();
         event.stopPropagation();

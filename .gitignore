@@ -226,7 +226,7 @@ skills-lock.json
 icons_dev/
 .github/instructions/
 _temp/
-.codebuddy/
 CLAUDE.md
 .claude/
 REASONIX.md
+.reasonix/
