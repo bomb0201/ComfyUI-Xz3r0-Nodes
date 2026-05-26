@@ -324,17 +324,31 @@ class XAudioSave(io.ComfyNode):
             safe_filename_prefix
         )
 
-        safe_subfolder = sanitize_path_component(subfolder)
-        safe_subfolder = replace_datetime_tokens(safe_subfolder)
+        # 允许多级子文件夹，同时对每一段做安全清理，防止路径遍历或注入
+        raw_subfolder = replace_datetime_tokens(subfolder or "")
+
+        # 将可能包含的 / 或 \ 分割为多个组件，再分别清理每一段。
+        parts = [p for p in re.split(r"[\\/]+", raw_subfolder) if p]
+        safe_parts: list[str] = []
+        for p in parts:
+            # 使用现有的组件清理工具以移除危险字符
+            cleaned = sanitize_path_component(p)
+            if cleaned:
+                safe_parts.append(cleaned)
+
+        if safe_parts:
+            safe_subfolder_path = Path(*safe_parts)
+        else:
+            safe_subfolder_path = Path("")
 
         try:
-            save_dir = resolve_output_subpath(output_dir, safe_subfolder)
+            save_dir = resolve_output_subpath(output_dir, safe_subfolder_path)
         except ValueError as exc:
             raise RuntimeError(cls.INVALID_SAVE_PATH_ERROR) from exc
 
-        # 创建目录 (仅支持单级目录)
+        # 创建目录，支持多级创建并保持安全
         try:
-            save_dir.mkdir(exist_ok=True)
+            save_dir.mkdir(parents=True, exist_ok=True)
         except OSError as exc:
             raise RuntimeError(cls.OUTPUT_DIRECTORY_ERROR) from exc
 
@@ -372,7 +386,7 @@ class XAudioSave(io.ComfyNode):
         try:
             save_path = resolve_output_subpath(
                 output_dir,
-                Path(safe_subfolder) / final_filename,
+                safe_subfolder_path / final_filename,
             )
         except ValueError as exc:
             raise RuntimeError(cls.INVALID_SAVE_PATH_ERROR) from exc
