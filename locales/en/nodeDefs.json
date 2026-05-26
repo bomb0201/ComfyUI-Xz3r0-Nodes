@@ -636,6 +636,10 @@
         "name": "Filename Prefix",
         "tooltip": "Filename prefix, supports datetime placeholders: %Y%, %m%, %d%, %H%, %M%, %S%"
       },
+      "enable_multi_level_directory": {
+        "name": "Enable multi-level directory",
+        "tooltip": "Support creating multi-level directories or not. True, subfolders support path separators; False, subfolders do not support path separators."
+      },
       "subfolder": {
         "name": "Subfolder",
         "tooltip": "Subfolder name (no path separators allowed), supports datetime placeholders: %Y%, %m%, %d%, %H%, %M%, %S%"
