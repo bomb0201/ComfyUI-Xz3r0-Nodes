@@ -12,6 +12,7 @@ import shutil
 import tempfile
 import time
 from pathlib import Path
+import folder_paths
 
 import comfy.utils
 import ffmpeg
@@ -134,6 +135,7 @@ class XAudioSave(io.ComfyNode):
     }
     OUTPUT_DIRECTORY_ERROR = "Unable to create output directory"
     INVALID_SAVE_PATH_ERROR = "Invalid save path"
+    RELATIVE_PATH_ERROR = "Unable to build relative save path"
     AUDIO_TENSOR_PREPARE_ERROR = "Unable to prepare audio tensor for saving"
     AUDIO_NORMALIZE_ERROR = "Audio normalization failed"
     AUDIO_SAVE_ERROR = "Audio file saving failed"
@@ -261,15 +263,16 @@ class XAudioSave(io.ComfyNode):
                 ),
             ],
             outputs=[
-                io.Audio.Output(
+                        io.Audio.Output(
                     "processed_audio",
                     tooltip="Audio after resampling, loudness "
                     "normalization, and peak limiting "
                     "(32-bit float format)",
                 ),
-                        io.String.Output(
+                io.String.Output(
                     "save_path",
-                    tooltip="Saved file path as an absolute filesystem path",
+                    tooltip="Saved file path relative to ComfyUI "
+                    "output directory",
                 ),
             ],
             hidden=[io.Hidden.prompt, io.Hidden.extra_pnginfo],
@@ -309,9 +312,9 @@ class XAudioSave(io.ComfyNode):
             custom_ratio: 自定义压缩比
 
         Returns:
-            NodeOutput: 包含处理后的音频和保存的绝对路径
+            NodeOutput: 包含处理后的音频和保存的相对路径
             - processed_audio: 32-bit float 格式的音频
-            - save_path: 保存的音频文件绝对路径 (.wav 或.flac)
+            - save_path: 保存的音频文件相对路径 (.wav 或.flac)
         """
         # 获取 ComfyUI 默认输出目录
         output_dir = cls._get_output_directory()
@@ -468,14 +471,21 @@ class XAudioSave(io.ComfyNode):
 
         cls._validate_saved_file(save_path)
 
-        # 记录绝对路径
-        absolute_save_path = str(save_path.resolve(strict=False))
+        # 记录相对路径
+        relative_path = cls._build_relative_save_path(save_path, output_dir)
 
         # 构建 ComfyUI 音频字典格式 (需要 batch 维度)
         processed_audio = {
             "waveform": waveform.unsqueeze(0),
             "sample_rate": target_sr,
         }
+
+        # return io.NodeOutput(processed_audio, relative_path)
+
+        # 核心：拼接 ComfyUI 输出目录 + 你的文件路径 = 完整绝对路径
+        absolute_save_path = os.path.join(folder_paths.get_output_directory(), str(save_path))
+        # 规范化路径（自动适配 Windows / Linux 格式）
+        absolute_save_path = os.path.abspath(absolute_save_path)
 
         return io.NodeOutput(processed_audio, absolute_save_path)
 
