@@ -12,7 +12,6 @@ import shutil
 import tempfile
 import time
 from pathlib import Path
-import folder_paths
 
 import comfy.utils
 import ffmpeg
@@ -135,7 +134,6 @@ class XAudioSave(io.ComfyNode):
     }
     OUTPUT_DIRECTORY_ERROR = "Unable to create output directory"
     INVALID_SAVE_PATH_ERROR = "Invalid save path"
-    RELATIVE_PATH_ERROR = "Unable to build relative save path"
     AUDIO_TENSOR_PREPARE_ERROR = "Unable to prepare audio tensor for saving"
     AUDIO_NORMALIZE_ERROR = "Audio normalization failed"
     AUDIO_SAVE_ERROR = "Audio file saving failed"
@@ -271,8 +269,7 @@ class XAudioSave(io.ComfyNode):
                 ),
                 io.String.Output(
                     "save_path",
-                    tooltip="Saved file path relative to ComfyUI "
-                    "output directory",
+                    tooltip="Saved file path as an absolute filesystem path",
                 ),
             ],
             hidden=[io.Hidden.prompt, io.Hidden.extra_pnginfo],
@@ -312,9 +309,9 @@ class XAudioSave(io.ComfyNode):
             custom_ratio: 自定义压缩比
 
         Returns:
-            NodeOutput: 包含处理后的音频和保存的相对路径
+            NodeOutput: 包含处理后的音频和保存的绝对路径
             - processed_audio: 32-bit float 格式的音频
-            - save_path: 保存的音频文件相对路径 (.wav 或.flac)
+            - save_path: 保存的音频文件绝对路径 (.wav 或.flac)
         """
         # 获取 ComfyUI 默认输出目录
         output_dir = cls._get_output_directory()
@@ -326,26 +323,35 @@ class XAudioSave(io.ComfyNode):
         )
 
         # 允许多级子文件夹，同时对每一段做安全清理，防止路径遍历或注入
-        raw_subfolder = replace_datetime_tokens(subfolder or "")
+        raw_subfolder = replace_datetime_tokens(subfolder or "").strip()
 
-        # 将可能包含的 / 或 \ 分割为多个组件，再分别清理每一段。
-        parts = [p for p in re.split(r"[\\/]+", raw_subfolder) if p]
-        safe_parts: list[str] = []
-        for p in parts:
-            # 使用现有的组件清理工具以移除危险字符
-            cleaned = sanitize_path_component(p)
-            if cleaned:
-                safe_parts.append(cleaned)
+        safe_subfolder_path = Path("")
+        if raw_subfolder:
+            is_absolute = os.path.isabs(raw_subfolder)
+            raw_path = Path(raw_subfolder)
+            safe_parts: list[str] = []
+            for part in raw_path.parts:
+                if part in (raw_path.anchor, os.sep, os.altsep):
+                    continue
+                cleaned = sanitize_path_component(part)
+                if cleaned:
+                    safe_parts.append(cleaned)
 
-        if safe_parts:
-            safe_subfolder_path = Path(*safe_parts)
+            if is_absolute:
+                if raw_path.anchor:
+                    safe_subfolder_path = Path(raw_path.anchor, *safe_parts)
+                else:
+                    safe_subfolder_path = Path(*safe_parts)
+            else:
+                safe_subfolder_path = Path(*safe_parts) if safe_parts else Path("")
+
+        if safe_subfolder_path.is_absolute():
+            save_dir = safe_subfolder_path
         else:
-            safe_subfolder_path = Path("")
-
-        try:
-            save_dir = resolve_output_subpath(output_dir, safe_subfolder_path)
-        except ValueError as exc:
-            raise RuntimeError(cls.INVALID_SAVE_PATH_ERROR) from exc
+            try:
+                save_dir = resolve_output_subpath(output_dir, safe_subfolder_path)
+            except ValueError as exc:
+                raise RuntimeError(cls.INVALID_SAVE_PATH_ERROR) from exc
 
         # 创建目录，支持多级创建并保持安全
         try:
@@ -384,13 +390,7 @@ class XAudioSave(io.ComfyNode):
         )
         progress_bar.update_absolute(2)
 
-        try:
-            save_path = resolve_output_subpath(
-                output_dir,
-                safe_subfolder_path / final_filename,
-            )
-        except ValueError as exc:
-            raise RuntimeError(cls.INVALID_SAVE_PATH_ERROR) from exc
+        save_path = save_dir / final_filename
 
         # 处理 LUFS 标准化和峰值限制
         # WAV 容器在当前 FFmpeg 路径下无法稳定保留自定义工作流元数据，
@@ -471,21 +471,13 @@ class XAudioSave(io.ComfyNode):
 
         cls._validate_saved_file(save_path)
 
-        # 记录相对路径
-        relative_path = cls._build_relative_save_path(save_path, output_dir)
+        absolute_save_path = str(save_path.resolve(strict=False))
 
         # 构建 ComfyUI 音频字典格式 (需要 batch 维度)
         processed_audio = {
             "waveform": waveform.unsqueeze(0),
             "sample_rate": target_sr,
         }
-
-        # return io.NodeOutput(processed_audio, relative_path)
-
-        # 核心：拼接 ComfyUI 输出目录 + 你的文件路径 = 完整绝对路径
-        absolute_save_path = os.path.join(folder_paths.get_output_directory(), str(save_path))
-        # 规范化路径（自动适配 Windows / Linux 格式）
-        absolute_save_path = os.path.abspath(absolute_save_path)
 
         return io.NodeOutput(processed_audio, absolute_save_path)
 
