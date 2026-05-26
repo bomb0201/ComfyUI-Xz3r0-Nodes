@@ -70,11 +70,11 @@ class XAudioSave(io.ComfyNode):
         - 多声道统一处理 (link=average, 保持立体声平衡)
         - 峰值限制 (支持两种模式：Disabled, True Peak)
         - 支持自定义文件名和子文件夹
+        - 支持多级子文件夹创建
         - 支持日期时间标识符 (%Y%, %m%, %d%, %H%, %M%, %S%)
         - 自动添加序列号防止覆盖 (从 00001 开始)
-        - 仅支持单级子文件夹创建
         - 安全防护 (防止路径遍历攻击)
-        - 输出相对路径 (不泄露绝对路径)
+        - 输出绝对路径
 
     处理流程：
         1. 应用传统压缩器 (如果启用):
@@ -115,7 +115,7 @@ class XAudioSave(io.ComfyNode):
 
     输出：
         processed_audio: 处理后的音频 (重采样、压缩、LUFS 标准化、峰值限制)
-        save_path: 保存的相对路径 (STRING)
+        save_path: 保存的绝对文件路径 (STRING)
 
     使用示例：
         filename_prefix="MyAudio_%Y%m%d", subfolder="Audio",
@@ -134,7 +134,6 @@ class XAudioSave(io.ComfyNode):
     }
     OUTPUT_DIRECTORY_ERROR = "Unable to create output directory"
     INVALID_SAVE_PATH_ERROR = "Invalid save path"
-    RELATIVE_PATH_ERROR = "Unable to build relative save path"
     AUDIO_TENSOR_PREPARE_ERROR = "Unable to prepare audio tensor for saving"
     AUDIO_NORMALIZE_ERROR = "Audio normalization failed"
     AUDIO_SAVE_ERROR = "Audio file saving failed"
@@ -268,10 +267,9 @@ class XAudioSave(io.ComfyNode):
                     "normalization, and peak limiting "
                     "(32-bit float format)",
                 ),
-                io.String.Output(
+                        io.String.Output(
                     "save_path",
-                    tooltip="Saved file path relative to ComfyUI "
-                    "output directory",
+                    tooltip="Saved file path as an absolute filesystem path",
                 ),
             ],
             hidden=[io.Hidden.prompt, io.Hidden.extra_pnginfo],
@@ -311,9 +309,9 @@ class XAudioSave(io.ComfyNode):
             custom_ratio: 自定义压缩比
 
         Returns:
-            NodeOutput: 包含处理后的音频和保存的相对路径
+            NodeOutput: 包含处理后的音频和保存的绝对路径
             - processed_audio: 32-bit float 格式的音频
-            - save_path: 保存的音频文件相对路径 (.wav 或.flac)
+            - save_path: 保存的音频文件绝对路径 (.wav 或.flac)
         """
         # 获取 ComfyUI 默认输出目录
         output_dir = cls._get_output_directory()
@@ -470,8 +468,8 @@ class XAudioSave(io.ComfyNode):
 
         cls._validate_saved_file(save_path)
 
-        # 记录相对路径
-        relative_path = cls._build_relative_save_path(save_path, output_dir)
+        # 记录绝对路径
+        absolute_save_path = str(save_path.resolve(strict=False))
 
         # 构建 ComfyUI 音频字典格式 (需要 batch 维度)
         processed_audio = {
@@ -479,7 +477,7 @@ class XAudioSave(io.ComfyNode):
             "sample_rate": target_sr,
         }
 
-        return io.NodeOutput(processed_audio, relative_path)
+        return io.NodeOutput(processed_audio, absolute_save_path)
 
     @classmethod
     def _resample_audio(
@@ -1122,16 +1120,3 @@ class XAudioSave(io.ComfyNode):
 
         return Path("test_output")
 
-    @classmethod
-    def _build_relative_save_path(
-        cls,
-        save_path: Path,
-        output_dir: Path,
-    ) -> str:
-        """
-        基于当前实例输出目录构建相对保存路径。
-        """
-        try:
-            return str(Path(save_path).relative_to(output_dir))
-        except ValueError as exc:
-            raise RuntimeError(cls.RELATIVE_PATH_ERROR) from exc
